@@ -1,0 +1,9 @@
+rootProject.name = 'corda-spring'
+
+include 'cordapp-contracts-states'
+include 'cordapp'
+include 'spring-corda-beans'
+//include 'spring-corda-nodes'
+include 'spring-corda-autoconfigure'
+include 'spring-boot-corda-starter'
+include 'corda-webserver-spring-boot'

@@ -1,2 +1,2 @@
-# corda-spring
-Corda &lt;> Spring Integration 
+Work in progress. 
+
