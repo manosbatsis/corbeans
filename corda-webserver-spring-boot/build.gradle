@@ -1,6 +1,7 @@
 
 apply plugin: 'application'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'org.asciidoctor.convert'
 
 mainClassName = "com.github.manosbatsis.corda.webserver.spring.ApplicationKt"
 
@@ -9,9 +10,7 @@ springBoot {
 	buildInfo()
 }
 dependencies {
-
 	compile project(":spring-boot-corda-starter")
-	//implementation 'com.github.manosbatsis.corda-spring:spring-boot-corda-starter:0.6'
 	compile("org.springframework.boot:spring-boot-starter-web")
 
 	// Corda integration dependencies
@@ -20,6 +19,11 @@ dependencies {
 	compile "$corda_release_group:corda-jackson:$corda_release_version"
 	compile "$corda_release_group:corda-rpc:$corda_release_version"
 
+	// swagger via springfox
+	compile "io.springfox:springfox-swagger2:2.9.2"
+	compile "io.springfox:springfox-swagger-ui:2.9.2"
+
+	// activemq
 	compile "org.apache.activemq:artemis-core-client:${artemis_version}"
 	compile "org.apache.activemq:artemis-commons:${artemis_version}"
 
@@ -34,6 +38,7 @@ dependencies {
 	testCompile "$corda_release_group:corda-finance:$corda_release_version"
 	testCompile "$corda_release_group:corda-node-driver:$corda_release_version"
 	testCompile "$corda_release_group:corda-finance:$corda_release_version"
+
 
 	testCompile('org.springframework.boot:spring-boot-starter-test') {
 		exclude module: 'junit'

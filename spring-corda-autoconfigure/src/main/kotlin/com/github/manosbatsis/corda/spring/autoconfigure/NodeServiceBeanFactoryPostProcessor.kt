@@ -5,6 +5,7 @@ import com.github.manosbatsis.corda.spring.beans.CordaNodeServiceImpl
 import com.github.manosbatsis.corda.spring.beans.util.SimpleNodeRpcConnection
 import org.slf4j.LoggerFactory
 import org.springframework.beans.BeansException
+import org.springframework.beans.factory.config.BeanDefinition.SCOPE_SINGLETON
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
 import org.springframework.beans.factory.support.BeanDefinitionBuilder
@@ -46,17 +47,29 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
         val beanDefinitionRegistry = beanFactory as BeanDefinitionRegistry
 
         this.cordaNodesProperties.nodes.forEach{ (nodeName, nodeParams) ->
+            logger.debug("postProcessBeanFactory, nodeName: {}, nodeParams: {}", nodeName, nodeParams)
+
             // register RPC connection wrapper bean
-            logger.info("postProcessBeanFactory, nodeName: {}, nodeParams: {}", nodeName, nodeParams)
-            val rpcConnBean = SimpleNodeRpcConnection(nodeParams)
-            val dynamicBean = BeanDefinitionBuilder
+            val rpcConnectionBeanName = "${nodeName}RpcConnection";
+            val rpcConnectionBean = BeanDefinitionBuilder
+                    // TODO: make service class configurable
+                    .rootBeanDefinition(SimpleNodeRpcConnection::class.java)
+                    .setScope(SCOPE_SINGLETON)
+                    //.setScope(SCOPE_PROTOTYPE)
+                    .addConstructorArgValue(nodeParams)
+                    .getBeanDefinition()
+            beanDefinitionRegistry.registerBeanDefinition(rpcConnectionBeanName, rpcConnectionBean)
+            logger.info("Registered RPC connection bean {} for Party {}", rpcConnectionBeanName, nodeName)
+
+            // register Node service
+            val nodeServiceBeanName = "${nodeName}NodeService";
+            val nodeServiceBean = BeanDefinitionBuilder
                     // TODO: make service class configurable
                     .rootBeanDefinition(CordaNodeServiceImpl::class.java)
-                    //.setScope(SCOPE_PROTOTYPE)
-                    .addConstructorArgValue(rpcConnBean)
+                    .addConstructorArgReference(rpcConnectionBeanName)
                     .getBeanDefinition()
-            beanDefinitionRegistry.registerBeanDefinition("${nodeName}Service", dynamicBean)
-            logger.info("Registered node service for Party: {}", nodeName)
+            beanDefinitionRegistry.registerBeanDefinition(nodeServiceBeanName, nodeServiceBean)
+            logger.info("Registered node service {} for Party: {}", nodeServiceBeanName, nodeName)
         }
     }
 
@@ -66,7 +79,6 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
     fun buildCordaNodesProperties(environment: ConfigurableEnvironment): CordaNodesProperties {
         val sources = ConfigurationPropertySources.from(environment.propertySources)
         val binder = Binder(sources)
-
         return binder.bind("spring-corda", CordaNodesProperties::class.java).orElseCreate(CordaNodesProperties::class.java)
     }
 }
