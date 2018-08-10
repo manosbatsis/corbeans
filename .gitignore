@@ -27,7 +27,13 @@ lib/dokka.jar
 # if you remove the above rule, at least ignore the following:
 
 # Specific files to avoid churn
-.idea/*.xml
+.idea/gradle.xml
+.idea/kotlinc.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.idea/inspectionProfiles
 .idea/copyright
 .idea/jsLibraryMappings.xml
 
@@ -56,8 +62,7 @@ lib/dokka.jar
 
 # IntelliJ
 /out/
-cordapp/out/
-cordapp-contracts-states/out/
+/cordapp/out/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -72,3 +77,4 @@ crashlytics-build.properties
 
 # docs related
 docs/virtualenv/
+/server/logs/
