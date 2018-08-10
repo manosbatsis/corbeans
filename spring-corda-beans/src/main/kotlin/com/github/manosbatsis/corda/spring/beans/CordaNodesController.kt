@@ -42,7 +42,7 @@ open class CordaNodesController {
     }
 
     fun getService(nodeName: String): CordaNodeService =
-            this.services.get(nodeName) ?: throw IllegalArgumentException("Node not found: $nodeName")
+            this.services.get("${nodeName}NodeService") ?: throw IllegalArgumentException("Node not found: $nodeName")
 
     /** Returns the node's name. */
     @GetMapping("{nodeName}/me")
@@ -61,7 +61,7 @@ open class CordaNodesController {
     @GetMapping("{nodeName}/peernames")
     fun peerNames(@PathVariable nodeName: String) = this.getService(nodeName).peerNames()
 
-    /** Return thbe server time in UTC */
+    /** Return tbe node time in UTC */
     @GetMapping("{nodeName}/serverTime")
     fun serverTime(@PathVariable nodeName: String): LocalDateTime {
         return this.getService(nodeName).serverTime()

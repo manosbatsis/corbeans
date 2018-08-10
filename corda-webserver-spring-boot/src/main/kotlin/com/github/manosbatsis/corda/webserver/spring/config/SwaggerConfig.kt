@@ -1,7 +1,10 @@
 package com.github.manosbatsis.corda.webserver.spring.config
 
+import com.fasterxml.jackson.databind.SerializationFeature
+import net.corda.client.jackson.JacksonSupport
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport
 import springfox.documentation.builders.PathSelectors
 import springfox.documentation.builders.RequestHandlerSelectors
@@ -46,4 +49,5 @@ class SwaggerConfig: WebMvcConfigurationSupport() {
         return ApiInfoBuilder().title("Corda Spring-Boot Webserver")
                 .description("A rest API for Corda Nodes using Spring Boot 2").version("0.1").build()
     }
+
 }
