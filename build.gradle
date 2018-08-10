@@ -23,8 +23,11 @@ buildscript {
 
 	repositories {
 		mavenLocal()
-		mavenCentral()
 		jcenter()
+		mavenCentral()
+		maven { url 'https://dl.bintray.com/kotlin/exposed' }
+		maven { url 'https://jitpack.io' }
+		maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
 	}
 
 	dependencies {
@@ -57,8 +60,11 @@ plugins {
 
 repositories {
 	mavenLocal()
-	mavenCentral()
 	jcenter()
+	mavenCentral()
+	maven { url 'https://dl.bintray.com/kotlin/exposed' }
+	maven { url 'https://jitpack.io' }
+	maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
 }
 
 allprojects {
@@ -79,8 +85,8 @@ allprojects {
 	apply plugin: 'idea'
 	apply plugin: 'maven'
 
-	group = 'com.github.manosbatsis.corda.spring'
-	version = '0.2'
+	group = 'com.github.manosbatsis.corda-spring'
+	version = '0.3'
 
 	configurations {
 		all {
