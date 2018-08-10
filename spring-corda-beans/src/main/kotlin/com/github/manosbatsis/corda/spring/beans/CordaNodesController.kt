@@ -1,7 +1,11 @@
 package com.github.manosbatsis.corda.spring.beans
 
+import net.corda.core.contracts.ContractState
+import net.corda.core.contracts.StateAndRef
 import net.corda.core.crypto.SecureHash
+import net.corda.core.identity.Party
 import net.corda.core.internal.extractFile
+import net.corda.core.utilities.NetworkHostAndPort
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.io.FileNotFoundException
+import java.time.LocalDateTime
 import java.util.jar.JarInputStream
 import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletRequest
@@ -53,10 +58,44 @@ open class CordaNodesController {
     fun peers(@PathVariable nodeName: String) = this.getService(nodeName).peers()
 
     /** Returns a list of the node's network peer names. */
-    @GetMapping("{nodeName}/peersnames")
-    fun peersNames(@PathVariable nodeName: String) = this.getService(nodeName).peersNames()
+    @GetMapping("{nodeName}/peernames")
+    fun peerNames(@PathVariable nodeName: String) = this.getService(nodeName).peerNames()
 
-    /** Find the attachment that maches the given id, if it exists */
+    /** Return thbe server time in UTC */
+    @GetMapping("{nodeName}/serverTime")
+    fun serverTime(@PathVariable nodeName: String): LocalDateTime {
+        return this.getService(nodeName).serverTime()
+    }
+
+    @GetMapping("{nodeName}/addresses")
+    fun addresses(@PathVariable nodeName: String): List<NetworkHostAndPort> {
+        return this.getService(nodeName).addresses()
+    }
+
+    @GetMapping("{nodeName}/identities")
+    fun identities(@PathVariable nodeName: String): List<Party> {
+        return this.getService(nodeName).identities()
+    }
+
+    @GetMapping("{nodeName}/platformVersion")
+    fun platformVersion(@PathVariable nodeName: String): Int {
+        return this.getService(nodeName).platformVersion()
+    }
+
+    @GetMapping("{nodeName}/flows")
+    fun flows(@PathVariable nodeName: String): List<String> {
+        return this.getService(nodeName).flows()
+    }
+
+    @GetMapping("{nodeName}/notaries")
+    fun notaries(@PathVariable nodeName: String): List<Party> {
+        return this.getService(nodeName).notaries()
+    }
+
+    @GetMapping("{nodeName}/states")
+    fun states(@PathVariable nodeName: String): List<StateAndRef<ContractState>> {
+        return this.getService(nodeName).states()
+    }
 
     /**
      * Allows the node administrator to either download full attachment zips, or individual files within those zips.
@@ -70,7 +109,7 @@ open class CordaNodesController {
      * TODO: Provide an endpoint that exposes attachment file listings, to make attachments browsable.
      */
     @GetMapping("{nodeName}/attachment/{id}/**")
-    fun findAttachment(@PathVariable nodeName: String, @PathVariable id: String, req: HttpServletRequest, resp: HttpServletResponse) {
+    fun openArrachment(@PathVariable nodeName: String, @PathVariable id: String, req: HttpServletRequest, resp: HttpServletResponse) {
         /*
         val attachment = this.service.findAttachment(SecureHash.parse(id))
 

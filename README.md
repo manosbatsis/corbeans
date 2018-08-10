@@ -112,16 +112,8 @@ Bean Type          | Name                     | Description
 NodeRpcConnection  | {nodeName}RpcConnection  | Provides an Node RPC connection proxy
 CordaNodeService   | {nodeName}NodeService     | A Node Service Bean
 
-A controller is also added with endpoints exposing business methods for all configured nodes:
-
-Method | Path                                    | Description
------- | --------------------------------------- | -------------------
-GET    | /nodes/{nodeName}/whoami                | Returns the Node identity's name
-GET    | /nodes/{nodeName}/me                    | Returns the Node identity's x500Principal name
-GET    | /nodes/{nodeName}/peers                 | Returns a list of the node's network peers
-GET    | /nodes/{nodeName}/peersnames            | Returns a list of the node's network peer names
-GET    | /nodes/{nodeName}/attachment/{id}       | Returns the attachment mathing the given ID
-
+A controller is also added with endpoints exposing business methods for all 
+listing identity, network peers, notaries, flows, states, finding attachments etc.
 
 ## Corda Webserver Boot
 

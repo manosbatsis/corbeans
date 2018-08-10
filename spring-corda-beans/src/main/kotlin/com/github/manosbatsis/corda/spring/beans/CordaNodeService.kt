@@ -29,7 +29,7 @@ interface CordaNodeService {
 
 
     /** Returns a list of the node's network peer names. */
-    fun peersNames(): Map<String, List<String>>
+    fun peerNames(): Map<String, List<String>>
 
     fun serverTime(): LocalDateTime
     
