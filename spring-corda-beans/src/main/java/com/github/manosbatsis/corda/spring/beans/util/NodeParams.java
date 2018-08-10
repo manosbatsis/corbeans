@@ -69,4 +69,16 @@ public class NodeParams {
 	public void setRetryDelaySeconds(Long retryDelaySeconds) {
 		this.retryDelaySeconds = retryDelaySeconds;
 	}
+
+	@Override
+	public String toString() {
+		return "NodeParams{" +
+				"username='" + username + '\'' +
+				", password='" + password + '\'' +
+				", address='" + address + '\'' +
+				", adminAddress='" + adminAddress + '\'' +
+				", retries=" + retries +
+				", retryDelaySeconds=" + retryDelaySeconds +
+				'}';
+	}
 }

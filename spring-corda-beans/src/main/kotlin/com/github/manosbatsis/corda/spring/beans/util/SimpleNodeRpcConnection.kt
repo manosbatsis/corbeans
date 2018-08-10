@@ -19,7 +19,7 @@ open class SimpleNodeRpcConnection(
     override lateinit var proxy: CordaRPCOps
 
     init {
-        createProxy(nodeParams)
+        this.proxy = createProxy(nodeParams)
     }
 
 }

@@ -6,6 +6,8 @@ buildscript {
 		corda_release_version = '3.2-corda'
 		corda_gradle_plugins_version = '3.1.0'
 		quasar_version = '0.7.9'
+		capsule_version = '1.0.1'
+		asm_version = '0.5.3'
 		junit_version = '4.12'
 		slf4j_version = '1.7.25'
 
@@ -14,7 +16,7 @@ buildscript {
 
 		artemis_version = "2.2.0"
 		jackson_version = "2.9.2"
-		guava_version = '25.1-jre'
+		guava_version = '21.0'
 
 		dependency_managemen_version ="1.0.6.RELEASE"
 	}
@@ -36,10 +38,26 @@ buildscript {
 		classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlin_version"
 
 		// corda plugins
-		classpath "net.corda.plugins:cordapp:$corda_gradle_plugins_version"
-		classpath "net.corda.plugins:cordformation:$corda_gradle_plugins_version"
+		classpath "net.corda.plugins:publish-utils:$corda_gradle_plugins_version"
 		classpath "net.corda.plugins:quasar-utils:$corda_gradle_plugins_version"
+		classpath "net.corda.plugins:cordformation:$corda_gradle_plugins_version"
+		classpath "net.corda.plugins:cordapp:$corda_gradle_plugins_version"
+		classpath "net.corda.plugins:api-scanner:$corda_gradle_plugins_version"
 	}
+}
+
+
+plugins {
+	// TODO The capsule plugin requires the newer DSL plugin block.It would be nice if we could unify all the plugins into one style,
+	// but the DSL has some restrictions e.g can't be used on the allprojects section. So we should revisit this if there are improvements in Gradle.
+	// Version 1.0.2 of this plugin uses capsule:1.0.1
+	id "us.kirchmeier.capsule" version "1.0.2"
+}
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+	jcenter()
 }
 
 allprojects {
@@ -47,7 +65,8 @@ allprojects {
 		mavenLocal()
 		jcenter()
 		mavenCentral()
-		maven { url 'https://jitpack.io' } // This allows us to use jitpack projects
+		maven { url 'https://dl.bintray.com/kotlin/exposed' }
+		maven { url 'https://jitpack.io' }
 		maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
 	}
 
@@ -55,6 +74,7 @@ allprojects {
 	sourceCompatibility = JavaVersion.VERSION_1_8
 	targetCompatibility = JavaVersion.VERSION_1_8
 	apply plugin: 'kotlin'
+	apply plugin: 'kotlin-allopen'
 	apply plugin: 'idea'
 
 	group = 'com.github.manosbatsis.corda.spring'
@@ -62,7 +82,6 @@ allprojects {
 
 
 	configurations {
-
 		all {
 			resolutionStrategy {
 				// Force dependencies to use the same version of Kotlin as Corda.
@@ -88,6 +107,8 @@ allprojects {
 			//exclude group: 'io.netty', module: 'netty-all'
 		}
 	}
+
+	task allDeps(type: DependencyReportTask) {}
 }
 //dependencies {
 //	compile "com.google.guava:guava:$guava_version"
@@ -110,6 +131,9 @@ configure([
 		}
 	}
 
+	tasks.withType(JavaCompile) {
+		options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-Xlint:-options" << "-parameters"
+	}
 	tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 		kotlinOptions {
 			languageVersion = "1.1"
@@ -123,16 +147,24 @@ configure([
 	configurations {
 		all*.exclude group: 'junit', module: 'junit'
 
+		// We want to use SLF4J's version of these bindings: jcl-over-slf4j
+		// Remove any transitive dependency on Apache's version.
+		all*.exclude group: 'commons-logging', module: 'commons-logging'
+		all*.exclude group: 'ch.qos.logback', module: 'logback-classic'
+		all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
 		all {
 			exclude group: 'ch.qos.logback', module: 'logback-classic'
 			exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-
+			resolutionStrategy {
+				eachDependency { details ->
+					// Force our version of artemis
+					if (details.requested.group == 'org.apache.activemq' && details.requested.name.startsWith('artemis-')) {
+						details.useVersion artemis_version
+					}
+				}
+			}
 		}
 		compile {
-			// We want to use SLF4J's version of these bindings: jcl-over-slf4j
-			// Remove any transitive dependency on Apache's version.
-			exclude group: 'commons-logging', module: 'commons-logging'
-
 			// Netty-All is an uber-jar which contains every Netty module.
 			// Exclude it to force us to use the individual Netty modules instead.
 			//exclude group: 'io.netty', module: 'netty-all'
@@ -156,6 +188,7 @@ configure([
 	}
 
 	dependencies{
+		compile group: 'org.slf4j', name: 'slf4j-simple', version: "$slf4j_version"
 
 		compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 		compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Required for Kotlin integration
@@ -167,7 +200,6 @@ configure([
 		testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 
 	}
-	task allDeps(type: DependencyReportTask) {}
 }
 
 

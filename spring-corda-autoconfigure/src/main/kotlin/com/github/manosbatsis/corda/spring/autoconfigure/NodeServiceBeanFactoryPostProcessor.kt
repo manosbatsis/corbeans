@@ -2,7 +2,6 @@ package com.github.manosbatsis.corda.spring.autoconfigure
 
 
 import com.github.manosbatsis.corda.spring.beans.CordaNodeServiceImpl
-import com.github.manosbatsis.corda.spring.beans.util.NodeRpcConnection
 import com.github.manosbatsis.corda.spring.beans.util.SimpleNodeRpcConnection
 import org.slf4j.LoggerFactory
 import org.springframework.beans.BeansException
@@ -47,17 +46,18 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
         val beanDefinitionRegistry = beanFactory as BeanDefinitionRegistry
 
         this.cordaNodesProperties.nodes.forEach{ (nodeName, nodeParams) ->
+            // register RPC connection wrapper bean
+            logger.info("postProcessBeanFactory, nodeName: {}, nodeParams: {}", nodeName, nodeParams)
+            val rpcConnBean = SimpleNodeRpcConnection(nodeParams)
             val dynamicBean = BeanDefinitionBuilder
                     // TODO: make service class configurable
                     .rootBeanDefinition(CordaNodeServiceImpl::class.java)
                     //.setScope(SCOPE_PROTOTYPE)
-                    .addConstructorArgValue(SimpleNodeRpcConnection(nodeParams))
+                    .addConstructorArgValue(rpcConnBean)
                     .getBeanDefinition()
-
             beanDefinitionRegistry.registerBeanDefinition("${nodeName}Service", dynamicBean)
             logger.info("Registered node service for Party: {}", nodeName)
         }
-
     }
 
     /**
