@@ -56,6 +56,8 @@ plugins {
 	// but the DSL has some restrictions e.g can't be used on the allprojects section. So we should revisit this if there are improvements in Gradle.
 	// Version 1.0.2 of this plugin uses capsule:1.0.1
 	id "us.kirchmeier.capsule" version "1.0.2"
+
+
 }
 
 repositories {
@@ -85,7 +87,7 @@ allprojects {
 	apply plugin: 'idea'
 
 	group = 'com.github.manosbatsis.corda-spring'
-	version = '0.7'
+	version = '0.10'
 
 
 	configurations {
@@ -128,8 +130,19 @@ configure([
 	//apply plugin: "kotlin-allopem"
 	apply plugin: "kotlin-noarg"
 	apply plugin: "io.spring.dependency-management"
+
 	apply plugin: 'maven-publish'
 
+	publishing {
+		publications {
+			maven(MavenPublication) {
+				from components.java
+				groupId rootProject.group
+				artifactId project.name
+				version rootProject.version
+			}
+		}
+	}
 	dependencyManagement {
 		imports {
 			mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
@@ -147,6 +160,16 @@ configure([
 			jvmTarget = "1.8"
 			javaParameters = true   // Useful for reflection.
 		}
+	}
+
+	task sourcesJar(type: Jar, dependsOn: classes) {
+		classifier = 'sources'
+		from sourceSets.main.allSource
+	}
+
+	task javadocJar(type: Jar, dependsOn: javadoc) {
+		classifier = 'javadoc'
+		from javadoc.destinationDir
 	}
 
 	configurations {
@@ -210,7 +233,7 @@ configure([
 
 
 
-jar {
-	// Prevent the root project from building an unwanted dummy jar.
-	enabled = false
-}
+//jar {
+//	// Prevent the root project from building an unwanted dummy jar.
+//	enabled = false
+//}
