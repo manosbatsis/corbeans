@@ -43,6 +43,7 @@ buildscript {
 		classpath "net.corda.plugins:cordformation:$corda_gradle_plugins_version"
 		classpath "net.corda.plugins:cordapp:$corda_gradle_plugins_version"
 		classpath "net.corda.plugins:api-scanner:$corda_gradle_plugins_version"
+
 	}
 }
 
@@ -78,8 +79,7 @@ allprojects {
 	apply plugin: 'idea'
 
 	group = 'com.github.manosbatsis.corda.spring'
-	version = '0.0.1-SNAPSHOT'
-
+	version = '0.1'
 
 	configurations {
 		all {
@@ -110,9 +110,6 @@ allprojects {
 
 	task allDeps(type: DependencyReportTask) {}
 }
-//dependencies {
-//	compile "com.google.guava:guava:$guava_version"
-//}
 
 configure([
 		project(':spring-corda-beans'),
