@@ -92,7 +92,6 @@ allprojects {
 	group = 'com.github.manosbatsis.corda-spring'
 	version = '0.11'
 
-
 	configurations {
 		all {
 			resolutionStrategy {
