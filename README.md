@@ -1,4 +1,4 @@
-# Spring-Corda Integration
+# Spring-Corda Integration [![0.11](https://jitpack.io/v/manosbatsis/spring-corda.svg)](https://jitpack.io/#manosbatsis/spring-corda)
 
 This project provides utilities and integration for 
 [Spring-Boot](https://spring.io/projects/spring-boot) and [Corda](https://www.corda.net/).
