@@ -85,7 +85,7 @@ allprojects {
 	apply plugin: 'idea'
 
 	group = 'com.github.manosbatsis.corda-spring'
-	version = '0.5'
+	version = '0.6'
 
 
 	configurations {
@@ -128,7 +128,7 @@ configure([
 	//apply plugin: "kotlin-allopem"
 	apply plugin: "kotlin-noarg"
 	apply plugin: "io.spring.dependency-management"
-	apply plugin: 'maven'
+	apply plugin: 'maven-publish'
 
 	dependencyManagement {
 		imports {
