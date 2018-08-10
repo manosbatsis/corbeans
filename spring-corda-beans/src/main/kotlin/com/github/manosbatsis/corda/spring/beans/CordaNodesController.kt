@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse
  */
 // TODO: allow for autoconfigure only @ConditionalOnClass(value = Tomcat.class)
 @RestController
-@RequestMapping("nodes", MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping("nodes")
 open class CordaNodesController {
 
     companion object {
@@ -40,20 +40,20 @@ open class CordaNodesController {
             this.services.get(nodeName) ?: throw IllegalArgumentException("Node not found: $nodeName")
 
     /** Returns the node's name. */
-    @GetMapping("{nodeName}/me",  MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("{nodeName}/me")
     fun me(@PathVariable nodeName: String) = mapOf("me" to getService(nodeName).getMyIdentity().name.x500Principal.name.toString())
 
     /** Returns the node info. */
-    @GetMapping("{nodeName}/whoami",  MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("{nodeName}/whoami")
     fun whoami(@PathVariable nodeName: String) = mapOf("me" to getService(nodeName).getMyIdentity().name)
     //fun me() = mapOf("me" to _myIdentity.name.x500Principal.name.toString())
 
     /** Returns a list of the node's network peers. */
-    @GetMapping("{nodeName}/peers",  MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("{nodeName}/peers")
     fun peers(@PathVariable nodeName: String) = this.getService(nodeName).peers()
 
     /** Returns a list of the node's network peer names. */
-    @GetMapping("{nodeName}/peersnames",  MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("{nodeName}/peersnames")
     fun peersNames(@PathVariable nodeName: String) = this.getService(nodeName).peersNames()
 
     /** Find the attachment that maches the given id, if it exists */
