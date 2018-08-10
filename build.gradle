@@ -86,7 +86,7 @@ allprojects {
 	apply plugin: 'maven'
 
 	group = 'com.github.manosbatsis.corda-spring'
-	version = '0.3'
+	version = '0.4'
 
 
 	configurations {
