@@ -10,8 +10,8 @@ springBoot {
 }
 dependencies {
 
-	//compile project(":spring-boot-corda-starter")
-	implementation 'com.github.manosbatsis.corda-spring:spring-boot-corda-starter:master-SNAPSHOT'
+	compile project(":spring-boot-corda-starter")
+	//implementation 'com.github.manosbatsis.corda-spring:spring-boot-corda-starter:0.4'
 	compile("org.springframework.boot:spring-boot-starter-web")
 
 	// Corda integration dependencies
