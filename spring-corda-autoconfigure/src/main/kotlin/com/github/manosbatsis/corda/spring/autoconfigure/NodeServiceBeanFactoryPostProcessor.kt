@@ -78,7 +78,7 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
                     .addConstructorArgValue(nodeParams)
                     .getBeanDefinition()
             beanDefinitionRegistry.registerBeanDefinition(rpcConnectionBeanName, rpcConnectionBean)
-            logger.info("Registered RPC connection bean {} for Party {}", rpcConnectionBeanName, nodeName)
+            logger.debug("Registered RPC connection bean {} for Party {}", rpcConnectionBeanName, nodeName)
 
             // verify node service type
             val serviceType = Class.forName(nodeParams.serviceType)
@@ -93,7 +93,7 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
                     .addConstructorArgReference(rpcConnectionBeanName)
                     .getBeanDefinition()
             beanDefinitionRegistry.registerBeanDefinition(nodeServiceBeanName, nodeServiceBean)
-            logger.info("Registered node service {} for Party: {}, type: {}", nodeServiceBeanName, nodeName, serviceType.name)
+            logger.debug("Registered node service {} for Party: {}, type: {}", nodeServiceBeanName, nodeName, serviceType.name)
         }
     }
 
