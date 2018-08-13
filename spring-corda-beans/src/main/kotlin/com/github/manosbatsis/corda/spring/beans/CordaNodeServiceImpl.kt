@@ -23,7 +23,7 @@ import java.util.zip.ZipInputStream
 /**
  *  Base RPC service wrapper for Corda nodes
  */
-open class CordaNodeServiceImpl(val nodeRpcConnection: NodeRpcConnection) : InitializingBean, CordaNodeService {
+open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection) : InitializingBean, CordaNodeService {
 
 
 

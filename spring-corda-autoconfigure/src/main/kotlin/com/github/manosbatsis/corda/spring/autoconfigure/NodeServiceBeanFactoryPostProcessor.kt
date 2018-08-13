@@ -61,15 +61,20 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
             beanDefinitionRegistry.registerBeanDefinition(rpcConnectionBeanName, rpcConnectionBean)
             logger.info("Registered RPC connection bean {} for Party {}", rpcConnectionBeanName, nodeName)
 
+            // verify node service type
+            val serviceType = Class.forName(nodeParams.serviceType)
+            if(!CordaNodeServiceImpl::class.java.isAssignableFrom(serviceType)){
+                throw IllegalArgumentException("Provided service type for node ${nodeName} does not extend CordaNodeServiceImpl")
+            }
             // register Node service
             val nodeServiceBeanName = "${nodeName}NodeService";
             val nodeServiceBean = BeanDefinitionBuilder
                     // TODO: make service class configurable
-                    .rootBeanDefinition(CordaNodeServiceImpl::class.java)
+                    .rootBeanDefinition(serviceType)
                     .addConstructorArgReference(rpcConnectionBeanName)
                     .getBeanDefinition()
             beanDefinitionRegistry.registerBeanDefinition(nodeServiceBeanName, nodeServiceBean)
-            logger.info("Registered node service {} for Party: {}", nodeServiceBeanName, nodeName)
+            logger.info("Registered node service {} for Party: {}, type: {}", nodeServiceBeanName, nodeName, serviceType.name)
         }
     }
 

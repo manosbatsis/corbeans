@@ -2,8 +2,12 @@
 
 
 
-This project provides utilities and integration for 
-[Spring-Boot](https://spring.io/projects/spring-boot) and [Corda](https://www.corda.net/).
+This project provides integration and other utilities for developers working with  
+[Spring-Boot](https://spring.io/projects/spring-boot) and [Corda](https://www.corda.net/). 
+
+This project is perfectly usable but far from any notion of being 'complete'. Please browse 
+the [current issues](https://github.com/manosbatsis/corda-spring/issues) to get an idea of 
+the work in progress and post any questions or suggestions you may have.  
 
 <!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
@@ -128,6 +132,16 @@ GET    | /nodes/{nodeName}/addresses             | Returns a list of node addres
 GET    | /nodes/{nodeName}/notaries              | Returns a list of notaries in node's network
 GET    | /nodes/{nodeName}/states                | Returns a list of states
 GET    | /nodes/{nodeName}/states                | Returns a list of flow classnames
+
+#### Advanced Configuration
+
+Custom service types:
+
+```properties
+# node for PartyA
+# ...
+spring-corda.nodes.PartyA.serviceType=my.subclass.of.CordaNodeServiceImpl
+```  
 
 ## Corda Webserver Boot
 

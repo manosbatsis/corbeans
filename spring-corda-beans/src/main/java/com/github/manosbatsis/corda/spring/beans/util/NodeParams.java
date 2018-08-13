@@ -1,5 +1,8 @@
 package com.github.manosbatsis.corda.spring.beans.util;
 
+import com.github.manosbatsis.corda.spring.beans.CordaNodeService;
+import com.github.manosbatsis.corda.spring.beans.CordaNodeServiceImpl;
+
 public class NodeParams {
 
 	public String username;
@@ -8,6 +11,7 @@ public class NodeParams {
 	public String adminAddress;
 	public Integer retries = 6;
 	public Long retryDelaySeconds = Long.valueOf(10);
+	public String serviceType = CordaNodeServiceImpl.class.getCanonicalName();
 
 	public NodeParams() {
 	}
@@ -70,6 +74,10 @@ public class NodeParams {
 		this.retryDelaySeconds = retryDelaySeconds;
 	}
 
+	public String getServiceType() { return serviceType; }
+
+	public void setServiceType(String serviceType) { this.serviceType = serviceType; }
+
 	@Override
 	public String toString() {
 		return "NodeParams{" +
@@ -79,6 +87,7 @@ public class NodeParams {
 				", adminAddress='" + adminAddress + '\'' +
 				", retries=" + retries +
 				", retryDelaySeconds=" + retryDelaySeconds +
+				", serviceType='" + serviceType + '\'' +
 				'}';
 	}
 }

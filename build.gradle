@@ -90,7 +90,7 @@ allprojects {
 	apply plugin: 'idea'
 
 	group = 'com.github.manosbatsis.corda-spring'
-	version = '0.13'
+	version = '0.14'
 
 	configurations {
 		all {
