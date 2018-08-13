@@ -28,7 +28,7 @@ import java.io.InputStream
 import java.time.LocalDateTime
 
 /**
- *  Interface for RPC-based node wrapper services
+ *  Basic interface for RPC-based node services
  */
 interface CordaNodeService {
 

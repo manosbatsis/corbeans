@@ -41,7 +41,10 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 /**
- *  Rest controller for multiple corda nodes
+ *  Rest controller with basic endpoints for multiple corda nodes. Supports multiple nodes by
+ *  using the <code>nodeName</code>  *  path variable to construct a Service Bean name,
+ *  then uses it as a key to lookup and obtain  *  a CordaNodeService for the specific node
+ *  from the autowired services map.
  */
 // TODO: allow for autoconfigure only @ConditionalOnClass(value = Tomcat.class)
 @RestController
@@ -57,7 +60,7 @@ open class CordaNodesController {
 
     @PostConstruct
     fun postConstruct() {
-        logger.info("Auto-configured RESTful services for Corda nodes:: {}", services.keys)
+        logger.debug("Auto-configured RESTful services for Corda nodes:: {}", services.keys)
     }
 
     fun getService(nodeName: String): CordaNodeService =
@@ -124,19 +127,11 @@ open class CordaNodesController {
      *
      * Files are always forced to be downloads, they may not be embedded into web pages for security reasons.
      *
-     * TODO: See if there's a way to prevent access by JavaScript.
      * TODO: Provide an endpoint that exposes attachment file listings, to make attachments browsable.
      */
     @GetMapping("{nodeName}/attachment/{id}/**")
     fun openArrachment(@PathVariable nodeName: String, @PathVariable id: String, req: HttpServletRequest, resp: HttpServletResponse) {
-        /*
-        val attachment = this.service.findAttachment(SecureHash.parse(id))
 
-        response.contentType = MimetypesFileTypeMap().getContentType(attachment.filename);
-        response.setHeader("Content-disposition", "attachment; filename=${attachment.filename}");
-        IOUtils.copy(attachment.inputStream, response.outputStream)
-        IOUtils.closeQuietly(attachment.inputStream)
-        */
         val reqPath = req.pathInfo?.substring(1)
         if (reqPath == null) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST)
