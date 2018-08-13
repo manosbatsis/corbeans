@@ -3,10 +3,10 @@
 
 
 This project provides integration and other utilities for developers working with  
-[Spring-Boot](https://spring.io/projects/spring-boot) and [Corda](https://www.corda.net/). 
+[Spring-Boot](https://spring.io/projects/spring-boot) and [Corda](https://www.corda.net/).
 
-This project is perfectly usable but far from any notion of being 'complete'. Please browse 
-the [current issues](https://github.com/manosbatsis/corda-spring/issues) to get an idea of 
+This project is perfectly usable but far from any notion of being 'complete'. Please browse
+the [current issues](https://github.com/manosbatsis/corda-spring/issues) to get an idea of
 the work in progress and post any questions or suggestions you may have.  
 
 <!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
@@ -18,10 +18,10 @@ the work in progress and post any questions or suggestions you may have.
 			- [Maven Users](#maven-users)
 		- [Application Config](#application-config)
 		- [Registered Beans](#registered-beans)
+		- [Advanced Configuration](#advanced-configuration)
 - [Corda Webserver Boot](#corda-webserver-boot)
 
 <!-- /TOC -->
-
 ## Spring-Boot Starter
 
 The starter autoconfiguration provides effortless bootstrapping of
@@ -116,7 +116,7 @@ Bean Type          | Name                     | Description
 NodeRpcConnection  | {nodeName}RpcConnection  | Provides an Node RPC connection proxy
 CordaNodeService   | {nodeName}NodeService     | A Node Service Bean
 
-A controller is also added with endpoints exposing business methods for all 
+A controller is also added with endpoints exposing business methods for all
 listing identity, network peers, notaries, flows, states, finding attachments etc.
 
 Method | Path                                    | Description
@@ -128,7 +128,7 @@ GET    | /nodes/{nodeName}/peers                 | Returns a list of the node's 
 GET    | /nodes/{nodeName}/peersnames            | Returns a list of the node's network peer names
 GET    | /nodes/{nodeName}/peersnames            | Returns a list of node's network peer names
 GET    | /nodes/{nodeName}/attachment/{id}       | Returns the attachment mathing the given ID
-GET    | /nodes/{nodeName}/addresses             | Returns a list of node addresses 
+GET    | /nodes/{nodeName}/addresses             | Returns a list of node addresses
 GET    | /nodes/{nodeName}/notaries              | Returns a list of notaries in node's network
 GET    | /nodes/{nodeName}/states                | Returns a list of states
 GET    | /nodes/{nodeName}/states                | Returns a list of flow classnames
