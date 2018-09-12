@@ -6,10 +6,10 @@ dependencies {
 	compile project(":spring-corda-beans")
 
 	compile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-	compile "junit:junit:$junit_version"
+	implementation 'org.junit.jupiter:junit-jupiter-api'
+	runtimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+	compile "org.springframework.boot:spring-boot-test:$spring_boot_version"
 
-	compile group: 'org.springframework', name: 'spring-beans', version:spring_version
-	compile group: 'org.springframework', name: 'spring-web', version:spring_version
 	compile "$corda_release_group:corda-node-driver:$corda_release_version"
 	compile "$corda_release_group:corda-test-common:$corda_release_version"
 

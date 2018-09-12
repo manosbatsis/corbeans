@@ -2,10 +2,11 @@
 
 dependencies {
 
+	compile("org.springframework.boot:spring-boot:$spring_boot_version")
+	compile("org.springframework.boot:spring-boot-autoconfigure:$spring_boot_version")
 
-	compile('org.springframework.boot:spring-boot')
-
-    compile group: 'org.springframework', name: 'spring-beans', version:spring_version
+	compile group: 'org.springframework', name: 'spring-context', version:spring_version
+	compile group: 'org.springframework', name: 'spring-beans', version:spring_version
 	compile group: 'org.springframework', name: 'spring-web', version:spring_version
 
 	//compile group: 'org.springframework.boot', name: 'spring-boot', version:spring_boot_version

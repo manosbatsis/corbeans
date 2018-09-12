@@ -19,8 +19,13 @@
  */
 package com.github.manosbatsis.corda.webserver.spring
 
+import com.github.manosbatsis.corda.spring.beans.config.CordaNodesProperties
 import com.github.manosbatsis.corda.spring.beans.util.NodeParams
 import net.corda.core.identity.CordaX500Name
+import net.corda.core.utilities.getOrThrow
+import net.corda.testing.driver.DriverParameters
+import net.corda.testing.driver.driver
+import net.corda.testing.node.User
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import java.lang.RuntimeException
@@ -84,13 +89,14 @@ abstract class AbstractCordaNetworkCapableIntegrationTest {
                     val nodeParams = it.value
                     val user = User(nodeParams.username, nodeParams.password, setOf("ALL"))
 
-                    startNode(
+                    val handle = startNode(
                             providedName = CordaX500Name(nodeName, "Athens", "GR"),
                             rpcUsers = listOf(user),
                             customOverrides = mapOf(
                                     "rpcSettings.address" to nodeParams.address,
                                     "rpcSettings.adminAddress" to nodeParams.adminAddress)).getOrThrow()
                 }
+
                 started = true
                 action()
 

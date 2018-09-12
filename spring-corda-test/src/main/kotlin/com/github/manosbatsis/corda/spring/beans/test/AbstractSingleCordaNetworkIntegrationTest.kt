@@ -21,6 +21,9 @@ package com.github.manosbatsis.corda.webserver.spring
 
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.async
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.TestInstance
 import org.slf4j.LoggerFactory
 
 /**
