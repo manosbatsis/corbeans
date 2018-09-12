@@ -1,7 +1,7 @@
 
 buildscript {
 	ext {
-		kotlin_version = '1.2.51'
+		kotlin_version = '1.2.61'
 		corda_release_group = 'net.corda'
 		corda_release_version = '3.2-corda'
 		corda_gradle_plugins_version = '3.1.0'
@@ -92,8 +92,8 @@ allprojects {
 	apply plugin: 'idea'
 	apply plugin: 'license'
 
-	group = 'com.github.manosbatsis.corda-spring'
-	version = '0.14'
+	group = 'com.github.manosbatsis.corbeans'
+	version = '0.0.1-SNAPSHOT'
 
 	configurations {
 		all {
@@ -136,6 +136,7 @@ allprojects {
 
 configure([
 		project(':spring-corda-beans'),
+		project(':spring-corda-test'),
 		project(':spring-corda-autoconfigure'),
 		project(':spring-boot-corda-starter'),
 		project(':corda-webserver-spring-boot')]) {

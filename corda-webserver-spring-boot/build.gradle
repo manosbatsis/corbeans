@@ -1,6 +1,7 @@
 
 apply plugin: 'application'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'net.corda.plugins.quasar-utils'
 apply plugin: 'org.asciidoctor.convert'
 
 mainClassName = "com.github.manosbatsis.corda.webserver.spring.ApplicationKt"
@@ -10,6 +11,7 @@ springBoot {
 	buildInfo()
 }
 dependencies {
+
 	compile project(":spring-boot-corda-starter")
 	compile("org.springframework.boot:spring-boot-starter-web")
 
@@ -27,7 +29,9 @@ dependencies {
 	compile "org.apache.activemq:artemis-core-client:${artemis_version}"
 	compile "org.apache.activemq:artemis-commons:${artemis_version}"
 
-	testCompile project(":cordapp-example")
+	//testCompile project(":cordapp-example")
+
+	testCompile project(":spring-corda-test")
 	testCompile "$corda_release_group:corda-node-driver:$corda_release_version"
 	testCompile "$corda_release_group:corda-test-common:$corda_release_version"
 

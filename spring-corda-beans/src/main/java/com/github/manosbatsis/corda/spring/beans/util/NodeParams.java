@@ -19,7 +19,6 @@
  */
 package com.github.manosbatsis.corda.spring.beans.util;
 
-import com.github.manosbatsis.corda.spring.beans.CordaNodeService;
 import com.github.manosbatsis.corda.spring.beans.CordaNodeServiceImpl;
 
 public class NodeParams {
@@ -29,8 +28,10 @@ public class NodeParams {
 	public String address;
 	public String adminAddress;
 	public Integer retries = 6;
+
+	public Boolean lazy = false;
 	public Long retryDelaySeconds = Long.valueOf(10);
-	public String serviceType = CordaNodeServiceImpl.class.getCanonicalName();
+	public String primaryServiceType = CordaNodeServiceImpl.class.getCanonicalName();
 
 	public NodeParams() {
 	}
@@ -93,9 +94,18 @@ public class NodeParams {
 		this.retryDelaySeconds = retryDelaySeconds;
 	}
 
-	public String getServiceType() { return serviceType; }
+	public String getPrimaryServiceType() { return primaryServiceType; }
 
-	public void setServiceType(String serviceType) { this.serviceType = serviceType; }
+	public void setPrimaryServiceType(String primaryServiceType) { this.primaryServiceType = primaryServiceType; }
+
+
+	public Boolean getLazy() {
+		return lazy;
+	}
+
+	public void setLazy(Boolean lazy) {
+		this.lazy = lazy;
+	}
 
 	@Override
 	public String toString() {
@@ -104,9 +114,10 @@ public class NodeParams {
 				", password='" + password + '\'' +
 				", address='" + address + '\'' +
 				", adminAddress='" + adminAddress + '\'' +
+				", lazy='" + lazy + '\'' +
 				", retries=" + retries +
 				", retryDelaySeconds=" + retryDelaySeconds +
-				", serviceType='" + serviceType + '\'' +
+				", primaryServiceType='" + primaryServiceType + '\'' +
 				'}';
 	}
 }

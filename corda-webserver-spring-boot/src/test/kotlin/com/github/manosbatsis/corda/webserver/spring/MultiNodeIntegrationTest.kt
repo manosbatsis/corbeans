@@ -35,10 +35,15 @@ import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(SpringExtension::class)
-class MultiNodeIntegrationTest(@Autowired val restTemplate: TestRestTemplate) {
+class MultiNodeIntegrationTest() : AbstractSingleCordaNetworkIntegrationTest() {
+
     companion object {
         private val logger = LoggerFactory.getLogger(MultiNodeIntegrationTest::class.java)
+
     }
+
+    @Autowired
+    lateinit var restTemplate: TestRestTemplate
 
     @Autowired
     lateinit var services: Map<String, CordaNodeService>
@@ -50,35 +55,30 @@ class MultiNodeIntegrationTest(@Autowired val restTemplate: TestRestTemplate) {
     @Test
     fun `Can inject services`() {
         assertNotNull(this.services)
-        logger.info("Auto-configured RESTful services for Corda nodes:: {}", this.services.keys)
+        assertNotNull(this.service)
         assertTrue(this.services.keys.isNotEmpty())
     }
 
     @Test
     fun `Can retreive node identity`() {
-        val party = service.getMyIdentity()
-        logger.info("My identity: {}", party)
-        assertNotNull(service.getMyIdentity())
+        assertNotNull(service.myIdentity)
     }
 
     @Test
     fun `Can retreive notaries`() {
         val notaries: List<Party> = service.notaries()
-        logger.info("Notaries: {}", notaries)
         assertNotNull(notaries)
     }
 
     @Test
     fun `Can retreive flows`() {
         val flows: List<String> = service.flows()
-        logger.info("Flows: {}", flows)
         assertNotNull(flows)
     }
 
     @Test
     fun `Can retreive addresses`() {
         val addresses: List<NetworkHostAndPort> = service.addresses()
-        logger.info("Addresses: {}", addresses)
         assertNotNull(addresses)
     }
 

@@ -140,7 +140,7 @@ Custom service types:
 ```properties
 # node for PartyA
 # ...
-spring-corda.nodes.PartyA.serviceType=my.subclass.of.CordaNodeServiceImpl
+spring-corda.nodes.PartyA.primaryServiceType=my.subclass.of.CordaNodeServiceImpl
 ```  
 
 ## Corda Webserver Boot

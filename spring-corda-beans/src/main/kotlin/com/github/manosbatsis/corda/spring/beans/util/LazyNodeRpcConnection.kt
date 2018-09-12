@@ -17,20 +17,28 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corda.spring.autoconfigure
+package com.github.manosbatsis.corda.spring.beans.util
 
-import com.github.manosbatsis.corda.spring.beans.util.NodeParams
-import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.stereotype.Component
+import net.corda.core.messaging.CordaRPCOps
+import org.slf4j.LoggerFactory
 
 /**
- * Configuration model for component registration per Corda Node RPC connection
+ * Lazily initialised wrapper of a Node RPC connection proxy.
+ *
+ * @param nodeParams the RPC connection params
+ * @property proxy The RPC proxy.
  */
-@Component
-@ConfigurationProperties(prefix = "spring-corda")
-open class CordaNodesProperties {
+open class LazyNodeRpcConnection(
+        nodeParams: NodeParams): NodeRpcConnection{
 
-    open lateinit var nodes: Map<String, NodeParams>
+    companion object {
+        private val logger = LoggerFactory.getLogger(LazyNodeRpcConnection::class.java)
+    }
+
+    /** Provides lazy access to an identity service */
+    override val proxy: CordaRPCOps by lazy {
+        createProxy(nodeParams)
+    }
 
 
 }

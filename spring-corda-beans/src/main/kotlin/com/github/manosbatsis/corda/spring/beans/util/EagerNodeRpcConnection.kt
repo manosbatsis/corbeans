@@ -28,11 +28,11 @@ import org.slf4j.LoggerFactory
  * @param nodeParams the RPC connection params
  * @property proxy The RPC proxy.
  */
-open class SimpleNodeRpcConnection(
+open class EagerNodeRpcConnection(
         nodeParams: NodeParams): NodeRpcConnection{
 
     companion object {
-        private val logger = LoggerFactory.getLogger(SimpleNodeRpcConnection::class.java)
+        private val logger = LoggerFactory.getLogger(EagerNodeRpcConnection::class.java)
     }
 
     override lateinit var proxy: CordaRPCOps

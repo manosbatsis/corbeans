@@ -21,7 +21,9 @@ package com.github.manosbatsis.corda.spring.autoconfigure
 
 
 import com.github.manosbatsis.corda.spring.beans.CordaNodeServiceImpl
-import com.github.manosbatsis.corda.spring.beans.util.SimpleNodeRpcConnection
+import com.github.manosbatsis.corda.spring.beans.config.CordaNodesProperties
+import com.github.manosbatsis.corda.spring.beans.util.EagerNodeRpcConnection
+import com.github.manosbatsis.corda.spring.beans.util.LazyNodeRpcConnection
 import org.slf4j.LoggerFactory
 import org.springframework.beans.BeansException
 import org.springframework.beans.factory.config.BeanDefinition.SCOPE_SINGLETON
@@ -67,21 +69,22 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
 
         this.cordaNodesProperties.nodes.forEach{ (nodeName, nodeParams) ->
             logger.debug("postProcessBeanFactory, nodeName: {}, nodeParams: {}", nodeName, nodeParams)
+            System.out.println("postProcessBeanFactory, nodeName: ${nodeName}, nodeParams: ${nodeParams}")
 
             // register RPC connection wrapper bean
             val rpcConnectionBeanName = "${nodeName}RpcConnection";
             val rpcConnectionBean = BeanDefinitionBuilder
                     // TODO: make service class configurable
-                    .rootBeanDefinition(SimpleNodeRpcConnection::class.java)
+                    .rootBeanDefinition(if(nodeParams.lazy) LazyNodeRpcConnection::class.java else EagerNodeRpcConnection::class.java)
                     .setScope(SCOPE_SINGLETON)
-                    //.setScope(SCOPE_PROTOTYPE)
                     .addConstructorArgValue(nodeParams)
                     .getBeanDefinition()
             beanDefinitionRegistry.registerBeanDefinition(rpcConnectionBeanName, rpcConnectionBean)
             logger.debug("Registered RPC connection bean {} for Party {}", rpcConnectionBeanName, nodeName)
+            System.out.println("Registered RPC connection bean ${rpcConnectionBeanName} for Party ${nodeName}")
 
             // verify node service type
-            val serviceType = Class.forName(nodeParams.serviceType)
+            val serviceType = Class.forName(nodeParams.primaryServiceType)
             if(!CordaNodeServiceImpl::class.java.isAssignableFrom(serviceType)){
                 throw IllegalArgumentException("Provided service type for node ${nodeName} does not extend CordaNodeServiceImpl")
             }
@@ -94,6 +97,7 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
                     .getBeanDefinition()
             beanDefinitionRegistry.registerBeanDefinition(nodeServiceBeanName, nodeServiceBean)
             logger.debug("Registered node service {} for Party: {}, type: {}", nodeServiceBeanName, nodeName, serviceType.name)
+            System.out.println("Registered node service ${nodeServiceBeanName} for Party: ${nodeName}, type: ${serviceType.name}")
         }
     }
 

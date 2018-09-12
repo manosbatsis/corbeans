@@ -68,11 +68,11 @@ open class CordaNodesController {
 
     /** Returns the node's name. */
     @GetMapping("{nodeName}/me")
-    fun me(@PathVariable nodeName: String) = mapOf("me" to getService(nodeName).getMyIdentity().name.x500Principal.name.toString())
+    fun me(@PathVariable nodeName: String) = mapOf("me" to getService(nodeName).myIdentity.name.x500Principal.name.toString())
 
     /** Returns the node info. */
     @GetMapping("{nodeName}/whoami")
-    fun whoami(@PathVariable nodeName: String) = mapOf("me" to getService(nodeName).getMyIdentity().name)
+    fun whoami(@PathVariable nodeName: String) = mapOf("me" to getService(nodeName).myIdentity.name)
     //fun me() = mapOf("me" to _myIdentity.name.x500Principal.name.toString())
 
     /** Returns a list of the node's network peers. */

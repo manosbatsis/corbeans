@@ -17,25 +17,18 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corda.spring.beans
+package com.github.manosbatsis.corda.spring.beans.security.model
 
-import net.corda.core.contracts.ContractState
-import net.corda.core.contracts.StateAndRef
-import net.corda.core.crypto.SecureHash
-import net.corda.core.identity.Party
-import net.corda.core.utilities.NetworkHostAndPort
-import java.io.InputStream
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.Id
+import javax.persistence.Table
 
-/**
- *  Basic interface for RPC-based node services
- */
-interface CordaNodeService: BaseCordaNodeService {
-    fun states(): List<StateAndRef<ContractState>>
-    fun flows(): List<String>
-    fun notaries(): List<Party>
-    fun platformVersion(): Int
-    fun identities(): List<Party>
-    fun addresses(): List<NetworkHostAndPort>
-    fun openArrachment(hash: SecureHash): InputStream
-    fun openArrachment(hash: String): InputStream
-}
+@Entity
+@Table(name = "users")
+data class NodeUser(
+    @Id
+    val username: String,
+    @Column(nullable = false)
+    val password: String
+)
