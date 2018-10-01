@@ -1,10 +1,16 @@
 rootProject.name = 'corbeans'
 
+include "corbeans-commons"
+
+
+include "corbeans-corda-test"
+include 'corbeans-corda-webserver'
+include "corbeans-corda-workflows"
+
 include 'cordapp-example'
-include 'spring-corda-beans'
-include 'spring-corda-test'
-include 'spring-corda-beans-security'
-//include 'spring-corda-nodes'
-include 'spring-corda-autoconfigure'
-include 'spring-boot-corda-starter'
-include 'corda-webserver-spring-boot'
+
+include 'corbeans-spring-boot-corda'
+include 'corbeans-spring-boot-corda-autoconfigure'
+include 'corbeans-spring-boot-corda-security'
+include 'corbeans-spring-boot-corda-starter'
+include 'corbeans-spring-boot-corda-starter-test'

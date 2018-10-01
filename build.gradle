@@ -1,7 +1,9 @@
 
 buildscript {
 	ext {
+		arrow_version = "0.7.3"
 		kotlin_version = '1.2.61'
+		kotlinx_coroutines_version = '0.26.0'
 		corda_release_group = 'net.corda'
 		corda_release_version = '3.2-corda'
 		corda_gradle_plugins_version = '3.1.0'
@@ -91,6 +93,8 @@ allprojects {
 	apply plugin: 'kotlin-allopen'
 	apply plugin: 'idea'
 	apply plugin: 'license'
+	apply plugin: 'kotlin-kapt' //optional
+
 
 	group = 'com.github.manosbatsis.corbeans'
 	version = '0.0.1-SNAPSHOT'
@@ -135,11 +139,14 @@ allprojects {
 }
 
 configure([
-		project(':spring-corda-beans'),
-		project(':spring-corda-test'),
-		project(':spring-corda-autoconfigure'),
-		project(':spring-boot-corda-starter'),
-		project(':corda-webserver-spring-boot')]) {
+		project(':corbeans-corda-workflows'),
+		project(':corbeans-commons'),
+		project(':corbeans-spring-boot-corda'),
+		project(':corbeans-spring-boot-corda-starter-test'),
+		project(':corbeans-corda-test'),
+		project(':corbeans-spring-boot-corda-autoconfigure'),
+		project(':corbeans-spring-boot-corda-starter'),
+		project(':corbeans-corda-webserver')]) {
 
 	apply plugin: 'kotlin-spring'
 	//apply plugin: "kotlin-allopem"
@@ -237,6 +244,14 @@ configure([
 		compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Required for Kotlin integration
 		compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 		compile "com.fasterxml.jackson.module:jackson-module-kotlin"
+
+		compile "io.arrow-kt:arrow-core:$arrow_version"
+		compile "io.arrow-kt:arrow-syntax:$arrow_version"
+		compile "io.arrow-kt:arrow-typeclasses:$arrow_version"
+		compile "io.arrow-kt:arrow-data:$arrow_version"
+		compile "io.arrow-kt:arrow-instances-core:$arrow_version"
+		compile "io.arrow-kt:arrow-instances-data:$arrow_version"
+		kapt    "io.arrow-kt:arrow-annotations-processor:$arrow_version"
 
 		testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
 		testImplementation 'org.junit.jupiter:junit-jupiter-api'
