@@ -17,17 +17,14 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.cordapp.model
+package com.github.manosbatsis.corbeans.cordapp.flow.proposal.simple
 
-import net.corda.core.contracts.UniqueIdentifier
+import net.corda.core.serialization.CordaSerializable
 
-interface FlowInput {
-}
-
-interface LinearIdFlowInput: FlowInput {
-    val linearId: UniqueIdentifier
-}
-
-interface ExternalIdFlowInput: FlowInput {
-    val externalId: String
+// Minimal status jpa of a manual approval process
+@CordaSerializable
+enum class ProposalStatus {
+    NEW,
+    APPROVED,
+    REJECTED
 }

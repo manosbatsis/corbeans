@@ -3,13 +3,13 @@
 dependencies {
 	compile "$corda_release_group:corda-core:$corda_release_version"
 
-	compile "io.arrow-kt:arrow-free:$arrow_version" //optional
-	compile "io.arrow-kt:arrow-mtl:$arrow_version" //optional
-	compile "io.arrow-kt:arrow-effects:$arrow_version" //optional
-	compile "io.arrow-kt:arrow-effects-rx2:$arrow_version" //optional
-	compile "io.arrow-kt:arrow-effects-reactor:$arrow_version" //optional
-	compile "io.arrow-kt:arrow-effects-kotlinx-coroutines:$arrow_version" //optional
-	compile "io.arrow-kt:arrow-optics:$arrow_version" //optional
-	compile "io.arrow-kt:arrow-generic:$arrow_version" //optional
-	compile "io.arrow-kt:arrow-recursion:$arrow_version" //optional
+	//compile "io.arrow-kt:arrow-free:$arrow_version" //optional
+	//compile "io.arrow-kt:arrow-mtl:$arrow_version" //optional
+	//compile "io.arrow-kt:arrow-effects:$arrow_version" //optional
+	//compile "io.arrow-kt:arrow-effects-rx2:$arrow_version" //optional
+	//compile "io.arrow-kt:arrow-effects-reactor:$arrow_version" //optional
+	//compile "io.arrow-kt:arrow-effects-kotlinx-coroutines:$arrow_version" //optional
+	//compile "io.arrow-kt:arrow-optics:$arrow_version" //optional
+	//compile "io.arrow-kt:arrow-generic:$arrow_version" //optional
+	//compile "io.arrow-kt:arrow-recursion:$arrow_version" //optional
 }

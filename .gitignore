@@ -78,3 +78,14 @@ crashlytics-build.properties
 # docs related
 docs/virtualenv/
 /server/logs/
+
+## sbt-microsite
+project/project/
+project/target/
+target/
+/docs/target/
+/target/
+.idea/
+build/
+/project/target/
+/project/project/

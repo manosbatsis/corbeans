@@ -17,17 +17,25 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.cordapp.model
+package com.github.manosbatsis.corbeans.cordapp.flow.delegating.tx
 
-import net.corda.core.contracts.UniqueIdentifier
+import com.github.manosbatsis.corbeans.cordapp.model.TransactionItems
+import net.corda.core.contracts.CommandData
+import net.corda.core.contracts.ContractClassName
+import net.corda.core.contracts.TimeWindow
+import net.corda.core.identity.Party
 
-interface FlowInput {
-}
 
-interface LinearIdFlowInput: FlowInput {
-    val linearId: UniqueIdentifier
-}
-
-interface ExternalIdFlowInput: FlowInput {
-    val externalId: String
-}
+/**
+ * Base transaction executor delegate strategy
+ * used by implementations of [TxDelegatingFlow]
+ */
+data class TxStrategyDelegateConfig(
+        val transactionItems: TransactionItems,
+        val commandData: CommandData,
+        val contractClassName: ContractClassName,
+        val notary: Party,
+        val timeWindow: TimeWindow
+        //val progressTracker: ProgressTracker,
+        // = super.getFirstNotary()
+)

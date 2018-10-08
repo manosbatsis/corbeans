@@ -17,7 +17,7 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corda.webserver.spring
+package com.github.manosbatsis.corbeans.spring.boot.corda.starter.test
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
 import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeParams
@@ -89,6 +89,7 @@ abstract class AbstractCordaNetworkCapableIntegrationTest {
                     val nodeParams = it.value
                     val user = User(nodeParams.username, nodeParams.password, setOf("ALL"))
 
+                    @Suppress("UNUSED_VARIABLE")
                     val handle = startNode(
                             providedName = CordaX500Name(nodeName, "Athens", "GR"),
                             rpcUsers = listOf(user),

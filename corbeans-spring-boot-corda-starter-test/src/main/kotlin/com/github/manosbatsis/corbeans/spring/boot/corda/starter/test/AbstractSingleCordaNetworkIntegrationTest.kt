@@ -19,6 +19,7 @@
  */
 package com.github.manosbatsis.corda.webserver.spring
 
+import com.github.manosbatsis.corbeans.spring.boot.corda.starter.test.AbstractCordaNetworkCapableIntegrationTest
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.async
 import org.junit.jupiter.api.AfterAll
@@ -69,6 +70,7 @@ abstract class AbstractSingleCordaNetworkIntegrationTest: AbstractCordaNetworkCa
     /**
      * Starts and maintains a network running in parallel with tests
      */
+    @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     private fun startNetworkAsync() = GlobalScope.async {
         super.networkContext{
             while (!finished) {

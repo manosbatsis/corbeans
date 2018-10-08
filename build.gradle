@@ -4,9 +4,11 @@ buildscript {
 		arrow_version = "0.7.3"
 		kotlin_version = '1.2.61'
 		kotlinx_coroutines_version = '0.26.0'
+
 		corda_release_group = 'net.corda'
 		corda_release_version = '3.2-corda'
 		corda_gradle_plugins_version = '3.1.0'
+
 		quasar_version = '0.7.9'
 		capsule_version = '1.0.1'
 		asm_version = '0.5.3'
@@ -21,6 +23,16 @@ buildscript {
 		guava_version = '21.0'
 
 		dependency_managemen_version ="1.0.6.RELEASE"
+
+		withoutKotlinRuntime = {
+			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-runtime'
+			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
+			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
+			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre7'
+			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre8'
+
+		}
 	}
 
 	repositories {
@@ -245,13 +257,13 @@ configure([
 		compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 		compile "com.fasterxml.jackson.module:jackson-module-kotlin"
 
-		compile "io.arrow-kt:arrow-core:$arrow_version"
-		compile "io.arrow-kt:arrow-syntax:$arrow_version"
-		compile "io.arrow-kt:arrow-typeclasses:$arrow_version"
-		compile "io.arrow-kt:arrow-data:$arrow_version"
-		compile "io.arrow-kt:arrow-instances-core:$arrow_version"
-		compile "io.arrow-kt:arrow-instances-data:$arrow_version"
-		kapt    "io.arrow-kt:arrow-annotations-processor:$arrow_version"
+		//compile "io.arrow-kt:arrow-core:$arrow_version"
+		//compile "io.arrow-kt:arrow-syntax:$arrow_version"
+		//compile "io.arrow-kt:arrow-typeclasses:$arrow_version"
+		//compile "io.arrow-kt:arrow-data:$arrow_version"
+		//compile "io.arrow-kt:arrow-instances-core:$arrow_version"
+		//compile "io.arrow-kt:arrow-instances-data:$arrow_version"
+		//kapt    "io.arrow-kt:arrow-annotations-processor:$arrow_version"
 
 		testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
 		testImplementation 'org.junit.jupiter:junit-jupiter-api'

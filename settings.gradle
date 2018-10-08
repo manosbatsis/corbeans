@@ -7,8 +7,6 @@ include "corbeans-corda-test"
 include 'corbeans-corda-webserver'
 include "corbeans-corda-workflows"
 
-include 'cordapp-example'
-
 include 'corbeans-spring-boot-corda'
 include 'corbeans-spring-boot-corda-autoconfigure'
 include 'corbeans-spring-boot-corda-security'
