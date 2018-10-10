@@ -20,7 +20,8 @@
 package com.github.manosbatsis.corbeans.cordapp.flow.proposal.simple
 
 import com.github.manosbatsis.corbeans.corda.test.MockNetworkFlowTest
-import com.github.manosbatsis.corbeans.cordapp.flow.proposal.simple.propose.ProposeFlow
+import com.github.manosbatsis.corbeans.cordapp.flow.proposal.simple.input.CreateProposalInput
+import com.github.manosbatsis.corbeans.cordapp.flow.proposal.simple.input.ResolveProposalInput
 import net.corda.core.toFuture
 import net.corda.core.utilities.getOrThrow
 import org.junit.jupiter.api.Test
@@ -42,8 +43,8 @@ class AccordanceWorkflowTest: MockNetworkFlowTest() {
         // Proposal submission by Alice
         // =============================
         val flow1 = aliceNode.startFlow(
-                ProposeFlow(
-                        ProposalInput(
+                CreateProposalFlow(
+                        CreateProposalInput(
                                 accordanceInputId,
                                 bob,
                                 "test"
@@ -83,9 +84,9 @@ class AccordanceWorkflowTest: MockNetworkFlowTest() {
         // Proposal approved by Bob
         // ==========================
         val flow2 = bobNode.startFlow(
-                CompleteFlow(latestFromB.ref, ProposalStatus.APPROVED))
+                ResolveProposalFlow(ResolveProposalInput(latestFromB.ref, ProposalStatus.APPROVED)))
         // wait for the flow to end
-        val completedRef = flow2.getOrThrow()
+        val outputState: ProposalState = flow2.getOrThrow().tx.outputStates.first() as ProposalState
         // wait for the vault updates to stabilise
         nodeAVaultUpdate.get()
         secondNodeBVaultUpdate.get()
@@ -99,12 +100,12 @@ class AccordanceWorkflowTest: MockNetworkFlowTest() {
         }
 
         // Confirm the state is as expected
-        assertEquals(ProposalStatus.APPROVED, completedRef.state.data.status)
-        assertEquals(accordanceInputId, completedRef.state.data.processId)
-        assertEquals(alice, completedRef.state.data.initiatingParty)
-        assertEquals(bob, completedRef.state.data.counterParty)
-        assertEquals(completedRef, finalFromA)
-        assertEquals(completedRef, finalFromB)
+        assertEquals(ProposalStatus.APPROVED, outputState.status)
+        assertEquals(accordanceInputId, outputState.processId)
+        assertEquals(alice, outputState.initiatingParty)
+        assertEquals(bob, outputState.counterParty)
+        assertEquals(outputState, finalFromA.state.data)
+        assertEquals(outputState, finalFromB.state.data)
     }
 }
 

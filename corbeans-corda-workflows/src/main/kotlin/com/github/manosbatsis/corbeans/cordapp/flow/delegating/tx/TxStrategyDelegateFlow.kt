@@ -163,7 +163,7 @@ abstract class TxStrategyDelegateFlow(
     }
 
     @Suspendable
-    fun addOutputState(stateAndContract: StateAndContract, txb: TransactionBuilder) {
+        fun addOutputState(stateAndContract: StateAndContract, txb: TransactionBuilder) {
         addOutputState(TransactionState(stateAndContract.state, stateAndContract.contract, config.notary), txb)
     }
 

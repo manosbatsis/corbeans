@@ -18,12 +18,14 @@ lazy val micrositeSettings = Seq(
   micrositeGitterChannel := false,
   micrositeHighlightTheme := "github",
   micrositeGithubToken := Option(System.getenv().get("GITHUB_TOKEN")),
-  micrositePushSiteWith := GitHub4s
+  micrositePushSiteWith := GitHub4s,
+  micrositeGithubToken := getEnvVar("GH_REPO_ACCESS_TOKEN")
 )
+
 
 lazy val docs = (project in file("docs"))
   .settings(moduleName := "docs")
   .settings(micrositeSettings: _*)
   .settings(noPublishSettings: _*)
   .enablePlugins(MicrositesPlugin)
-//.enablePlugins(TutPlugin)
+  .enablePlugins(TutPlugin)

@@ -50,7 +50,7 @@ open class NoCounterSignDistributionFlowCallStrategyDelegateFlow(
     override fun createFinalizedTransaction(notarizableTx: SignedTransaction): SignedTransaction {
         val finalizedTx = subFlow(FinalityFlow(
                 notarizableTx,
-                extraParticipants = serviceHub.wellKnownCounterParties(notarizableTx.tx.outputStates),
+                serviceHub.wellKnownCounterParties(notarizableTx.tx.outputStates),
                 FINALISING.childProgressTracker()))
         return finalizedTx
     }

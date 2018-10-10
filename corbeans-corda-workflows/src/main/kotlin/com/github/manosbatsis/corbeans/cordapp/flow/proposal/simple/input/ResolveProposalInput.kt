@@ -17,14 +17,15 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.cordapp.flow.proposal.simple
+package com.github.manosbatsis.corbeans.cordapp.flow.proposal.simple.input
 
-import net.corda.core.identity.Party
+import com.github.manosbatsis.corbeans.cordapp.flow.proposal.simple.ProposalStatus
+import net.corda.core.contracts.StateRef
 
 /**
  * Truly minimal status that just records a processId string and the parties involved.
  */
-data class ProposalInput(
-        val processId: String,
-        val counterParty: Party,
-        val context: Any)
+data class ResolveProposalInput(
+        val ref: StateRef,
+        val verdict: ProposalStatus
+)

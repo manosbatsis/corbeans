@@ -17,14 +17,12 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.cordapp.flow.proposal.simple.propose
+package com.github.manosbatsis.corbeans.cordapp.flow.proposal.simple
 
 import com.github.manosbatsis.corbeans.cordapp.flow.delegating.TxDelegatingFlow
 import com.github.manosbatsis.corbeans.cordapp.flow.delegating.tx.NoCounterSignDistributionFlowCallStrategyDelegateFlow
 import com.github.manosbatsis.corbeans.cordapp.flow.delegating.tx.TxStrategyDelegateFlow
-import com.github.manosbatsis.corbeans.cordapp.flow.proposal.simple.ProposalContract
-import com.github.manosbatsis.corbeans.cordapp.flow.proposal.simple.ProposalInput
-import com.github.manosbatsis.corbeans.cordapp.flow.proposal.simple.ProposalState
+import com.github.manosbatsis.corbeans.cordapp.flow.proposal.simple.input.CreateProposalInput
 import com.github.manosbatsis.corbeans.cordapp.model.TransactionItems
 import net.corda.core.contracts.CommandData
 
@@ -33,8 +31,8 @@ import net.corda.core.contracts.CommandData
  * The protocol then sends a copy to the other node(S). We don't require the other party to sign
  * as their approval/rejection is to follow.
  */
-class ProposeFlow(
-        private val proposalInput: ProposalInput
+class CreateProposalFlow(
+        private val proposalInput: CreateProposalInput
 ) : TxDelegatingFlow<NoCounterSignDistributionFlowCallStrategyDelegateFlow>() {
 
     override val txDelegateType =
@@ -45,7 +43,7 @@ class ProposeFlow(
             ProposalContract::class.java.canonicalName
 
     /** The [CommandData] appropriate for the given contract and state */
-    override val commandData = ProposalContract.Commands.Issue()
+    override val commandData = ProposalContract.Commands.Create()
 
     /** The transaction items used by the [TxStrategyDelegateFlow] */
     override fun getTransactionItems(): TransactionItems {

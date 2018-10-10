@@ -40,17 +40,22 @@ import net.corda.core.utilities.seconds
 abstract class TxDelegatingFlow<TX : TxStrategyDelegateFlow> : BaseFlowLogic<SignedTransaction>() {
 
     companion object {
-        object INITIALISING : ProgressTracker.Step("Initialize.")
-        object INPUT_CONVERT : ProgressTracker.Step("Convert flow input.")
-        object TRANSACTION_CONFIG : ProgressTracker.Step("Create transaction configuration.")
-        object TRANSACTION_DELEGATE : ProgressTracker.Step("Create transaction delegate.")
-        object TRANSACTION_EXEC : ProgressTracker.Step("Execute transaction.")
+        object INITIALISING : ProgressTracker.Step("Initializing.")
+        object INPUT_VALIDATE : ProgressTracker.Step("Validating flow input.")
+        object INPUT_CONVERT : ProgressTracker.Step("Converting flow input.")
+        object TRANSACTION_CONFIG : ProgressTracker.Step("Creating transaction configuration.")
+        object TRANSACTION_CREATE_DELEGATE : ProgressTracker.Step("Creating transaction delegate.")
+        object TRANSACTION_EXEC : ProgressTracker.Step("Executing transaction.")
 
-        fun tracker() = ProgressTracker(INITIALISING, INPUT_CONVERT, TRANSACTION_CONFIG, TRANSACTION_DELEGATE, TRANSACTION_EXEC)
+        fun tracker() = ProgressTracker(INITIALISING, INPUT_VALIDATE, INPUT_CONVERT, TRANSACTION_CONFIG, TRANSACTION_CREATE_DELEGATE, TRANSACTION_EXEC)
 
     }
 
     override val progressTracker: ProgressTracker = tracker()
+    init{
+        progressTracker.currentStep = INITIALISING
+    }
+
     abstract val txDelegateType: Class<TX>
     /** The [CommandData] to be used in the transaction */
     abstract val commandData: CommandData
@@ -59,6 +64,9 @@ abstract class TxDelegatingFlow<TX : TxStrategyDelegateFlow> : BaseFlowLogic<Sig
 
     /** The transaction items to be used by the [TxStrategyDelegateFlow] */
     abstract fun getTransactionItems(): TransactionItems
+
+    /** Validate input data */
+    open fun validateInput() {/* default is NO_OP */}
 
     /** The notary to be used in the transaction */
     open fun getNotary(): Party = serviceHub.getFirstNotary()
@@ -74,7 +82,8 @@ abstract class TxDelegatingFlow<TX : TxStrategyDelegateFlow> : BaseFlowLogic<Sig
     @Suspendable
     override fun call(): SignedTransaction {
 
-        progressTracker.currentStep = INITIALISING
+        progressTracker.currentStep = INPUT_VALIDATE
+        validateInput()
 
         progressTracker.currentStep = INPUT_CONVERT
         val transactionItems = this.getTransactionItems()
@@ -88,7 +97,7 @@ abstract class TxDelegatingFlow<TX : TxStrategyDelegateFlow> : BaseFlowLogic<Sig
                 timeWindow = getTimeWindow()
         )
 
-        progressTracker.currentStep = TRANSACTION_DELEGATE
+        progressTracker.currentStep = TRANSACTION_CREATE_DELEGATE
         val txDelegateFlow: TX = createTxDelegate(config)
 
         progressTracker.currentStep = TRANSACTION_EXEC
