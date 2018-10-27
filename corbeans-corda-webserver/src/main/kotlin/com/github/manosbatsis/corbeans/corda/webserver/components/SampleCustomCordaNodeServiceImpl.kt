@@ -23,7 +23,9 @@ import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeServiceImpl
 import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeRpcConnection
 
 
-class SampleCustomCordaNodeServiceImpl(override val nodeRpcConnection: NodeRpcConnection) : CordaNodeServiceImpl(nodeRpcConnection) {
+class SampleCustomCordaNodeServiceImpl(
+        nodeRpcConnection: NodeRpcConnection
+) : CordaNodeServiceImpl(nodeRpcConnection) {
 
     /** dummy method */
     fun dummy(): Boolean = true

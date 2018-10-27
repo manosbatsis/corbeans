@@ -19,6 +19,7 @@
  */
 package com.github.manosbatsis.corbeans.corda.webserver
 
+import com.github.manosbatsis.corbeans.corda.webserver.components.SampleCustomCordaNodeServiceImpl
 import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeService
 import com.github.manosbatsis.corda.webserver.spring.AbstractSingleCordaNetworkIntegrationTest
 import net.corda.core.identity.Party
@@ -46,20 +47,32 @@ class MultiNodeIntegrationTest : AbstractSingleCordaNetworkIntegrationTest() {
     @Autowired
     lateinit var restTemplate: TestRestTemplate
 
+    // autowire all created services, mapped by name
     @Autowired
     lateinit var services: Map<String, CordaNodeService>
 
+    // autowire a services for a specific node
     @Autowired
     @Qualifier("partyANodeService")
     lateinit var service: CordaNodeService
 
+    // autowire a unique custom service
+    @Autowired
+    lateinit var customCervice: SampleCustomCordaNodeServiceImpl
+
     @Test
     fun `Can inject services`() {
-        System.out.println("services: "+ services.keys)
         logger.info("services: {}", services)
         assertNotNull(this.services)
         assertNotNull(this.service)
         assertTrue(this.services.keys.isNotEmpty())
+    }
+
+    @Test
+    fun `Can inject custom service`() {
+        logger.info("customCervice: {}", customCervice)
+        assertNotNull(this.customCervice)
+        assertTrue(this.customCervice.dummy())
     }
 
     @Test

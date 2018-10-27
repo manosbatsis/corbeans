@@ -2,28 +2,14 @@ options:
   - title: Introduction
     url: docs/index.html
 
-  - title: Spring-Boot
+  - title: Spring-Boot Starter
     url: docs/spring-boot-starter.html
-    menu_section: spring-boot
 
-    nested_options:
-        - title: Starter Dependency
-          url: docs/spring-boot/starter.html
-        - title: Node Auth
-          url: docs/spring-boot/node-auth.html
-        - title: Integration Testing
-          url: docs/spring-boot/integration-testing.html
-        - title: Webserver
-          url: docs/spring-boot/webserver.html
-
-  - title: Flows Library
-    url: docs/flows-library.html
+  - title: Testing
+    url: docs/testing.html
 
   - title: Webserver
     url: docs/spring-boot-webserver.html
 
   - title: Corda Auth
     url: docs/sprint-boot-corda-auth.html
-
-  - title: Integration Testing
-    url: docs/integration-testing.html

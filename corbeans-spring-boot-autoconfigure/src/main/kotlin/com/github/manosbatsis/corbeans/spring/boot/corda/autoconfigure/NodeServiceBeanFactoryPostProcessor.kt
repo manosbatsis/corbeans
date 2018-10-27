@@ -20,6 +20,7 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure
 
 
+import com.github.manosbatsis.corbeans.spring.boot.corda.BaseCordaNodeServiceImpl
 import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeServiceImpl
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
 import com.github.manosbatsis.corbeans.spring.boot.corda.util.EagerNodeRpcConnection
@@ -62,7 +63,7 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
     }
 
     /**
-     * Create and register a CordaNodeService bean per node according to configuration
+     * Create and register a [CordaNodeService] bean per node according to configuration
      */
     @Throws(BeansException::class)
     override fun postProcessBeanFactory(beanFactory: ConfigurableListableBeanFactory) {
@@ -75,7 +76,6 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
             // register RPC connection wrapper bean
             val rpcConnectionBeanName = "${nodeName}RpcConnection";
             val rpcConnectionBean = BeanDefinitionBuilder
-                    // TODO: make service class configurable
                     .rootBeanDefinition(if(nodeParams.lazy) LazyNodeRpcConnection::class.java else EagerNodeRpcConnection::class.java)
                     .setScope(SCOPE_SINGLETON)
                     .addConstructorArgValue(nodeParams)
@@ -86,8 +86,8 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
 
             // verify node service type
             val serviceType = Class.forName(nodeParams.primaryServiceType)
-            if(!CordaNodeServiceImpl::class.java.isAssignableFrom(serviceType)){
-                throw IllegalArgumentException("Provided service type for node ${nodeName} does not extend CordaNodeServiceImpl")
+            if(!BaseCordaNodeServiceImpl::class.java.isAssignableFrom(serviceType)){
+                throw IllegalArgumentException("Provided service type for node ${nodeName} does not extend BaseCordaNodeServiceImpl or CordaNodeServiceImpl")
             }
             // register Node service
             val nodeServiceBeanName = "${nodeName}NodeService";
@@ -103,7 +103,7 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
     }
 
     /**
-     * Parse spring-boot config files to a CordaNodesProperties instance
+     * Parse spring-boot config files to a [CordaNodesProperties] instance
      */
     fun buildCordaNodesProperties(environment: ConfigurableEnvironment): CordaNodesProperties {
         val sources = ConfigurationPropertySources.from(environment.propertySources)

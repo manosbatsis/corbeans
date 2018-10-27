@@ -4,6 +4,7 @@ buildscript {
 		arrow_version = "0.7.3"
 		kotlin_version = '1.1.60'
 		kotlinx_coroutines_version = '0.30.2'
+		dokka_version = '0.9.17'
 
 		corda_release_group = 'net.corda'
 		corda_release_version = '3.3-corda'
@@ -55,6 +56,7 @@ buildscript {
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 		classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
 		classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlin_version"
+		classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
 
 		// corda plugins
 		classpath "net.corda.plugins:publish-utils:$corda_gradle_plugins_version"

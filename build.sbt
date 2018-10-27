@@ -10,16 +10,16 @@ lazy val noPublishSettings = Seq(
 
 lazy val micrositeSettings = Seq(
   micrositeName := "corbeans",
-  micrositeDescription := "Corbeans Documentation",
+  micrositeDescription := "Corbeans: Corda integration for Spring-Boot apps",
   micrositeBaseUrl := "corbeans",
   micrositeDocumentationUrl := "/corbeans/docs/",
   micrositeGithubOwner := "manosbatsis",
   micrositeGithubRepo := "corbeans",
   micrositeGitterChannel := false,
   micrositeHighlightTheme := "github",
-  micrositeGithubToken := Option(System.getenv().get("GITHUB_TOKEN")),
-  micrositePushSiteWith := GitHub4s,
-  micrositeGithubToken := getEnvVar("GH_REPO_ACCESS_TOKEN")
+  //micrositeGithubToken := Option(System.getenv().get("GITHUB_TOKEN")),
+  //micrositePushSiteWith := GitHub4s,
+  //micrositeGithubToken := getEnvVar("GH_REPO_ACCESS_TOKEN")
 )
 
 
