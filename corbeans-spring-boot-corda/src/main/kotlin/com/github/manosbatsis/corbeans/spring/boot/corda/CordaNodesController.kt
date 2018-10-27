@@ -149,11 +149,11 @@ open class CordaNodesController {
             resp.contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE
             if (subPath.isEmpty()) {
                 resp.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"$hash.zip\"")
-               attachment.use { it.copyTo(resp.outputStream) }
+               attachment.copyTo(resp.outputStream)
             } else {
                 val filename = subPath.split('/').last()
                 resp.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"$filename\"")
-                JarInputStream(attachment).use { it.extractFile(subPath, resp.outputStream) }
+                JarInputStream(attachment).extractFile(subPath, resp.outputStream)
             }
 
             // Closing the output stream commits our response. We cannot change the status code after this.

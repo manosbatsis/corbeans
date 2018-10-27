@@ -32,8 +32,8 @@ import org.springframework.context.annotation.Configuration
  * Auto-configures a CordaNodeService for each Corda Node
  */
 @Configuration
-@ComponentScan(basePackages = arrayOf("com.github.manosbatsis.corda.spring"))
-open class CordaNodesAutoConfiguration {
+@ComponentScan(basePackages = arrayOf("com.github.manosbatsis.corbeans"))
+class CordaNodesAutoConfiguration {
 
     companion object {
         private val logger = LoggerFactory.getLogger(CordaNodesAutoConfiguration::class.java)
@@ -42,6 +42,7 @@ open class CordaNodesAutoConfiguration {
         @ConditionalOnMissingBean(NodeServiceBeanFactoryPostProcessor::class)
         @JvmStatic
         fun nodeServiceBeanFactoryPostProcessor(): NodeServiceBeanFactoryPostProcessor {
+            logger.debug("Creating a NodeServiceBeanFactoryPostProcessor")
             return NodeServiceBeanFactoryPostProcessor()
         }
     }

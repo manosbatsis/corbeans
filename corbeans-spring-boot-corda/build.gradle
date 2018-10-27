@@ -2,25 +2,20 @@
 
 dependencies {
 
-	compile("org.springframework.boot:spring-boot:$spring_boot_version")
 	compile("org.springframework.boot:spring-boot-autoconfigure:$spring_boot_version")
 
 	compile group: 'org.springframework', name: 'spring-context', version:spring_version
 	compile group: 'org.springframework', name: 'spring-beans', version:spring_version
 	compile group: 'org.springframework', name: 'spring-web', version:spring_version
 
-	//compile group: 'org.springframework.boot', name: 'spring-boot', version:spring_boot_version
-	//compile group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: spring_boot_version
-
-	//compile group: 'net.corda', name: 'corda', version:corda_release_version
-    //compile group: 'net.corda', name: 'corda-core', version:corda_release_version
-    compile group: 'net.corda', name: 'corda-jackson', version:corda_release_version
-    compile group: 'net.corda', name: 'corda-rpc', version:corda_release_version
-
-    //compile group: 'org.apache.commons', name: 'commons-compress', version:'1.16.1'
-
-	// Guava: Google test library (collections test suite)
-	//testCompile "com.google.guava:guava-testlib:$guava_version"
-
+	compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
+	
+	compile "$corda_release_group:corda-jackson:$corda_release_version"
+	compile "$corda_release_group:corda-rpc:$corda_release_version"
+	
+	compile "org.apache.activemq:artemis-core-client:${artemis_version}"
+	compile "org.apache.activemq:artemis-commons:${artemis_version}"
+	
 	compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
+
 }

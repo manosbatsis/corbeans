@@ -5,6 +5,7 @@ dependencies {
 	compile project(":corbeans-spring-boot-corda")
 
 	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_coroutines_version"
+	
 	implementation 'org.junit.jupiter:junit-jupiter-api'
 	runtimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 
@@ -20,7 +21,7 @@ dependencies {
 
 	compile "$corda_release_group:corda-finance:$corda_release_version"
 	compile "$corda_release_group:corda-node-driver:$corda_release_version"
-	compile "$corda_release_group:corda-finance:$corda_release_version"
+	compile('org.springframework.boot:spring-boot-starter-test')
 
 
 }

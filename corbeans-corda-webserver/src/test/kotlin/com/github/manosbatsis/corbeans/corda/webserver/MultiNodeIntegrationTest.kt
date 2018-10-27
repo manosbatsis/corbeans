@@ -36,7 +36,7 @@ import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(SpringExtension::class)
-class MultiNodeIntegrationTest() : AbstractSingleCordaNetworkIntegrationTest() {
+class MultiNodeIntegrationTest : AbstractSingleCordaNetworkIntegrationTest() {
 
     companion object {
         private val logger = LoggerFactory.getLogger(MultiNodeIntegrationTest::class.java)
@@ -55,6 +55,8 @@ class MultiNodeIntegrationTest() : AbstractSingleCordaNetworkIntegrationTest() {
 
     @Test
     fun `Can inject services`() {
+        System.out.println("services: "+ services.keys)
+        logger.info("services: {}", services)
         assertNotNull(this.services)
         assertNotNull(this.service)
         assertTrue(this.services.keys.isNotEmpty())

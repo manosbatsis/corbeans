@@ -53,7 +53,7 @@ Add the starter dependency
 
 ```groovy
 dependencies {
-	implementation 'com.github.manosbatsis.corda-spring:corbeans-spring-boot-corda-starter:VERSION'
+	implementation 'com.github.manosbatsis.corda-spring:corbeans-spring-boot-starter:VERSION'
 }
 ```
 
@@ -75,7 +75,7 @@ Add the starter dependency
 ```xml
 <dependency>
 	<groupId>com.github.manosbatsis.corda-spring</groupId>
-	<artifactId>corbeans-spring-boot-corda-starter</artifactId>
+	<artifactId>corbeans-spring-boot-starter</artifactId>
 	<version>VERSION</version>
 </dependency>
 ```

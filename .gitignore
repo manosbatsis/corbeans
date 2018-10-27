@@ -89,3 +89,4 @@ target/
 build/
 /project/target/
 /project/project/
+/corbeans-corda-webserver/logs/

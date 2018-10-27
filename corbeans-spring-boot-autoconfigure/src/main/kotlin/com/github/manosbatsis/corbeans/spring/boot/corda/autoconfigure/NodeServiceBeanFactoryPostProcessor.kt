@@ -46,18 +46,19 @@ import org.springframework.core.env.Environment
 @Order
 open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, EnvironmentAware {
 
-    protected lateinit var cordaNodesProperties: CordaNodesProperties
-
-
     companion object {
         private val logger = LoggerFactory.getLogger(NodeServiceBeanFactoryPostProcessor::class.java)
     }
+
+    protected lateinit var cordaNodesProperties: CordaNodesProperties
+
 
     /**
      * Parse spring-boot config manually since it's not available yet
      */
     override fun setEnvironment(env: Environment) {
         this.cordaNodesProperties = this.buildCordaNodesProperties(env as ConfigurableEnvironment)
+        logger.debug("Loaded corda nodes config: {}", cordaNodesProperties)
     }
 
     /**
@@ -107,6 +108,6 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
     fun buildCordaNodesProperties(environment: ConfigurableEnvironment): CordaNodesProperties {
         val sources = ConfigurationPropertySources.from(environment.propertySources)
         val binder = Binder(sources)
-        return binder.bind("spring-corda", CordaNodesProperties::class.java).orElseCreate(CordaNodesProperties::class.java)
+        return binder.bind("corbeans", CordaNodesProperties::class.java).orElseCreate(CordaNodesProperties::class.java)
     }
 }

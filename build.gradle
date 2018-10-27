@@ -2,11 +2,11 @@
 buildscript {
 	ext {
 		arrow_version = "0.7.3"
-		kotlin_version = '1.2.61'
-		kotlinx_coroutines_version = '0.26.0'
+		kotlin_version = '1.1.60'
+		kotlinx_coroutines_version = '0.30.2'
 
 		corda_release_group = 'net.corda'
-		corda_release_version = '3.2-corda'
+		corda_release_version = '3.3-corda'
 		corda_gradle_plugins_version = '3.1.0'
 
 		quasar_version = '0.7.9'
@@ -15,11 +15,12 @@ buildscript {
 		junit_version = '4.12'
 		slf4j_version = '1.7.25'
 
-		spring_boot_version = '2.0.4.RELEASE'
-		spring_version = '5.0.8.RELEASE'
+		spring_boot_version = '2.0.6.RELEASE'
+		springBootVersion = '2.0.6.RELEASE'
+		spring_version = '5.0.10.RELEASE'
 
 		artemis_version = "2.2.0"
-		jackson_version = "2.9.2"
+		jackson_version = "2.9.5"
 		guava_version = '21.0'
 
 		dependency_managemen_version ="1.0.6.RELEASE"
@@ -31,7 +32,6 @@ buildscript {
 			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
 			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre7'
 			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre8'
-
 		}
 	}
 
@@ -46,6 +46,7 @@ buildscript {
 	}
 
 	dependencies {
+
 		// spring plugins
 		classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version"
 		classpath "io.spring.gradle:dependency-management-plugin:$dependency_managemen_version"
@@ -64,7 +65,6 @@ buildscript {
 
 		// plugins for asciidoctor
 		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.6'
-
 	}
 }
 
@@ -75,8 +75,6 @@ plugins {
 	// Version 1.0.2 of this plugin uses capsule:1.0.1
 	id "us.kirchmeier.capsule" version "1.0.2"
 	id "com.github.hierynomus.license" version "0.14.0"
-
-
 }
 
 repositories {
@@ -88,7 +86,7 @@ repositories {
 	maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
 }
 
-allprojects {
+subprojects {
 	repositories {
 		mavenLocal()
 		jcenter()
@@ -101,40 +99,125 @@ allprojects {
 	apply plugin: 'java'
 	sourceCompatibility = JavaVersion.VERSION_1_8
 	targetCompatibility = JavaVersion.VERSION_1_8
+
 	apply plugin: 'kotlin'
-	apply plugin: 'kotlin-allopen'
+	compileKotlin {
+		kotlinOptions {
+			freeCompilerArgs = ["-Xjsr305=strict"]
+			jvmTarget = "1.8"
+			javaParameters = true   // Useful for reflection.
+		}
+	}
+	compileTestKotlin {
+		kotlinOptions {
+			freeCompilerArgs = ["-Xjsr305=strict"]
+			jvmTarget = "1.8"
+			javaParameters = true   // Useful for reflection.
+		}
+	}
+	
+	apply plugin: 'kotlin-spring'
+	apply plugin: 'eclipse'
+	apply plugin: 'io.spring.dependency-management'
+
+	apply plugin: 'maven-publish'
 	apply plugin: 'idea'
 	apply plugin: 'license'
-	apply plugin: 'kotlin-kapt' //optional
+	//apply plugin: 'kotlin-kapt' //optional
 
 
 	group = 'com.github.manosbatsis.corbeans'
 	version = '0.0.1-SNAPSHOT'
+	
+	publishing {
+		publications {
+			maven(MavenPublication) {
+				from components.java
+				groupId rootProject.group
+				artifactId project.name
+				version rootProject.version
+			}
+		}
+	}
 
+	tasks.withType(JavaCompile) {
+		options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-Xlint:-options" << "-parameters"
+	}
+	
+	task sourcesJar(type: Jar, dependsOn: classes) {
+		classifier = 'sources'
+		from sourceSets.main.allSource
+	}
+
+	test {
+		// stop gradle from swallowing stdout and stderr
+		testLogging {
+			outputs.upToDateWhen {false}
+			showStandardStreams = true
+		}
+
+		// Run unit tests using junit5
+		useJUnitPlatform {
+			exclude '**/*IntegrationTest.class'
+		}
+	}
+
+	// Run integration tests using junit5
+	task integrationTest(type: Test) {
+		useJUnitPlatform {
+			include '**/*IntegrationTest.class'
+
+		}
+	}
+	
 	configurations {
 		all {
+			exclude group: 'junit', module: 'junit'
+			//exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre7'
+			//exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre8'
+			//exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+			//exclude group: 'commons-logging', module: 'commons-logging'
+			//exclude group: 'ch.qos.logback', module: 'logback-classic'
+			//exclude group: 'ch.qos.logback', module: 'logback-core'
+			//exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j-impl'
 			resolutionStrategy {
-				// Force dependencies to use the same version of Kotlin as Corda.
-				force "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-				force "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-				force "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-				force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-				force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-				force "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-
+				eachDependency { details ->
+					// Force our version of artemis
+					if (details.requested.group == 'org.apache.activemq' && details.requested.name.startsWith('artemis-')) {
+						details.useVersion artemis_version
+					}
+					// Force our version of jackson
+					else if (details.requested.group.startsWith('com.fasterxml.jackson')) {
+						details.useVersion jackson_version
+					}
+				}
 				// Force dependencies to use the same version of Guava as Corda.
 				force "com.google.guava:guava:$guava_version"
 
 			}
 		}
-		compile {
-			// We want to use SLF4J's version of these bindings: jcl-over-slf4j
-			// Remove any transitive dependency on Apache's version.
-			exclude group: 'commons-logging', module: 'commons-logging'
 
-			// Netty-All is an uber-jar which contains every Netty module.
-			// Exclude it to force us to use the individual Netty modules instead.
-			//exclude group: 'io.netty', module: 'netty-all'
+
+		dependencyManagement {
+			imports {
+				mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+			}
+		}
+
+		dependencies{
+
+			implementation('org.springframework.boot:spring-boot-starter')
+			implementation("org.jetbrains.kotlin:kotlin-stdlib-jre8")
+			implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+			compileOnly('org.springframework.boot:spring-boot-configuration-processor')
+			
+			testImplementation('org.springframework.boot:spring-boot-starter-test')
+
+			testCompile("org.jetbrains.kotlin:kotlin-test")
+			testImplementation('org.junit.jupiter:junit-jupiter-api')
+			testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
+
 		}
 	}
 
@@ -149,131 +232,3 @@ allprojects {
 		strictCheck true
 	}
 }
-
-configure([
-		project(':corbeans-corda-workflows'),
-		project(':corbeans-commons'),
-		project(':corbeans-spring-boot-corda'),
-		project(':corbeans-spring-boot-corda-starter-test'),
-		project(':corbeans-corda-test'),
-		project(':corbeans-spring-boot-corda-autoconfigure'),
-		project(':corbeans-spring-boot-corda-starter'),
-		project(':corbeans-corda-webserver')]) {
-
-	apply plugin: 'kotlin-spring'
-	//apply plugin: "kotlin-allopem"
-	apply plugin: "kotlin-noarg"
-	apply plugin: "io.spring.dependency-management"
-
-	apply plugin: 'maven-publish'
-
-	publishing {
-		publications {
-			maven(MavenPublication) {
-				from components.java
-				groupId rootProject.group
-				artifactId project.name
-				version rootProject.version
-			}
-		}
-	}
-	dependencyManagement {
-		imports {
-			mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
-		}
-	}
-
-	tasks.withType(JavaCompile) {
-		options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-Xlint:-options" << "-parameters"
-	}
-	tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-		kotlinOptions {
-			languageVersion = "1.1"
-			apiVersion = "1.1"
-			freeCompilerArgs = ["-Xjsr305=strict"]
-			jvmTarget = "1.8"
-			javaParameters = true   // Useful for reflection.
-		}
-	}
-
-	task sourcesJar(type: Jar, dependsOn: classes) {
-		classifier = 'sources'
-		from sourceSets.main.allSource
-	}
-
-	task javadocJar(type: Jar, dependsOn: javadoc) {
-		classifier = 'javadoc'
-		from javadoc.destinationDir
-	}
-
-	configurations {
-		all*.exclude group: 'junit', module: 'junit'
-
-		// We want to use SLF4J's version of these bindings: jcl-over-slf4j
-		// Remove any transitive dependency on Apache's version.
-		all*.exclude group: 'commons-logging', module: 'commons-logging'
-		all*.exclude group: 'ch.qos.logback', module: 'logback-classic'
-		all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-		all {
-			exclude group: 'ch.qos.logback', module: 'logback-classic'
-			exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-			resolutionStrategy {
-				eachDependency { details ->
-					// Force our version of artemis
-					if (details.requested.group == 'org.apache.activemq' && details.requested.name.startsWith('artemis-')) {
-						details.useVersion artemis_version
-					}
-				}
-			}
-		}
-		compile {
-			// Netty-All is an uber-jar which contains every Netty module.
-			// Exclude it to force us to use the individual Netty modules instead.
-			//exclude group: 'io.netty', module: 'netty-all'
-		}
-
-	}
-
-	// Run unit tests using junit5
-	test {
-		useJUnitPlatform {
-			exclude '**/*IntegrationTest.class'
-		}
-	}
-
-	// Run integration tests using junit5
-	task integrationTest(type: Test) {
-		useJUnitPlatform {
-			include '**/*IntegrationTest.class'
-
-		}
-	}
-
-	dependencies{
-		compile group: 'org.slf4j', name: 'slf4j-simple', version: "$slf4j_version"
-
-		compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-		compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Required for Kotlin integration
-		compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-		compile "com.fasterxml.jackson.module:jackson-module-kotlin"
-
-		//compile "io.arrow-kt:arrow-core:$arrow_version"
-		//compile "io.arrow-kt:arrow-syntax:$arrow_version"
-		//compile "io.arrow-kt:arrow-typeclasses:$arrow_version"
-		//compile "io.arrow-kt:arrow-data:$arrow_version"
-		//compile "io.arrow-kt:arrow-instances-core:$arrow_version"
-		//compile "io.arrow-kt:arrow-instances-data:$arrow_version"
-		//kapt    "io.arrow-kt:arrow-annotations-processor:$arrow_version"
-
-		testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-		testImplementation 'org.junit.jupiter:junit-jupiter-api'
-		testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-
-	}
-}
-
-
-//jar {
-//	// Prevent the root project from building an unwanted dummy jar.
-//	enabled = false
-//}

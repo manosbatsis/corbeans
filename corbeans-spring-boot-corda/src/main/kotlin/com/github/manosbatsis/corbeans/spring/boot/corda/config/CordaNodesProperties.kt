@@ -27,10 +27,10 @@ import org.springframework.stereotype.Component
  * Configuration jpa for component registration per Corda Node RPC connection
  */
 @Component
-@ConfigurationProperties(prefix = "spring-corda")
-open class CordaNodesProperties {
+@ConfigurationProperties(prefix = "corbeans")
+class CordaNodesProperties {
 
-    open lateinit var nodes: Map<String, NodeParams>
+    var nodes: Map<String, NodeParams> = mutableMapOf()
 
 
 }
