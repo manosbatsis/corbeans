@@ -79,6 +79,8 @@ plugins {
 	id "com.github.hierynomus.license" version "0.14.0"
 }
 
+apply plugin: 'org.jetbrains.dokka'
+
 repositories {
 	mavenLocal()
 	jcenter()
@@ -233,4 +235,36 @@ subprojects {
 		}
 		strictCheck true
 	}
+}
+
+configurations {
+	dokkapath
+	dokkapath.description = "dokka project classpath"
+}
+
+dependencies {
+	// TODO: Get Android version from Dependencies.kt
+	dokkapath fileTree (include: ['*.jar'])
+}
+
+task dokka (type: org.jetbrains.dokka.gradle.DokkaTask, overwrite: true) {
+	moduleName = "$rootProject.name"
+	outputDirectory = "$buildDir/dokka"
+	outputFormat = "html"
+	processConfigurations = []
+
+	sourceDirs = files(subprojects.collect {
+		p ->
+
+			def path = new File(p.projectDir, "/src/main/kotlin")
+
+			def relativePath = rootDir.toPath().relativize(path.toPath()).toString()
+			linkMapping {
+				dir = path
+				url = "https://....../blob/master/$relativePath"
+				suffix = "#L"
+			}
+
+			return path
+	})
 }

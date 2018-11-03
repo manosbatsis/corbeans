@@ -24,7 +24,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
 
 /**
- * Configuration jpa for component registration per Corda Node RPC connection
+ * Corda nodes configuration
  */
 @Component
 @ConfigurationProperties(prefix = "corbeans")
