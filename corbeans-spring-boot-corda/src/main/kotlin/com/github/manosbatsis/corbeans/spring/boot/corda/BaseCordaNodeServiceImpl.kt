@@ -21,10 +21,14 @@ package com.github.manosbatsis.corbeans.spring.boot.corda
 
 //import org.springframework.messaging.simp.SimpMessagingTemplate
 import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeRpcConnection
+import net.corda.core.contracts.ContractState
+import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.identity.Party
+import net.corda.core.messaging.vaultQueryBy
 import net.corda.core.node.services.vault.*
 import org.slf4j.LoggerFactory
+import java.io.InputStream
 import java.time.LocalDateTime
 import java.time.ZoneId
 
@@ -73,6 +77,22 @@ open class BaseCordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnectio
     override fun serverTime(): LocalDateTime {
         return LocalDateTime.ofInstant(nodeRpcConnection.proxy.currentNodeTime(), ZoneId.of("UTC"))
     }
+
+    override fun addresses() = nodeRpcConnection.proxy.nodeInfo().addresses
+
+    override fun identities() = nodeRpcConnection.proxy.nodeInfo().legalIdentities
+
+    override fun platformVersion() = nodeRpcConnection.proxy.nodeInfo().platformVersion
+
+    override fun notaries() = nodeRpcConnection.proxy.notaryIdentities()
+
+    override fun flows() = nodeRpcConnection.proxy.registeredFlows()
+
+    override fun states() = nodeRpcConnection.proxy.vaultQueryBy<ContractState>().states
+
+
+    override fun openArrachment(hash: String): InputStream = this.openArrachment(SecureHash.parse(hash))
+    override fun openArrachment(hash: SecureHash): InputStream = nodeRpcConnection.proxy.openAttachment(hash)
 
 
 }

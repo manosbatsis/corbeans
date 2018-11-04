@@ -19,7 +19,12 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda
 
+import net.corda.core.contracts.ContractState
+import net.corda.core.contracts.StateAndRef
+import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.Party
+import net.corda.core.utilities.NetworkHostAndPort
+import java.io.InputStream
 import java.time.LocalDateTime
 
 /**
@@ -39,4 +44,12 @@ interface BaseCordaNodeService {
 
     fun serverTime(): LocalDateTime
 
+    fun states(): List<StateAndRef<ContractState>>
+    fun flows(): List<String>
+    fun notaries(): List<Party>
+    fun platformVersion(): Int
+    fun identities(): List<Party>
+    fun addresses(): List<NetworkHostAndPort>
+    fun openArrachment(hash: SecureHash): InputStream
+    fun openArrachment(hash: String): InputStream
 }

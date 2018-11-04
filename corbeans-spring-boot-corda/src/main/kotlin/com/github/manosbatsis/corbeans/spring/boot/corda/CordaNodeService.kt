@@ -30,12 +30,4 @@ import java.io.InputStream
  *  Basic interface for RPC-based node services
  */
 interface CordaNodeService: BaseCordaNodeService {
-    fun states(): List<StateAndRef<ContractState>>
-    fun flows(): List<String>
-    fun notaries(): List<Party>
-    fun platformVersion(): Int
-    fun identities(): List<Party>
-    fun addresses(): List<NetworkHostAndPort>
-    fun openArrachment(hash: SecureHash): InputStream
-    fun openArrachment(hash: String): InputStream
 }

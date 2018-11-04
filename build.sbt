@@ -10,7 +10,7 @@ lazy val noPublishSettings = Seq(
 
 lazy val micrositeSettings = Seq(
   micrositeName := "corbeans",
-  micrositeDescription := "Corbeans: Corda integration for Spring-Boot",
+  micrositeDescription := "Corda integration for Spring-Boot",
   micrositeBaseUrl := "corbeans",
   micrositeDocumentationUrl := "/corbeans/docs/",
   micrositeGithubOwner := "manosbatsis",

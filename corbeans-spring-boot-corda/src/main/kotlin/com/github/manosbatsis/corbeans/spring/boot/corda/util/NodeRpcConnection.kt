@@ -27,17 +27,18 @@ import java.util.concurrent.TimeUnit
 
 
 /**
- * Wraps a Corda Node RPC connection proxy
+ * Wraps a Corda Node RPC connection
  */
-interface NodeRpcConnection {
+abstract class NodeRpcConnection(val nodeParams: NodeParams) {
 
     companion object {
         private val logger = LoggerFactory.getLogger(NodeRpcConnection::class.java)
     }
 
-    val proxy: CordaRPCOps
 
-    fun createProxy(nodeParams: NodeParams): CordaRPCOps {
+    abstract val proxy: CordaRPCOps
+
+    fun createProxy(): CordaRPCOps {
         var created: CordaRPCOps? = null
         var i = 0;
         while (created == null) {

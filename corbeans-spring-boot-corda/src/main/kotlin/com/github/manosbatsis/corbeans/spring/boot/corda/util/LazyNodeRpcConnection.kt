@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory
  * @property proxy The RPC proxy.
  */
 open class LazyNodeRpcConnection(
-        nodeParams: NodeParams): NodeRpcConnection {
+        nodeParams: NodeParams): NodeRpcConnection(nodeParams) {
 
     companion object {
         private val logger = LoggerFactory.getLogger(LazyNodeRpcConnection::class.java)
@@ -37,8 +37,7 @@ open class LazyNodeRpcConnection(
 
     /** Provides lazy access to an identity service */
     override val proxy: CordaRPCOps by lazy {
-        createProxy(nodeParams)
+        createProxy()
     }
-
 
 }

@@ -43,22 +43,6 @@ open class CordaNodeServiceImpl(override val nodeRpcConnection: NodeRpcConnectio
         private val logger = LoggerFactory.getLogger(CordaNodeServiceImpl::class.java)
     }
 
-    override fun addresses() = nodeRpcConnection.proxy.nodeInfo().addresses
-
-    override fun identities() = nodeRpcConnection.proxy.nodeInfo().legalIdentities
-
-    override fun platformVersion() = nodeRpcConnection.proxy.nodeInfo().platformVersion
-
-    override fun notaries() = nodeRpcConnection.proxy.notaryIdentities()
-
-    override fun flows() = nodeRpcConnection.proxy.registeredFlows()
-
-    override fun states() = nodeRpcConnection.proxy.vaultQueryBy<ContractState>().states
-
-
-    override fun openArrachment(hash: String): InputStream = this.openArrachment(SecureHash.parse(hash))
-    override fun openArrachment(hash: SecureHash): InputStream = nodeRpcConnection.proxy.openAttachment(hash)
-
     @Throws(IOException::class)
     private fun convertToInputStream(inputStreamIn: ZipInputStream): InputStream {
         val out = ByteArrayOutputStream()

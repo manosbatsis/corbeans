@@ -4,5 +4,6 @@
 dependencies {
     compile project(':corbeans-spring-boot-autoconfigure')
 
+    testCompile project(':corbeans-spring-boot-starter-test')
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
 }
