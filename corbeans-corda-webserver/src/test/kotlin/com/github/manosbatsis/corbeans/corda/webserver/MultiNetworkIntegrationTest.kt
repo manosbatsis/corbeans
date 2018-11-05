@@ -21,21 +21,22 @@ package com.github.manosbatsis.corbeans.corda.webserver
 
 import com.github.manosbatsis.corbeans.corda.webserver.components.SampleCustomCordaNodeServiceImpl
 import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeService
-import com.github.manosbatsis.corbeans.test.integration.AppConfigDrivenNetworkIT
-import com.github.manosbatsis.corda.webserver.spring.AppConfigDrivenSingleNetworkIT
+import com.github.manosbatsis.corbeans.test.integration.WithDriverNodesIT
 import net.corda.core.identity.Party
 import net.corda.core.utilities.NetworkHostAndPort
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(SpringExtension::class)
-class MultiNetworkIntegrationTest : AppConfigDrivenNetworkIT() {
+class MultiNetworkIntegrationTest : WithDriverNodesIT() {
 
     companion object {
         private val logger = LoggerFactory.getLogger(MultiNetworkIntegrationTest::class.java)
@@ -44,27 +45,66 @@ class MultiNetworkIntegrationTest : AppConfigDrivenNetworkIT() {
 
     override fun getCordappPackages(): List<String> = listOf("net.corda.finance")
 
+    // autowire all created services, mapped by name
+    @Autowired
+    lateinit var services: Map<String, CordaNodeService>
+
+    // autowire a services for a specific node
+    @Autowired
+    @Qualifier("partyANodeService")
+    lateinit var service: CordaNodeService
+
+    // autowire a unique custom service
+    @Autowired
+    lateinit var customCervice: SampleCustomCordaNodeServiceImpl
+
     @Test
-    fun `Can create services`() {
+    fun `Can inject services`() {
         withDriverNodes {
             logger.info("services: {}", services)
             assertNotNull(this.services)
+            assertNotNull(this.service)
             assertTrue(this.services.keys.isNotEmpty())
         }
     }
 
+    @Test
+    fun `Can inject custom service`() {
+        withDriverNodes {
+            logger.info("customCervice: {}", customCervice)
+            assertNotNull(this.customCervice)
+            assertTrue(this.customCervice.dummy())
+        }
+    }
 
     @Test
     fun `Can retrieve node identity`() {
         withDriverNodes {
-            assertNotNull(services["partyANodeService"]?.myIdentity)
+            assertNotNull(service.myIdentity)
         }
     }
 
     @Test
     fun `Can retrieve notaries`() {
         withDriverNodes {
-            assertNotNull(services["partyANodeService"]?.notaries())
+            val notaries: List<Party> = service.notaries()
+            assertNotNull(notaries)
+        }
+    }
+
+    @Test
+    fun `Can retrieve flows`() {
+        withDriverNodes {
+            val flows: List<String> = service.flows()
+            assertNotNull(flows)
+        }
+    }
+
+    @Test
+    fun `Can retrieve addresses`() {
+        withDriverNodes {
+            val addresses: List<NetworkHostAndPort> = service.addresses()
+            assertNotNull(addresses)
         }
     }
 

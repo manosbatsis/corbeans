@@ -31,15 +31,55 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.lang.RuntimeException
 
 /**
- * Base internal implementation. Allows starting a Corda network, configuring nodes based on `application.properties`
+ *
+ * Provides Corda (driver) network per [withDriverNodes] call, using the corbeans'
+ * config from `application.properties`. You may override the latter with an
+ * additional file in your test classpath, i.e. `src/test/resources/application.properties`.
+ *
+ * Sample:
+ *
+ * ```
+ * @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+ * @ExtendWith(SpringExtension::class)
+ * class MyWithDriverNodesIntegrationTest : WithDriverNodesIT() {
+ *
+ *      // tell the driver which cordapp packages to load
+ *      override fun getCordappPackages(): List<String> = listOf("net.corda.finance")
+ *
+ *      @Test
+ *      fun `Can create services`() {
+ *          withDriverNodes {
+ *              assertNotNull(this.services)
+ *              assertTrue(this.services.keys.isNotEmpty())
+ *          }
+ *      }
+ *
+ *      @Test
+ *      fun `Can retrieve node identity`() {
+ *          withDriverNodes {
+ *              assertNotNull(services["partyANodeService"]?.myIdentity)
+ *          }
+ *      }
+ *
+ *      @Test
+ *      fun `Can retrieve notaries`() {
+ *          withDriverNodes {
+ *              assertNotNull(services["partyANodeService"]?.notaries())
+ *          }
+ *      }
+ * }
+ * ```
  */
-abstract class BaseAppConfigDrivenNetworkIT {
+abstract class WithDriverNodesIT {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(BaseAppConfigDrivenNetworkIT::class.java)
+        private val logger = LoggerFactory.getLogger(WithDriverNodesIT::class.java)
     }
 
-    /** Implement to specify cordapp packages to be scanned by the node driver */
+    /**
+     * Implement to specify cordapp packages to be scanned by the node driver
+     * TODO: move to application config?
+     */
     abstract fun getCordappPackages(): List<String>
 
     @Autowired
@@ -85,7 +125,7 @@ abstract class BaseAppConfigDrivenNetworkIT {
                                     "rpcSettings.address" to nodeParams.address,
                                     "rpcSettings.adminAddress" to nodeParams.adminAddress)).getOrThrow()
                 }
-                
+
                 // mark as started
                 started = true
                 // call any initialization handling code in subclass
@@ -108,6 +148,4 @@ abstract class BaseAppConfigDrivenNetworkIT {
     open fun onNetworkInitialized(){
         // NO-OP
     }
-
-
 }

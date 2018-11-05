@@ -19,7 +19,7 @@
  */
 package com.github.manosbatsis.corda.webserver.spring
 
-import com.github.manosbatsis.corbeans.test.integration.BaseAppConfigDrivenNetworkIT
+import com.github.manosbatsis.corbeans.test.integration.WithDriverNodesIT
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.async
 import org.junit.jupiter.api.AfterAll
@@ -28,16 +28,16 @@ import org.junit.jupiter.api.TestInstance
 import org.slf4j.LoggerFactory
 
 /**
- * Automatically creates and maintains a single Corda network throughout test execution using `withDriverNodes`
- * and the application's corbeans (auto)configuration from application.properties
+ * Automatically creates and maintains a single Corda network throughout test execution,
+ * using the corbeans' config from `application.properties`. You may override the latter with an
+ * additional file in your test classpath, i.e. `src/test/resources/application.properties`.
  *
- * Using a single driver instance and network improves performance VS multiple `withDriverNodes` per test suite
- * and allows to simply autowire components registered by corbeans auto-configuration, for example:
+ * Example:
  *
  * ```
  * @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
  * @ExtendWith(SpringExtension::class)
- * class MySampleIntegrationTest : AppConfigDrivenSingleNetworkIT() {
+ * class MyWithSingleNetworkIntegrationTest : WithImplicitNetworkIT() {
  *
  *      // tell the driver which cordapp packages to load
  *      override fun getCordappPackages(): List<String> = listOf("net.corda.finance")
@@ -63,13 +63,12 @@ import org.slf4j.LoggerFactory
  *      }
  * }
  * ```
- *
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-abstract class AppConfigDrivenSingleNetworkIT: BaseAppConfigDrivenNetworkIT() {
+abstract class WithImplicitNetworkIT: WithDriverNodesIT() {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(AppConfigDrivenSingleNetworkIT::class.java)
+        private val logger = LoggerFactory.getLogger(WithImplicitNetworkIT::class.java)
     }
 
     /**
@@ -108,6 +107,7 @@ abstract class AppConfigDrivenSingleNetworkIT: BaseAppConfigDrivenNetworkIT() {
     private fun startNetworkAsync() = GlobalScope.async {
         super.withDriverNodes{
             while (!finished) {
+                // wait for tests completion
                 Thread.sleep(1000)
             }
         }
@@ -115,9 +115,9 @@ abstract class AppConfigDrivenSingleNetworkIT: BaseAppConfigDrivenNetworkIT() {
     }
 
     /**
-     * Don't allow concurrent copies of the same network
+     * Disallow execution of additional networks i.e. other than the one implicitly started.
      */
-    override fun withDriverNodes(action: () -> Unit) {
+    final override fun withDriverNodes(action: () -> Unit) {
         throw IllegalStateException(
                 "You can only use the single Corda network context running in parallel with this implementation")
     }
