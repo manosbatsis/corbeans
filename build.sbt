@@ -1,5 +1,6 @@
 name := "corbeans"
-version := "1.0"
+organizationName := "Manos Batsis"
+version := "3.3.1"
 scalaVersion := "2.11.8"
 
 lazy val noPublishSettings = Seq(
@@ -11,15 +12,21 @@ lazy val noPublishSettings = Seq(
 lazy val micrositeSettings = Seq(
   micrositeName := "corbeans",
   micrositeDescription := "Corda integration for Spring-Boot",
-  micrositeBaseUrl := "corbeans",
-  micrositeDocumentationUrl := "/corbeans/docs/",
+  micrositeBaseUrl := "/corbeans",
+  micrositeDocumentationUrl := "/corbeans/docs",
+  micrositeAuthor := "Manos Batsis",
+  micrositeHomepage := "https://manosbatsis.github.io/corbeans/",
+  micrositeOrganizationHomepage := "https://manosbatsis.github.io",
   micrositeGithubOwner := "manosbatsis",
   micrositeGithubRepo := "corbeans",
-  micrositeGitterChannel := false,
+  micrositeGithubToken := sys.env.get("GITHUB_TOKEN"),
+  micrositePushSiteWith := GitHub4s,
+  micrositeGithubLinks := false,
+  micrositeGitterChannel := true,
   micrositeHighlightTheme := "github",
-  //micrositeGithubToken := Option(System.getenv().get("GITHUB_TOKEN")),
-  //micrositePushSiteWith := GitHub4s,
-  //micrositeGithubToken := getEnvVar("GH_REPO_ACCESS_TOKEN")
+  micrositeHighlightLanguages := Seq("kotlin", "java", "gradle", "xml", "bash", "properties"),
+  micrositeStaticDirectory := file("build/dokka"),
+  micrositeFooterText := Some("we are in accord")
 )
 
 
@@ -28,4 +35,5 @@ lazy val docs = (project in file("docs"))
   .settings(micrositeSettings: _*)
   .settings(noPublishSettings: _*)
   .enablePlugins(MicrositesPlugin)
+ // .enablePlugins(GitHub4s)
   .enablePlugins(TutPlugin)

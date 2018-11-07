@@ -20,7 +20,6 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure
 
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.BaseCordaNodeServiceImpl
 import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeServiceImpl
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
 import com.github.manosbatsis.corbeans.spring.boot.corda.util.EagerNodeRpcConnection
@@ -86,8 +85,8 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
 
             // verify node service type
             val serviceType = Class.forName(nodeParams.primaryServiceType)
-            if(!BaseCordaNodeServiceImpl::class.java.isAssignableFrom(serviceType)){
-                throw IllegalArgumentException("Provided service type for node ${nodeName} does not extend BaseCordaNodeServiceImpl or CordaNodeServiceImpl")
+            if(!CordaNodeServiceImpl::class.java.isAssignableFrom(serviceType)){
+                throw IllegalArgumentException("Provided service type for node ${nodeName} does not extend CordaNodeServiceImpl or CordaNodeServiceImpl")
             }
             // register Node service
             val nodeServiceBeanName = "${nodeName}NodeService";

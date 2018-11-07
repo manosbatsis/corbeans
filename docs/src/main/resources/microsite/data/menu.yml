@@ -2,22 +2,18 @@ options:
   - title: Introduction
     url: docs/index.html
 
-  - title: Spring-Boot Starter
-    url: docs/spring-boot-starter.html
+  - title: Spring Boot Starter
+    url: docs/starter.html
 
-    nested_options:
-    - title: Installation
-      url: docs/starter/installation.html
-    - title: Configuration
-      url: docs/starter/configuration.html
-    - title: Autowiring
-      url: docs/starter/autowiring.html
+  - title: Starter Test
+    url: docs/starter-test.html
 
-  - title: Testing
-    url: docs/testing.html
+  - title: Data RPC
+    url: docs/data-rpc.html
 
   - title: Webserver
-    url: docs/spring-boot-webserver.html
+    url: docs/webserver.html
 
-  - title: Corda Auth
-    url: docs/sprint-boot-corda-auth.html
+  - title: Acknowledgements
+    url: docs/acknowledgements.html
+

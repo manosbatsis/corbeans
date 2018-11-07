@@ -148,8 +148,7 @@ subprojects {
 	test {
 		// stop gradle from swallowing stdout and stderr
 		testLogging {
-			outputs.upToDateWhen {false}
-			showStandardStreams = true
+			events "passed", "skipped", "failed", "standardOut", "standardError"
 		}
 
 		// Run unit tests using junit5
@@ -210,7 +209,7 @@ subprojects {
 			
 			testImplementation('org.springframework.boot:spring-boot-starter-test')
 
-			testCompile("org.jetbrains.kotlin:kotlin-test")
+			testImplementation("org.jetbrains.kotlin:kotlin-test")
 			testImplementation('org.junit.jupiter:junit-jupiter-api')
 			testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
 

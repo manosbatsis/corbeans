@@ -23,25 +23,81 @@ package com.github.manosbatsis.corbeans.spring.boot.corda
 import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeRpcConnection
 import net.corda.core.contracts.ContractState
 import net.corda.core.crypto.SecureHash
+import net.corda.core.identity.CordaX500Name
+import net.corda.core.identity.Party
 import net.corda.core.messaging.vaultQueryBy
+import net.corda.core.node.services.vault.*
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.zip.ZipInputStream
 
 
 /**
- *  Basic primary RPC-based node service implementation
+ *  Basic RPC-based node service implementation
  */
-open class CordaNodeServiceImpl(override val nodeRpcConnection: NodeRpcConnection):
-        BaseCordaNodeServiceImpl(nodeRpcConnection), CordaNodeService {
+open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): CordaNodeService {
 
     companion object {
         private val logger = LoggerFactory.getLogger(CordaNodeServiceImpl::class.java)
     }
+
+    protected val myLegalName: CordaX500Name by lazy {
+        myIdentity.name
+    }
+    override val myIdentity: Party by lazy {
+        nodeRpcConnection.proxy.nodeInfo().legalIdentities.first()
+
+    }
+
+    protected val myIdCriteria: QueryCriteria.LinearStateQueryCriteria by lazy {
+        QueryCriteria.LinearStateQueryCriteria(participants = listOf(myIdentity))
+
+    }
+
+    val defaultPageSpecification = PageSpecification(pageSize = DEFAULT_PAGE_SIZE, pageNumber = -1)
+    var sortByUid = Sort.SortColumn(SortAttribute.Standard(Sort.LinearStateAttribute.UUID), Sort.Direction.DESC)
+    var defaultSort = Sort(listOf(sortByUid))
+
+
+    /** Returns a list of the node's network peers. */
+    override fun peers() = mapOf("peers" to nodeRpcConnection.proxy.networkMapSnapshot()
+            .filter { nodeInfo -> nodeInfo.legalIdentities.first() != myIdentity }
+            .map { it.legalIdentities.first().name.organisation })
+
+    /** Returns a list of the node's network peer names. */
+    override fun peerNames(): Map<String, List<String>> {
+        val nodes = nodeRpcConnection.proxy.networkMapSnapshot()
+        val nodeNames = nodes.map { it.legalIdentities.first().name }
+        val filteredNodeNames = nodeNames.filter { it.organisation !== myIdentity.name.organisation }
+        val filteredNodeNamesToStr = filteredNodeNames.map { it.toString() }
+        return mapOf("peers" to filteredNodeNamesToStr)
+    }
+
+    override fun serverTime(): LocalDateTime {
+        return LocalDateTime.ofInstant(nodeRpcConnection.proxy.currentNodeTime(), ZoneId.of("UTC"))
+    }
+
+    override fun addresses() = nodeRpcConnection.proxy.nodeInfo().addresses
+
+    override fun identities() = nodeRpcConnection.proxy.nodeInfo().legalIdentities
+
+    override fun platformVersion() = nodeRpcConnection.proxy.nodeInfo().platformVersion
+
+    override fun notaries() = nodeRpcConnection.proxy.notaryIdentities()
+
+    override fun flows() = nodeRpcConnection.proxy.registeredFlows()
+
+    override fun states() = nodeRpcConnection.proxy.vaultQueryBy<ContractState>().states
+
+
+    override fun openArrachment(hash: String): InputStream = this.openArrachment(SecureHash.parse(hash))
+    override fun openArrachment(hash: SecureHash): InputStream = nodeRpcConnection.proxy.openAttachment(hash)
 
     @Throws(IOException::class)
     private fun convertToInputStream(inputStreamIn: ZipInputStream): InputStream {
