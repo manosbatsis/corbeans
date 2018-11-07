@@ -1,5 +1,7 @@
-# Spring-Corda Integration [![Release](https://jitpack.io/v/com.github.manosbatsis/corda-spring.svg)](https://jitpack.io/#com.github.manosbatsis/corda-spring) [![Join the chat at https://gitter.im/manosbatsis/corbeans](https://badges.gitter.im/manosbatsis/corbeans.svg)](https://gitter.im/manosbatsis/corbeans?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# Corbeans [![Release](https://jitpack.io/v/com.github.manosbatsis/corbeans.svg)](https://jitpack.io/#com.github.manosbatsis/corbeans) [![Join the chat at https://gitter.im/manosbatsis/corbeans](https://badges.gitter.im/manosbatsis/corbeans.svg)](https://gitter.im/manosbatsis/corbeans?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+Corbeans provides Corda support to Spring Boot applications. More details can be found in the docs, 
+see https://manosbatsis.github.io/corbeans
 
-- Documentation: https://manosbatsis.github.io/corbeans/
-- Feedback and support: https://github.com/manosbatsis/corbeans/issues
+For feedback or support check out the issues or create a new one at https://github.com/manosbatsis/corbeans/issues
+
