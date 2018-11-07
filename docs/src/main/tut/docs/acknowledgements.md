@@ -3,11 +3,15 @@ layout: docs
 title: "Acknowledgements"
 ---
 
-# Contributors
+# Acknowledgements
 
 TODO
 
-# Dependencies
+## Contributors
+
+TODO
+
+## Dependencies
 
 
 TODO

@@ -8,35 +8,39 @@ technologies:
 
 <div class="row">
 	<div class="col-md-3">
-		<div class="panel panel-default">
-		  <div class="panel-heading">Spring Boot Starter</div>
+		<div class="panel panel-info">
+		  <div class="panel-heading text-center"><h2>Boot Starter</h2></div>
 		  <div class="panel-body">
 			<p>Use standard Corda APIs with Spring Boot components auto-configured for your nodes.</p>
 		  </div>
+		  <div class="panel-footer text-right"><a href="docs/starter.html">More details</a></div>
 		</div>
 	</div>
 	<div class="col-md-3">
-		<div class="panel panel-default">
-		  <div class="panel-heading">Starter Test</div>
+		<div class="panel panel-info">
+		  <div class="panel-heading text-center"><h2>Starter Test</h2></div>
 		  <div class="panel-body">
 			<p>Add Corda network capabilities to your Spring Boot tests.</p>
 		  </div>
+		  <div class="panel-footer text-right"><a href="docs/starter-test.html">More details</a></div>
 		</div>
 	</div>
 	<div class="col-md-3">
-		<div class="panel panel-default">
-		  <div class="panel-heading">RPC Auth</div>
+		<div class="panel panel-info">
+		  <div class="panel-heading text-center"><h2>Data RPC</h2></div>
 		  <div class="panel-body">
 			<p>Have some JPA Entities for direct access to your RPC security datasource.</p>
 		  </div>
+		  <div class="panel-footer text-right"><a href="docs/data-rpc.html">More details</a></div>
 		</div>
 	</div>
 	<div class="col-md-3">
-		<div class="panel panel-default">
-		  <div class="panel-heading">Node Webserver</div>
+		<div class="panel panel-info">
+		  <div class="panel-heading text-center"><h2>Webserver</h2></div>
 		  <div class="panel-body">
 			<p>Try a corbeans sample project for a Spring Boot alternative to Corda’s standard Node Webserver.</p>
 		  </div>
+		  <div class="panel-footer text-right"><a href="docs/webserver.html">More details</a></div>
 		</div>
 	</div>
 </div>

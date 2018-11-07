@@ -3,6 +3,8 @@ layout: docs
 title: "Data RPC"
 ---
 
+# Data RPC
+
 The `corbeans-spring-data-corda-rpc` module provides JPA entities that are compatible with the 
 [RPC datasource schema](https://docs.corda.net/clientrpc.html?highlight=rpc#rpc-security-management) 
 and suitable for applications using JPA to access such a database directly.
