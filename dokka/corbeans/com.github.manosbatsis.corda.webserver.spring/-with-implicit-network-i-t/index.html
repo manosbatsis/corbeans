@@ -1,0 +1,159 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>WithImplicitNetworkIT - corbeans</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">corbeans</a>&nbsp;/&nbsp;<a href="../index.html">com.github.manosbatsis.corda.webserver.spring</a>&nbsp;/&nbsp;<a href="./index.html">WithImplicitNetworkIT</a><br/>
+<br/>
+<h1>WithImplicitNetworkIT</h1>
+<code><span class="keyword">abstract</span> <span class="keyword">class </span><span class="identifier">WithImplicitNetworkIT</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../com.github.manosbatsis.corbeans.test.integration/-with-driver-nodes-i-t/index.html"><span class="identifier">WithDriverNodesIT</span></a></code> <a href="https://....../blob/master/corbeans-spring-boot-starter-test/src/main/kotlin/com/github/manosbatsis/corbeans/test/integration/WithImplicitNetworkIT.kt#L68">(source)</a>
+<p>Automatically creates and maintains a single Corda network throughout test execution,
+using the corbeans' config from <code>application.properties</code>. You may override the latter with an
+additional file in your test classpath, i.e. <code>src/test/resources/application.properties</code>.</p>
+<p>Example:</p>
+<pre><code>@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ExtendWith(SpringExtension::class)
+class MyWithSingleNetworkIntegrationTest : WithImplicitNetworkIT() {
+
+     // tell the driver which cordapp packages to load
+     override fun getCordappPackages(): List&lt;String&gt; = listOf("net.corda.finance")
+
+     // autowire a service for a specific node
+     @Autowired
+     @Qualifier("partyANodeService")
+     lateinit var service: CordaNodeService
+
+     // autowire a unique-typed custom node service
+     @Autowired
+     lateinit var customCervice: SampleCustomCordaNodeServiceImpl
+
+     @Test
+     fun `Can inject services`() {
+         assertNotNull(this.service)
+         assertNotNull(this.customCervice)
+     }
+
+     @Test
+     fun `Can retrieve node identity`() {
+         assertNotNull(service.myIdentity)
+     }
+}
+</code></pre>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">WithImplicitNetworkIT</span><span class="symbol">(</span><span class="symbol">)</span></code>
+<p>Automatically creates and maintains a single Corda network throughout test execution,
+using the corbeans' config from <code>application.properties</code>. You may override the latter with an
+additional file in your test classpath, i.e. <code>src/test/resources/application.properties</code>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Inherited Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../../com.github.manosbatsis.corbeans.test.integration/-with-driver-nodes-i-t/corda-nodes-properties.html">cordaNodesProperties</a></p>
+</td>
+<td>
+<code><span class="keyword">lateinit</span> <span class="keyword">var </span><span class="identifier">cordaNodesProperties</span><span class="symbol">: </span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.config/-corda-nodes-properties/index.html"><span class="identifier">CordaNodesProperties</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../../com.github.manosbatsis.corbeans.test.integration/-with-driver-nodes-i-t/finished.html">finished</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">finished</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../../com.github.manosbatsis.corbeans.test.integration/-with-driver-nodes-i-t/started.html">started</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">started</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../../com.github.manosbatsis.corbeans.test.integration/-with-driver-nodes-i-t/stopped.html">stopped</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">stopped</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="start-network.html">startNetwork</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">startNetwork</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Starts the Corda network</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="stop-network.html">stopNetwork</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">stopNetwork</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Stops the Corda network</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="with-driver-nodes.html">withDriverNodes</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">withDriverNodes</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corda.webserver.spring.WithImplicitNetworkIT$withDriverNodes(kotlin.Function0((kotlin.Unit)))/action">action</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Disallow execution of additional networks i.e. other than the one implicitly started.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Inherited Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../../com.github.manosbatsis.corbeans.test.integration/-with-driver-nodes-i-t/get-cordapp-packages.html">getCordappPackages</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getCordappPackages</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code>
+<p>Implement to specify cordapp packages to be scanned by the node driver
+TODO: move to application config?</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../../com.github.manosbatsis.corbeans.test.integration/-with-driver-nodes-i-t/get-node-params.html">getNodeParams</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getNodeParams</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">&gt;</span></code>
+<p>Load node config from spring-boot application</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../../com.github.manosbatsis.corbeans.test.integration/-with-driver-nodes-i-t/on-network-initialized.html">onNetworkInitialized</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onNetworkInitialized</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Perform any required initializatioon here</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
