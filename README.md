@@ -5,3 +5,4 @@ see https://manosbatsis.github.io/corbeans
 
 For feedback or support check out the issues or create a new one at https://github.com/manosbatsis/corbeans/issues
 
+If you find this project useful please let me know by adding a star on github.

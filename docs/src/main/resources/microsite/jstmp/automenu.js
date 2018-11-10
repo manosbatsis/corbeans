@@ -10,9 +10,10 @@ function organizeContent() {
     var subcontent = $('<div></div>');
     content.prepend(subcontent);
     content.find('h1').each(function(index) {
+        var h1 = $(this);
+        var sidebarLink = $('#sidebar li a:contains(" + h1.text() + ")');
         var section = $('<section></section>');
         subcontent.append(section);
-        var h1 = $(this);
         var elements = h1.nextUntil('h1');
         var text = h1.text();
         var slug = slugify(text) + '-' + index;

@@ -11,8 +11,11 @@ options:
   - title: Data RPC
     url: docs/data-rpc.html
 
-  - title: Webserver
+  - title: Sample Webserver
     url: docs/webserver.html
 
-  - title: KDoc
+  - title: Build Howto
+    url: docs/build-howto.html
+
+  - title: KDoc API Reference
     url: dokka/corbeans/index.html
