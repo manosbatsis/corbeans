@@ -17,16 +17,22 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.jpa.rpc
+package com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure
 
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import org.slf4j.LoggerFactory
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.Configuration
 
+/**
+ * Auto-configures a CordaNodeService for each Corda Node
+ */
+@Configuration
+@ComponentScan(basePackages = arrayOf("com.github.manosbatsis.corbeans"))
+class CordaRpcDsAutoConfiguration {
 
-@Entity
-@Table(name = "permission")
-class RpcPermission(
-        @Id
-        val id: String
-)
+    companion object {
+        private val logger = LoggerFactory.getLogger(CordaRpcDsAutoConfiguration::class.java)
+    }
+
+    // TODO: make repo's conditional
+}

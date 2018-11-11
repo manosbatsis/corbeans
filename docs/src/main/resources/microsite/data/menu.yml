@@ -18,4 +18,4 @@ options:
     url: docs/build-howto.html
 
   - title: KDoc API Reference
-    url: dokka/corbeans/index.html
+    url: dokka/corbeans/

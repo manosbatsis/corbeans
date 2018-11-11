@@ -20,7 +20,7 @@ technologies:
 		<div class="panel panel-info">
 		  <div class="panel-heading text-center"><h2>Starter Test</h2></div>
 		  <div class="panel-body">
-			<p>Add Corda network capabilities to your Spring Boot tests.</p>
+			<p>Add Corda network capabilities to your Spring Boot automated tests.</p>
 		  </div>
 		  <div class="panel-footer text-right"><a href="docs/starter-test.html">More details</a></div>
 		</div>
@@ -38,7 +38,7 @@ technologies:
 		<div class="panel panel-info">
 		  <div class="panel-heading text-center"><h2>Webserver</h2></div>
 		  <div class="panel-body">
-			<p>Try a corbeans sample project for a Spring Boot alternative to Corda’s standard Node Webserver.</p>
+			<p>Try a corbeans sample project for a Spring Boot alternative to Corda’s standard Webserver.</p>
 		  </div>
 		  <div class="panel-footer text-right"><a href="docs/webserver.html">More details</a></div>
 		</div>

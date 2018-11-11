@@ -21,7 +21,7 @@ Current modules:
     <p class="list-group-item-text">Provides basic JPA Entities for direct access to your RPC security datasource.</p>
   </a>
   <a href="webserver.html" class="list-group-item">
-    <h4 class="list-group-item-heading">Node Webserver</h4>
-    <p class="list-group-item-text">Project example, provides a Spring Boot alternative to Corda’s standard webserver.</p>
+    <h4 class="list-group-item-heading">Sample Webserver</h4>
+    <p class="list-group-item-text">Project example, provides a Spring Boot alternative to Corda’s standard webserver with support for multiple nodes.</p>
   </a>
 </div>

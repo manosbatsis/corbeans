@@ -10,7 +10,7 @@ You don't need to do this if you only want to use corbeans in your project.
 
 Corbeans requires a recent JDK8.
 
-## Clone the Repo
+## Cloning the Repo
 
 ```bash
 git clone https://github.com/manosbatsis/corbeans.git
@@ -22,7 +22,7 @@ If you intent to contribute by submitting a PR, it is better to fork the project
 git clone https://github.com/MYUSENAME/corbeans.git
 ```
 
-## Build Corbeans
+## Building Corbeans
 
 Navigate to the project root folder:
 
@@ -59,7 +59,7 @@ corresponding nodes manually:
 ```
 
 
-## Build the Website
+## Building the Website
 
 The corbeans documentation website is build using [sbt](https://www.scala-sbt.org/), 
 [sbt-microsites](https://47deg.github.io/sbt-microsites/) and [jekyll](https://jekyllrb.com/). The site files are in `/docs`.

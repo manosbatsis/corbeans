@@ -17,21 +17,14 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.jpa.rpc
+package com.github.manosbatsis.corbeans.spring.boot.corda.rpc
 
-import javax.persistence.*
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
 
-@Entity
-@Table(name = "users")
-class RpcUser(
-    @Id
-    val username: String,
-    @Column(nullable = false)
-    val password: String,
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = arrayOf(JoinColumn(name = "username", referencedColumnName = "username")),
-            inverseJoinColumns = arrayOf(JoinColumn(name = "role_name", referencedColumnName = "role_name"))
-    )
-    val role: List<RpcRole>
-)
+@SpringBootApplication
+class Application
+
+fun main(args: Array<String>) {
+    runApplication<Application>(*args)
+}

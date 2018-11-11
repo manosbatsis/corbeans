@@ -19,20 +19,12 @@
  */
 package com.github.manosbatsis.corbeans.jpa.rpc
 
-import javax.persistence.*
+import javax.persistence.Id
+import javax.persistence.MappedSuperclass
 
-@Entity
-@Table(name = "roles")
-class RpcRole(
 
+@MappedSuperclass
+open class MappedRpcPermission(
         @Id
-        val id: String,
-
-        @JoinTable(
-                name = "roles_permissions",
-                joinColumns = arrayOf(JoinColumn(name = "role_name", referencedColumnName = "id")),
-                inverseJoinColumns = arrayOf(JoinColumn(name = "permission", referencedColumnName = "id"))
-        )
-        val role: List<RpcPermission>
-
+        val id: String
 )
