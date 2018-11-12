@@ -125,7 +125,7 @@ subprojects {
 
 
 	group = 'com.github.manosbatsis.corbeans'
-	version = '0.0.2-SNAPSHOT'
+	version = '1.0-SNAPSHOT'
 	
 	publishing {
 		publications {

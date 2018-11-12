@@ -12,6 +12,8 @@ springBoot {
 dependencies {
 
 	compile project(":corbeans-spring-boot-starter")
+
+	//implementation 'com.github.manosbatsis.corbeans:corbeans-spring-boot-starter:1.0-SNAPSHOT'
 	
 	compile("org.springframework.boot:spring-boot-starter:$spring_boot_version")
 	compile("org.springframework.boot:spring-boot-starter-web:$spring_boot_version")
