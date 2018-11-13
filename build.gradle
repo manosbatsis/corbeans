@@ -37,7 +37,7 @@ buildscript {
 		maven { url 'https://dl.bintray.com/kotlin/exposed' }
 		maven { url 'https://jitpack.io' }
 		maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
-		maven { url  "https://dl.bintray.com/manosbatsis/corbeans" }
+		//maven { url  "https://dl.bintray.com/manosbatsis/corbeans" }
 
 
 	}
@@ -65,8 +65,8 @@ buildscript {
 		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.6'
 
 		// nebula
-		classpath "com.netflix.nebula:nebula-publishing-plugin:7.1.0"
-		classpath "com.netflix.nebula:nebula-release-plugin:6.3.3"
+		classpath "com.netflix.nebula:nebula-publishing-plugin:8.1.0"
+		classpath "com.netflix.nebula:nebula-release-plugin:6.3.5"
 		classpath "com.netflix.nebula:nebula-bintray-plugin:3.5.2"
 	}
 }
@@ -101,7 +101,7 @@ allprojects {
 	group = 'com.github.manosbatsis.corbeans'
 	//version = "${projectVersion}"
 	apply plugin: "nebula.release"
-	apply plugin: "nebula.nebula-bintray-publishing"
+	//apply plugin: "nebula.nebula-bintray-publishing"
 
 }
 
@@ -267,7 +267,7 @@ dependencies {
 
 bintray {
 	user = 'manosbatsis'
-	key = System.getenv('BINTRAY_KEY')
+	apiKey = System.getenv('BINTRAY_KEY')
 	//publish = true
 	//override = true
 	//configurations = ['archives']
