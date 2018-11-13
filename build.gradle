@@ -261,7 +261,7 @@ subprojects {
 		//override = true
 		//configurations = ['archives']
 		pkg {
-			userOrg = 'manosbatsis'
+			//userOrg = 'manosbatsis'
 			repo = 'corbeans'
 			//name = project.name
 			//desc = 'Corda integration for Spring Boot applications'
