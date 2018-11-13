@@ -68,6 +68,8 @@ buildscript {
 		classpath "com.netflix.nebula:nebula-publishing-plugin:8.1.0"
 		classpath "com.netflix.nebula:nebula-release-plugin:6.3.5"
 		classpath "com.netflix.nebula:nebula-bintray-plugin:3.5.2"
+		// to remove annoying msg: "Please upgrade com.jfrog.artifactory (org.jfrog.buildinfo:build-info-extractor-gradle:) to version 4.6.0 or above"
+		classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.7.3"
 	}
 }
 
@@ -84,9 +86,6 @@ apply plugin: 'org.jetbrains.dokka'
 
 allprojects {
 
-	apply plugin: "nebula.maven-publish"
-	apply plugin: "nebula.javadoc-jar"
-	apply plugin: "nebula.source-jar"
 
 
 	repositories {
@@ -112,6 +111,9 @@ repositories {
 	maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
 }
 
+apply plugin: "nebula.maven-publish"
+apply plugin: "nebula.javadoc-jar"
+apply plugin: "nebula.source-jar"
 apply plugin: "nebula.nebula-bintray-publishing"
 
 bintray {
