@@ -101,29 +101,6 @@ allprojects {
 	group = 'com.github.manosbatsis.corbeans'
 	//version = "${projectVersion}"
 	apply plugin: "nebula.release"
-	apply plugin: "nebula.nebula-bintray-publishing"
-
-	bintray {
-		user = 'manosbatsis'
-		key = System.getenv('BINTRAY_KEY')
-		//publish = true
-		//override = true
-		//configurations = ['archives']
-		pkg {
-			userOrg = 'manosbatsis'
-			repo = 'corbeans'
-			//name = project.name
-			//desc = 'Corda integration for Spring Boot applications'
-			websiteUrl = 'https://manosbatsis.github.io/corbeans/'
-			issueTrackerUrl = 'https://github.com/manosbatsis/corbeans/issues'
-			vcsUrl = 'https://github.com/manosbatsis/corbeans.git'
-			licenses = ['LGPL-3.0']
-			labels = ['spring-boot', 'corda', 'spring-corda', 'corda-webserver-boot', 'corda-node', 'corda-rpc', 'integration-testing']
-			//publicDownloadNumbers = true
-			githubRepo = 'manosbatsis/corbeans' //Optional Github repository
-			githubReleaseNotesFile = 'README.md' //Optional Github readme file
-		}
-	}
 
 
 }
@@ -137,6 +114,29 @@ repositories {
 	maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
 }
 
+apply plugin: "nebula.nebula-bintray-publishing"
+
+bintray {
+	user = 'manosbatsis'
+	key = System.getenv('BINTRAY_KEY')
+	//publish = true
+	//override = true
+	//configurations = ['archives']
+	pkg {
+		userOrg = 'manosbatsis'
+		repo = 'corbeans'
+		//name = project.name
+		//desc = 'Corda integration for Spring Boot applications'
+		websiteUrl = 'https://manosbatsis.github.io/corbeans/'
+		issueTrackerUrl = 'https://github.com/manosbatsis/corbeans/issues'
+		vcsUrl = 'https://github.com/manosbatsis/corbeans.git'
+		licenses = ['LGPL-3.0']
+		labels = ['spring-boot', 'corda', 'spring-corda', 'corda-webserver-boot', 'corda-node', 'corda-rpc', 'integration-testing']
+		//publicDownloadNumbers = true
+		githubRepo = 'manosbatsis/corbeans' //Optional Github repository
+		githubReleaseNotesFile = 'README.md' //Optional Github readme file
+	}
+}
 subprojects {
 
 	apply plugin: 'java'
