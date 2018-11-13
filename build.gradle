@@ -37,6 +37,8 @@ buildscript {
 		maven { url 'https://dl.bintray.com/kotlin/exposed' }
 		maven { url 'https://jitpack.io' }
 		maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
+		maven { url  "https://dl.bintray.com/manosbatsis/corbeans" }
+
 
 	}
 
@@ -61,6 +63,11 @@ buildscript {
 
 		// plugins for asciidoctor
 		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.6'
+
+		// nebula
+		classpath "com.netflix.nebula:nebula-publishing-plugin:7.1.0"
+		classpath "com.netflix.nebula:nebula-release-plugin:6.3.3"
+		classpath "com.netflix.nebula:nebula-bintray-plugin:3.5.2"
 	}
 }
 
@@ -75,6 +82,29 @@ plugins {
 
 apply plugin: 'org.jetbrains.dokka'
 
+allprojects {
+
+	apply plugin: "nebula.maven-publish"
+	apply plugin: "nebula.javadoc-jar"
+	apply plugin: "nebula.source-jar"
+
+
+	repositories {
+		mavenLocal()
+		jcenter()
+		mavenCentral()
+		maven { url 'https://dl.bintray.com/kotlin/exposed' }
+		maven { url 'https://jitpack.io' }
+		maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
+	}
+
+	group = 'com.github.manosbatsis.corbeans'
+	//version = "${projectVersion}"
+	apply plugin: "nebula.release"
+	apply plugin: "nebula.nebula-bintray-publishing"
+
+}
+
 repositories {
 	mavenLocal()
 	jcenter()
@@ -85,20 +115,16 @@ repositories {
 }
 
 subprojects {
-	repositories {
-		mavenLocal()
-		jcenter()
-		mavenCentral()
-		maven { url 'https://dl.bintray.com/kotlin/exposed' }
-		maven { url 'https://jitpack.io' }
-		maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
-	}
 
 	apply plugin: 'java'
 	sourceCompatibility = JavaVersion.VERSION_1_8
 	targetCompatibility = JavaVersion.VERSION_1_8
 
 	apply plugin: 'kotlin'
+	apply plugin: "nebula.maven-publish"
+	apply plugin: "nebula.javadoc-jar"
+	apply plugin: "nebula.source-jar"
+
 	compileKotlin {
 		kotlinOptions {
 			freeCompilerArgs = ["-Xjsr305=strict"]
@@ -118,15 +144,12 @@ subprojects {
 	apply plugin: 'eclipse'
 	apply plugin: 'io.spring.dependency-management'
 
-	apply plugin: 'maven-publish'
+//	apply plugin: 'maven-publish'
 	apply plugin: 'idea'
 	apply plugin: 'license'
 	//apply plugin: 'kotlin-kapt' //optional
 
-
-	group = 'com.github.manosbatsis.corbeans'
-	version = '1.0-SNAPSHOT'
-	
+	/*
 	publishing {
 		publications {
 			maven(MavenPublication) {
@@ -136,7 +159,7 @@ subprojects {
 				version rootProject.version
 			}
 		}
-	}
+	}*/
 
 	tasks.withType(JavaCompile) {
 		options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-Xlint:-options" << "-parameters"
@@ -228,6 +251,7 @@ subprojects {
 		}
 		strictCheck true
 	}
+
 }
 
 configurations {
@@ -238,6 +262,29 @@ configurations {
 dependencies {
 	// TODO: Get Android version from Dependencies.kt
 	dokkapath fileTree (include: ['*.jar'])
+}
+
+
+bintray {
+	user = 'manosbatsis'
+	key = System.getenv('BINTRAY_KEY')
+	//publish = true
+	//override = true
+	//configurations = ['archives']
+	pkg {
+		userOrg = 'manosbatsis'
+		repo = 'corbeans'
+		//name = project.name
+		//desc = 'Corda integration for Spring Boot applications'
+		websiteUrl = 'https://manosbatsis.github.io/corbeans/'
+		issueTrackerUrl = 'https://github.com/manosbatsis/corbeans/issues'
+		vcsUrl = 'https://github.com/manosbatsis/corbeans.git'
+		licenses = ['LGPL-3.0']
+		labels = ['spring-boot', 'corda', 'spring-corda', 'corda-webserver-boot', 'corda-node', 'corda-rpc', 'integration-testing']
+		//publicDownloadNumbers = true
+		githubRepo = 'manosbatsis/corbeans' //Optional Github repository
+		githubReleaseNotesFile = 'README.md' //Optional Github readme file
+	}
 }
 
 task dokka (type: org.jetbrains.dokka.gradle.DokkaTask, overwrite: true) {
