@@ -101,7 +101,7 @@ allprojects {
 	group = 'com.github.manosbatsis.corbeans'
 	//version = "${projectVersion}"
 	apply plugin: "nebula.release"
-	//apply plugin: "nebula.nebula-bintray-publishing"
+	apply plugin: "nebula.nebula-bintray-publishing"
 
 }
 
@@ -267,7 +267,7 @@ dependencies {
 
 bintray {
 	user = 'manosbatsis'
-	apiKey = System.getenv('BINTRAY_KEY')
+	key = System.getenv('BINTRAY_KEY')
 	//publish = true
 	//override = true
 	//configurations = ['archives']
