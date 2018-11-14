@@ -30,7 +30,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest()
-class DataJpaTest(@Autowired val repo: RpcUserRepository) {
+class DataJpaIntegrationTest(@Autowired val repo: RpcUserRepository) {
 
     @Test
     fun `basic entity checks`() {

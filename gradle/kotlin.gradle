@@ -1,0 +1,53 @@
+
+apply plugin: 'java'
+apply plugin: "nebula.kotlin"
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+compileKotlin {
+	kotlinOptions {
+		languageVersion = "1.1"
+		freeCompilerArgs = ["-Xjsr305=strict"]
+		jvmTarget = "1.8"
+		javaParameters = true   // Useful for reflection.
+	}
+}
+
+compileTestKotlin {
+	kotlinOptions {
+		languageVersion = "1.1"
+		freeCompilerArgs = ["-Xjsr305=strict"]
+		jvmTarget = "1.8"
+		javaParameters = true   // Useful for reflection.
+	}
+}
+
+tasks.withType(JavaCompile) {
+	options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-Xlint:-options" << "-parameters"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+test {
+	// stop gradle from swallowing stdout and stderr
+	testLogging {
+		events "passed", "skipped", "failed", "standardOut", "standardError"
+	}
+
+	// Run unit tests using junit5
+	useJUnitPlatform {
+		exclude '**/*IntegrationTest.class'
+	}
+}
+
+// Run integration tests using junit5
+task integrationTest(type: Test) {
+	useJUnitPlatform {
+		include '**/*IntegrationTest.class'
+
+	}
+}

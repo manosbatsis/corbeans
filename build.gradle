@@ -68,11 +68,10 @@ buildscript {
 		classpath "com.netflix.nebula:nebula-publishing-plugin:8.1.0"
 		classpath "com.netflix.nebula:nebula-release-plugin:6.3.5"
 		classpath "com.netflix.nebula:nebula-bintray-plugin:3.5.2"
-		// to remove annoying msg: "Please upgrade com.jfrog.artifactory (org.jfrog.buildinfo:build-info-extractor-gradle:) to version 4.6.0 or above"
+		// just silences a warning because by default an older version is transitively pulled in
 		classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.7.3"
 	}
 }
-
 
 plugins {
 	// TODO The capsule plugin requires the newer DSL plugin block.It would be nice if we could unify all the plugins into one style,
@@ -86,8 +85,6 @@ apply plugin: 'org.jetbrains.dokka'
 
 allprojects {
 
-
-
 	repositories {
 		mavenLocal()
 		jcenter()
@@ -97,11 +94,11 @@ allprojects {
 		maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
 	}
 
-	group = 'com.github.manosbatsis.corbeans'
 	//version = "${projectVersion}"
 	apply plugin: "nebula.release"
+	group = 'com.github.manosbatsis.corbeans'
 }
-
+/*
 repositories {
 	mavenLocal()
 	jcenter()
@@ -110,120 +107,21 @@ repositories {
 	maven { url 'https://jitpack.io' }
 	maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
 }
-
-apply plugin: "nebula.maven-publish"
-apply plugin: "nebula.javadoc-jar"
-apply plugin: "nebula.source-jar"
-apply plugin: "nebula.nebula-bintray-publishing"
-
-bintray {
-	user = 'manosbatsis'
-	key = System.getenv('BINTRAY_KEY')
-	//publish = true
-	//override = true
-	//configurations = ['archives']
-	pkg {
-		//userOrg = 'manosbatsis'
-		repo = 'corbeans'
-		//name = project.name
-		//desc = 'Corda integration for Spring Boot applications'
-		websiteUrl = 'https://manosbatsis.github.io/corbeans/'
-		issueTrackerUrl = 'https://github.com/manosbatsis/corbeans/issues'
-		vcsUrl = 'https://github.com/manosbatsis/corbeans.git'
-		licenses = ['LGPL-3.0']
-		labels = ['spring-boot', 'corda', 'spring-corda', 'corda-webserver-boot', 'corda-node', 'corda-rpc', 'integration-testing']
-		//publicDownloadNumbers = true
-		githubRepo = 'manosbatsis/corbeans' //Optional Github repository
-		githubReleaseNotesFile = 'README.md' //Optional Github readme file
-	}
-}
-
+*/
 subprojects {
+	apply from: "$rootDir/gradle/kotlin.gradle"
+	apply from: "$rootDir/gradle/published.gradle"
 
-	apply plugin: 'java'
-	sourceCompatibility = JavaVersion.VERSION_1_8
-	targetCompatibility = JavaVersion.VERSION_1_8
-
-	apply plugin: 'kotlin'
-	apply plugin: "nebula.maven-publish"
-	apply plugin: "nebula.javadoc-jar"
-	apply plugin: "nebula.source-jar"
-
-	compileKotlin {
-		kotlinOptions {
-			freeCompilerArgs = ["-Xjsr305=strict"]
-			jvmTarget = "1.8"
-			javaParameters = true   // Useful for reflection.
-		}
-	}
-	compileTestKotlin {
-		kotlinOptions {
-			freeCompilerArgs = ["-Xjsr305=strict"]
-			jvmTarget = "1.8"
-			javaParameters = true   // Useful for reflection.
-		}
-	}
-	
 	apply plugin: 'kotlin-spring'
-	apply plugin: 'eclipse'
 	apply plugin: 'io.spring.dependency-management'
 
-//	apply plugin: 'maven-publish'
 	apply plugin: 'idea'
 	apply plugin: 'license'
 	//apply plugin: 'kotlin-kapt' //optional
 
-	/*
-	publishing {
-		publications {
-			maven(MavenPublication) {
-				from components.java
-				groupId rootProject.group
-				artifactId project.name
-				version rootProject.version
-			}
-		}
-	}*/
-
-	tasks.withType(JavaCompile) {
-		options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-Xlint:-options" << "-parameters"
-	}
-	
-	task sourcesJar(type: Jar, dependsOn: classes) {
-		classifier = 'sources'
-		from sourceSets.main.allSource
-	}
-
-	test {
-		// stop gradle from swallowing stdout and stderr
-		testLogging {
-			events "passed", "skipped", "failed", "standardOut", "standardError"
-		}
-
-		// Run unit tests using junit5
-		useJUnitPlatform {
-			exclude '**/*IntegrationTest.class'
-		}
-	}
-
-	// Run integration tests using junit5
-	task integrationTest(type: Test) {
-		useJUnitPlatform {
-			include '**/*IntegrationTest.class'
-
-		}
-	}
-	
 	configurations {
 		all {
 			exclude group: 'junit', module: 'junit'
-			//exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre7'
-			//exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre8'
-			//exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-			//exclude group: 'commons-logging', module: 'commons-logging'
-			//exclude group: 'ch.qos.logback', module: 'logback-classic'
-			//exclude group: 'ch.qos.logback', module: 'logback-core'
-			//exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j-impl'
 			resolutionStrategy {
 				eachDependency { details ->
 					// Force our version of artemis
@@ -237,10 +135,8 @@ subprojects {
 				}
 				// Force dependencies to use the same version of Guava as Corda.
 				force "com.google.guava:guava:$guava_version"
-
 			}
 		}
-
 
 		dependencyManagement {
 			imports {
@@ -249,7 +145,6 @@ subprojects {
 		}
 
 		dependencies{
-
 			implementation('org.springframework.boot:spring-boot-starter')
 			implementation("org.jetbrains.kotlin:kotlin-stdlib-jre8")
 			implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -257,9 +152,9 @@ subprojects {
 			compileOnly('org.springframework.boot:spring-boot-configuration-processor')
 			
 			testImplementation('org.springframework.boot:spring-boot-starter-test')
-
 			testImplementation("org.jetbrains.kotlin:kotlin-test")
 			testImplementation('org.junit.jupiter:junit-jupiter-api')
+
 			testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
 
 		}
@@ -275,7 +170,6 @@ subprojects {
 		}
 		strictCheck true
 	}
-
 }
 
 configurations {
@@ -284,10 +178,8 @@ configurations {
 }
 
 dependencies {
-	// TODO: Get Android version from Dependencies.kt
 	dokkapath fileTree (include: ['*.jar'])
 }
-
 
 task dokka (type: org.jetbrains.dokka.gradle.DokkaTask, overwrite: true) {
 	moduleName = "$rootProject.name"
