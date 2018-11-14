@@ -65,11 +65,12 @@ buildscript {
 		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.6'
 
 		// nebula
+		//classpath "com.netflix.nebula:nebula-kotlin-plugin:1.3.10"
+		classpath "com.netflix.nebula:nebula-release-plugin:9.0.0"
 		classpath "com.netflix.nebula:nebula-publishing-plugin:8.1.0"
-		classpath "com.netflix.nebula:nebula-release-plugin:6.3.5"
-		classpath "com.netflix.nebula:nebula-bintray-plugin:3.5.2"
+		classpath "com.netflix.nebula:nebula-bintray-plugin:4.0.2"
 		// just silences a warning because by default an older version is transitively pulled in
-		classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.7.3"
+		//classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.7.3"
 	}
 }
 
@@ -79,6 +80,10 @@ plugins {
 	// Version 1.0.2 of this plugin uses capsule:1.0.1
 	id "us.kirchmeier.capsule" version "1.0.2"
 	id "com.github.hierynomus.license" version "0.14.0"
+	//id "nebula.kotlin" version "1.3.10"
+	//id "nebula.release" version "9.0.0"
+	//id "nebula.nebula-bintray" version "4.0.2"
+	//id 'nebula.maven-publish' version '8.1.0'
 }
 
 apply plugin: 'org.jetbrains.dokka'
@@ -96,6 +101,7 @@ allprojects {
 
 	//version = "${projectVersion}"
 	apply plugin: "nebula.release"
+	apply plugin: 'nebula.publish-verification'
 	group = 'com.github.manosbatsis.corbeans'
 }
 /*
