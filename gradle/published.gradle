@@ -17,5 +17,15 @@ bintray {
 		//publicDownloadNumbers = true
 		githubRepo = 'manosbatsis/corbeans' //Optional Github repository
 		githubReleaseNotesFile = 'README.md' //Optional Github readme file
+
+		version {
+			name = project.version
+			vcsTag = project.version
+			//Optional configuration for GPG signing
+			gpg {
+				sign = false //Determines whether to GPG sign the files. The default is false
+				//passphrase = 'passphrase' //Optional. The passphrase for GPG signing'
+			}
+		}
 	}
 }
