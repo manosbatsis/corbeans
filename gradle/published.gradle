@@ -6,6 +6,13 @@
 apply plugin: 'maven'
 apply plugin: 'signing'
 
+// Conditional signature of artifacts
+if (project.findProperty('signing.password') != '<YOUR-PASSWORD>') {
+	signing {
+		sign configurations.archives
+	}
+}
+
 // Upload the archives
 uploadArchives {
 	repositories {

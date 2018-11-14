@@ -14,46 +14,34 @@ To install the test starter, add the dependency to your build  using either the 
 
 ### For Gradle Users
 
-Add jitpack to your project repositories:
+Corbeans is available in Maven central.
 
 ```groovy
 repositories {
-	//...
-	maven { url 'https://jitpack.io' }
+	mavenCentral()
 }
 ```
 
-Add the starter dependency replacing VERSION with the latest tag or `master-SNAPSHOT`
+Add the starter dependency:
 
 ```groovy
 dependencies {
-	
 	// Note: you may need to exclude older junit deps in your con e.e. exclude group: 'junit', module: 'junit'
-	testImplementation 'com.github.manosbatsis.corbeans:corbeans-spring-boot-starter-test:VERSION'
+	testImplementation 'com.github.manosbatsis.corbeans:corbeans-spring-boot-starter-test:0.16'
 }
 
 ```
 
 ### For Maven Users
 
-Add jitpack to your project repositories:
 
-```xml
-<repositories>
-	<repository>
-		<id>jitpack.io</id>
-		<url>https://jitpack.io</url>
-	</repository>
-</repositories>
-```
-
-Add the starter dependency replacing VERSION with the latest tag or `master-SNAPSHOT`
+Add the dependency in your Maven POM:
 
 ```xml
 <dependency>
 	<groupId>com.github.manosbatsis.corbeans</groupId>
 	<artifactId>corbeans-spring-boot-starter-test</artifactId>
-	<version>VERSION</version>
+	<version>0.16</version>
 </dependency>
 ```
  

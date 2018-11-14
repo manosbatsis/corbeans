@@ -1,4 +1,4 @@
-# Corbeans [![Build Status](https://travis-ci.org/manosbatsis/corbeans.svg?branch=master)](https://travis-ci.org/manosbatsis/corbeans) [![Release](https://jitpack.io/v/com.github.manosbatsis/corbeans.svg)](https://jitpack.io/#com.github.manosbatsis/corbeans) [![Join the chat at https://gitter.im/manosbatsis/corbeans](https://badges.gitter.im/manosbatsis/corbeans.svg)](https://gitter.im/manosbatsis/corbeans?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# Corbeans ![version](https://img.shields.io/badge/version-0.16-blue.svg?maxAge=2592000) [![Build Status](https://travis-ci.org/manosbatsis/corbeans.svg?branch=master)](https://travis-ci.org/manosbatsis/corbeans) [![Join the chat at https://gitter.im/manosbatsis/corbeans](https://badges.gitter.im/manosbatsis/corbeans.svg)](https://gitter.im/manosbatsis/corbeans?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Corbeans provides Corda support to Spring Boot applications. More details can be found in the docs, 
 see https://manosbatsis.github.io/corbeans

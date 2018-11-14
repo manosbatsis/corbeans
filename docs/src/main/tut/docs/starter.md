@@ -20,43 +20,31 @@ To install the starter, add the dependency to your build  using either the Gradl
 
 ### For Gradle Users
 
-Add jitpack to your project repositories:
+Corbeans is available in Maven central.
 
 ```groovy
 repositories {
-	//...
-	maven { url 'https://jitpack.io' }
+	mavenCentral()
 }
 ```
 
-Add the starter dependency replacing VERSION with the latest tag or `master-SNAPSHOT`
+Add the starter dependency:
 
 ```groovy
 dependencies {
-	implementation 'com.github.manosbatsis.corbeans:corbeans-spring-boot-starter:VERSION'
+	implementation 'com.github.manosbatsis.corbeans:corbeans-spring-boot-starter:0.16'
 }
 ```
 
 ### For Maven Users
 
-Add jitpack to your project repositories:
-
-```xml
-<repositories>
-	<repository>
-		<id>jitpack.io</id>
-		<url>https://jitpack.io</url>
-	</repository>
-</repositories>
-```
-
-Add the starter dependency replacing VERSION with the latest tag or `master-SNAPSHOT`
+Add the dependency in your Maven POM:
 
 ```xml
 <dependency>
 	<groupId>com.github.manosbatsis.corbeans</groupId>
 	<artifactId>corbeans-spring-boot-starter</artifactId>
-	<version>VERSION</version>
+	<version>0.16</version>
 </dependency>
 ```
 

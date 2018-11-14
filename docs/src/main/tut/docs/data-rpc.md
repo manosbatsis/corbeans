@@ -22,39 +22,28 @@ To install the desired module, add the dependency to your build  using either th
 
 ### For Gradle Users
 
-Add jitpack to your project repositories:
+Corbeans is available in Maven central.
 
 ```groovy
 repositories {
-	//...
-	maven { url 'https://jitpack.io' }
+	mavenCentral()
 }
 ```
 
-Add the starter dependency replacing VERSION with the latest tag or `master-SNAPSHOT`
+Add the starter dependency:
 
 ```groovy
 dependencies {
-	implementation 'com.github.manosbatsis.corbeans:corbeans-spring-boot-rpc-datasource-starter:VERSION'
+	implementation 'com.github.manosbatsis.corbeans:corbeans-spring-boot-rpc-datasource-starter:0.16'
 	// Or, to use the JPA mapped superclasses only:
-	// implementation 'com.github.manosbatsis.corbeans:corbeans-spring-data-corda-rpc:VERSION'
+	// implementation 'com.github.manosbatsis.corbeans:corbeans-spring-data-corda-rpc:0.16'
 }
 ```
 
 ### For Maven Users
 
-Add jitpack to your project repositories:
+Add the dependency in your Maven POM:
 
-```xml
-<repositories>
-	<repository>
-		<id>jitpack.io</id>
-		<url>https://jitpack.io</url>
-	</repository>
-</repositories>
-```
-
-Add the starter dependency replacing VERSION with the latest tag or `master-SNAPSHOT`
 
 ```xml
 <dependency>
@@ -63,7 +52,7 @@ Add the starter dependency replacing VERSION with the latest tag or `master-SNAP
 	<!-- Or, to use the JPA mapped superclasses only:
 		<artifactId>corbeans-spring-data-corda-rpc</artifactId>
 	-->
-	<version>VERSION</version>
+	<version>0.16</version>
 </dependency>
 ```
 
