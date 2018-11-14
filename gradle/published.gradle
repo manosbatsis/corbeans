@@ -1,30 +1,52 @@
-apply plugin: "nebula.maven-publish"
-apply plugin: "nebula.javadoc-jar"
-apply plugin: "nebula.source-jar"
-apply plugin: "nebula.nebula-bintray-publishing"
+// The maven plugin for Gradle can take care of the metadata,
+// generate the required pom.xml file as well as take care
+// of the deployment of the build output to the repository.
+// The signing plugin allows you to get the components,
+// created by standard Gradle tasks, signed:
+apply plugin: 'maven'
+apply plugin: 'signing'
 
-bintray {
-	user = System.getenv("manosbatsis")
-	key = System.getenv("BINTRAY_KEY")
-	pkg {
-		userOrg = "manosbatsis"
-		repo = "corbeans"
-		websiteUrl = 'https://manosbatsis.github.io/corbeans/'
-		issueTrackerUrl = 'https://github.com/manosbatsis/corbeans/issues'
-		vcsUrl = 'https://github.com/manosbatsis/corbeans.git'
-		licenses = ['LGPL-3.0']
-		labels = ['spring-boot', 'corda', 'spring-corda', 'corda-webserver-boot', 'corda-node', 'corda-rpc', 'integration-testing']
-		//publicDownloadNumbers = true
-		githubRepo = 'manosbatsis/corbeans' //Optional Github repository
-		githubReleaseNotesFile = 'README.md' //Optional Github readme file
+// Upload the archives
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-		version {
-			name = project.version
-			vcsTag = project.version
-			//Optional configuration for GPG signing
-			gpg {
-				sign = true //Determines whether to GPG sign the files. The default is false
-				//passphrase = 'passphrase' //Optional. The passphrase for GPG signing'
+			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+				authentication(userName: ossrhUsername, password: ossrhPassword)
+			}
+
+			snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+				authentication(userName: ossrhUsername, password: ossrhPassword)
+			}
+
+			// Add required metadata to POM
+			pom.project {
+				name project.name
+				packaging project.name == rootProject.name ? 'pom' : 'jar'
+				description 'Corda integration for Spring Boot.'
+				url 'https://manosbatsis.github.io/corbeans/'
+
+				scm {
+					connection 'scm:git:git://github.com/manosbatsis/corbeans.git'
+					developerConnection 'scm:git:ssh://github.com/manosbatsis/corbeans.git'
+					url 'http://github.com/manosbatsis/corbeans/tree/master'
+				}
+
+				licenses {
+					license {
+						name 'GNU Lesser General Public License, Version 3'
+						url 'https://www.gnu.org/licenses/lgpl-3.0.txt'
+					}
+				}
+
+				developers {
+					developer {
+						id 'manosbatsis'
+						name 'Manos Batsis'
+						email 'manosbatsis@gmail.com'
+					}
+				}
 			}
 		}
 	}

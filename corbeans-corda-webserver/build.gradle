@@ -1,14 +1,22 @@
 
-apply plugin: 'application'
+//apply plugin: 'application'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'net.corda.plugins.quasar-utils'
 apply plugin: 'org.asciidoctor.convert'
 
-mainClassName = "com.github.manosbatsis.corbeans.corda.webserver.ApplicationKt"
-
 springBoot {
 	buildInfo()
+	mainClassName = "com.github.manosbatsis.corbeans.corda.webserver.ApplicationKt"
 }
+
+jar {
+	enabled = false
+}
+
+bootJar {
+	//classifier = 'boot'
+}
+
 dependencies {
 
 	compile project(":corbeans-spring-boot-starter")

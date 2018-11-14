@@ -1,9 +1,24 @@
 
 apply plugin: 'java'
-apply plugin: "nebula.kotlin"
-
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
+apply plugin: 'kotlin'
+
+// Typical Java project: a javadocJar as well as a sourcesJar task...
+task javadocJar(type: Jar) {
+	classifier = 'javadoc'
+	from javadoc
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+// and hook them up into the artifacts collection together with the project jar itself:
+artifacts {
+	archives javadocJar, sourcesJar
+}
 
 compileKotlin {
 	kotlinOptions {
@@ -27,10 +42,6 @@ tasks.withType(JavaCompile) {
 	options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-Xlint:-options" << "-parameters"
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-	classifier = 'sources'
-	from sourceSets.main.allSource
-}
 
 test {
 	// stop gradle from swallowing stdout and stderr
