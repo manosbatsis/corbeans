@@ -84,6 +84,7 @@ apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'io.codearte.nexus-staging'
 nexusStaging {
 	packageGroup = 'com.github.manosbatsis'
+	stagingProfileId = 'com.github.manosbatsis'
 }
 
 allprojects {
