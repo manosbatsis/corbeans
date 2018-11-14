@@ -65,7 +65,7 @@ buildscript {
 		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.6'
 
 		// nebula
-		classpath "com.netflix.nebula:nebula-kotlin-plugin:1.1.61"
+		classpath "com.netflix.nebula:nebula-kotlin-plugin:$kotlin_version"
 		classpath "com.netflix.nebula:nebula-release-plugin:9.0.0"
 		classpath "com.netflix.nebula:nebula-publishing-plugin:8.1.0"
 		classpath "com.netflix.nebula:nebula-bintray-plugin:4.0.2"
