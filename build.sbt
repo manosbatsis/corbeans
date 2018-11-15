@@ -1,6 +1,6 @@
 name := "corbeans"
 organizationName := "Manos Batsis"
-version := "1.0-SNAPSHOT"
+version := "0.17"
 scalaVersion := "2.11.8"
 
 lazy val noPublishSettings = Seq(

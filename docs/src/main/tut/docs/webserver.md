@@ -40,7 +40,7 @@ logging.level.net.corda=INFO
 You can pass that file to the webserver executable with:
 
 ```bash
-java -jar corbeans-corda-webserver-0.16.jar  --spring.config.location=/path/to/application.properties
+java -jar corbeans-corda-webserver-0.17.jar  --spring.config.location=/path/to/application.properties
 ```
 
 For more alternatives see [Externalized Configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)

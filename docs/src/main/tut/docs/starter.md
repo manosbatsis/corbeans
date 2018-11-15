@@ -32,7 +32,7 @@ Add the starter dependency:
 
 ```groovy
 dependencies {
-	implementation 'com.github.manosbatsis.corbeans:corbeans-spring-boot-starter:0.16'
+	implementation 'com.github.manosbatsis.corbeans:corbeans-spring-boot-starter:0.17'
 }
 ```
 
@@ -44,7 +44,7 @@ Add the dependency in your Maven POM:
 <dependency>
 	<groupId>com.github.manosbatsis.corbeans</groupId>
 	<artifactId>corbeans-spring-boot-starter</artifactId>
-	<version>0.16</version>
+	<version>0.17</version>
 </dependency>
 ```
 
