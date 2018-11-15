@@ -2,7 +2,7 @@
 
 dependencies {
 
-	implementation project(":corbeans-spring-boot-corda")
+	compile project(":corbeans-spring-boot-corda")
 
 	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_coroutines_version"
 	

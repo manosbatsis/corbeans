@@ -97,9 +97,10 @@ allprojects {
 		maven { url 'https://dl.bintray.com/kotlin/exposed' }
 		maven { url 'https://jitpack.io' }
 		maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
+		maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 	}
 
-	version = "0.16"
+	version = "0.17-SNAPSHOT"
 	group = 'com.github.manosbatsis.corbeans'
 
 	apply from: "$rootDir/gradle/published.gradle"
@@ -117,6 +118,8 @@ subprojects {
 
 	configurations {
 		all {
+			resolutionStrategy.cacheChangingModulesFor 0, 'minutes'
+			resolutionStrategy.cacheDynamicVersionsFor 0, 'minutes'
 			exclude group: 'junit', module: 'junit'
 			resolutionStrategy {
 				eachDependency { details ->
@@ -141,7 +144,7 @@ subprojects {
 		}
 
 		dependencies{
-			implementation('org.springframework.boot:spring-boot-starter')
+			compile('org.springframework.boot:spring-boot-starter')
 			implementation("org.jetbrains.kotlin:kotlin-stdlib-jre8")
 			implementation("org.jetbrains.kotlin:kotlin-reflect")
 
