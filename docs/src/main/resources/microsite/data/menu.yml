@@ -19,3 +19,6 @@ options:
 
   - title: KDoc API Reference
     url: dokka/corbeans/
+
+  - title: Acknowledgements
+    url: docs/acknowledgements.html

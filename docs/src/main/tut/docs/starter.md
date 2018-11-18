@@ -25,6 +25,8 @@ Corbeans is available in Maven central.
 ```groovy
 repositories {
 	mavenCentral()
+	// OR, if changes have not yet been reflected to central:
+	// maven { url "http://oss.sonatype.org/content/repositories/releases/" }
 }
 ```
 

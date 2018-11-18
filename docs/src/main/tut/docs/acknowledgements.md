@@ -5,13 +5,4 @@ title: "Acknowledgements"
 
 # Acknowledgements
 
-TODO
-
-## Contributors
-
-TODO
-
-## Dependencies
-
-
-TODO
+- Logo contributed by [Xenokratis Vartzikos](https://www.linkedin.com/in/xenokratis-vartzikos/)

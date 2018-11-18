@@ -14,6 +14,13 @@ per instance, see bellow for a configuration example.
 
 There are multiple ways to let Spring Boot know about your Corda nodes using 
 [externalized configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html). 
+
+### Download 
+
+See the available versions at https://oss.sonatype.org/content/repositories/releases/com/github/manosbatsis/corbeans/corbeans-corda-webserver/
+
+### Configure
+
 For a simple example, consider an `application.properties` file like:
 
 ```properties
@@ -36,7 +43,9 @@ logging.level.root=INFO
 logging.level.com.github.manosbatsis=DEBUG
 logging.level.net.corda=INFO
 ```
- 
+
+### Run
+
 You can pass that file to the webserver executable with:
 
 ```bash
@@ -44,7 +53,7 @@ java -jar corbeans-corda-webserver-0.17.jar  --spring.config.location=/path/to/a
 ```
 
 For more alternatives see [Externalized Configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)
-in Spring Boot docs.
+in Spring Boot docs. 
 
 
 ## API Reference

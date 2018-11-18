@@ -81,7 +81,6 @@ plugins {
 }
 
 apply plugin: 'org.jetbrains.dokka'
-
 apply plugin: 'io.codearte.nexus-staging'
 nexusStaging {
 	packageGroup = 'com.github.manosbatsis.corbeans'
@@ -100,10 +99,12 @@ allprojects {
 		maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 	}
 
-	version = "0.17"
+	version = "0.18-SNAPSHOT"
 	group = 'com.github.manosbatsis.corbeans'
 
 	apply from: "$rootDir/gradle/published.gradle"
+
+	apply plugin: 'project-report'
 }
 
 subprojects {
@@ -118,8 +119,8 @@ subprojects {
 
 	configurations {
 		all {
-			resolutionStrategy.cacheChangingModulesFor 0, 'minutes'
-			resolutionStrategy.cacheDynamicVersionsFor 0, 'minutes'
+			//resolutionStrategy.cacheChangingModulesFor 0, 'minutes'
+			//resolutionStrategy.cacheDynamicVersionsFor 0, 'minutes'
 			exclude group: 'junit', module: 'junit'
 			resolutionStrategy {
 				eachDependency { details ->
