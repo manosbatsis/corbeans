@@ -3,11 +3,26 @@ apply plugin: 'java'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 apply plugin: 'kotlin'
+apply plugin: 'org.jetbrains.dokka'
 
-// Typical Java project: a javadocJar as well as a sourcesJar task...
-task javadocJar(type: Jar) {
+sourceSets {
+	main.java.srcDirs += 'src/main/kotlin'
+}
+
+dokka {
+	outputFormat = 'javadoc'
+	outputDirectory = javadoc.destinationDir
+	//inputs.dir 'src/main/kotlin'
+	linkMapping {
+		dir = "src/main/kotlin"
+		url = "https://github.com/manosbatsis/corbeans/tree/master/${project.name}/src/main/kotlin"
+		suffix = "#L"
+	}
+}
+
+task javadocJar(type: Jar, dependsOn: dokka) {
 	classifier = 'javadoc'
-	from javadoc
+	from javadoc.destinationDir
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -15,7 +30,8 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 	from sourceSets.main.allSource
 }
 
-// and hook them up into the artifacts collection together with the project jar itself:
+// and hook them up into the artifacts collection together
+// with the project jar itself when publishing
 artifacts {
 	archives javadocJar, sourcesJar
 }

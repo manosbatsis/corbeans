@@ -21,12 +21,13 @@ lazy val micrositeSettings = Seq(
   micrositeGithubRepo := "corbeans",
   micrositeGithubToken := sys.env.get("GITHUB_TOKEN"),
   micrositePushSiteWith := GitHub4s,
-  micrositeGithubLinks := false,
+  micrositeGithubLinks := true,
   micrositeGitterChannel := true,
   micrositeHighlightTheme := "github",
   micrositeHighlightLanguages := Seq("kotlin", "java", "gradle", "xml", "bash", "properties"),
   micrositeStaticDirectory := file("build/dokka"),
-  micrositeFooterText := Some("we are in accord")
+  micrositeFooterText := Some("we are in accord"),
+  micrositeShareOnSocial := false,
 )
 
 
