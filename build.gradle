@@ -1,18 +1,17 @@
 
 buildscript {
 	ext {
-		arrow_version = "0.7.3"
-		kotlin_version = '1.1.60'
+		kotlin_version = '1.2.71'
 		kotlinx_coroutines_version = '0.30.2'
 		dokka_version = '0.9.17'
 
 		corda_release_group = 'net.corda'
-		corda_release_version = '3.3-corda'
+		corda_release_version = '4.0-SNAPSHOT'
 		corda_gradle_plugins_version = '3.1.0'
 
-		quasar_version = '0.7.9'
-		capsule_version = '1.0.1'
-		asm_version = '0.5.3'
+		quasar_version = '0.7.10'
+		capsule_version = '1.0.3'
+		asm_version = '5.0.4'
 		junit_version = '4.12'
 		slf4j_version = '1.7.25'
 
@@ -20,9 +19,10 @@ buildscript {
 		springBootVersion = '2.0.6.RELEASE'
 		spring_version = '5.0.10.RELEASE'
 
-		artemis_version = "2.2.0"
+		artemis_version = "2.6.2"
 		jackson_version = "2.9.5"
-		guava_version = '21.0'
+		guava_version = '25.1-jre'
+		//netty_version = '4.1.22.Final'
 
 		h2 = '1.4.196'
 
