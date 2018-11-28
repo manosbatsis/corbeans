@@ -29,7 +29,7 @@ Add the starter dependency:
 ```groovy
 dependencies {
 	// Note: you may need to exclude older junit deps in your con e.e. exclude group: 'junit', module: 'junit'
-	testImplementation 'com.github.manosbatsis.corbeans:corbeans-spring-boot-starter-test:0.17'
+	testImplementation 'com.github.manosbatsis.corbeans:corbeans-spring-boot-starter-test:0.18'
 }
 
 ```
@@ -43,7 +43,7 @@ Add the dependency in your Maven POM:
 <dependency>
 	<groupId>com.github.manosbatsis.corbeans</groupId>
 	<artifactId>corbeans-spring-boot-starter-test</artifactId>
-	<version>0.17</version>
+	<version>0.18</version>
 </dependency>
 ```
  
