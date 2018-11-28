@@ -7,19 +7,84 @@ title: "Sample Webserver"
 
 
 The `corbeans-corda-webserver` example project implements an alternative to Corda's default
-Node webserver using modules of corbeans. The server exposes basic endpoints by default but supports multiple nodes
-per instance, see bellow for a configuration example.
+Node webserver using modules of corbeans. The server exposes basic endpoints by default but supports either a single 
+node via `runNodes` or multiple manually configured nodes, see bellow for a configuration examples.
+
+## Download 
+
+You can use your own custom webserver based on the [starter](starter.html) or download the sample at 
+https://oss.sonatype.org/content/repositories/releases/com/github/manosbatsis/corbeans/corbeans-corda-webserver/
 
 ## Running the Server
 
+Spring Boot applications using the [starter](starter.html) can be run either manually or via `runNodes` as a 
+drop-in replacement to the corda-webserver. 
+
+
+
+### Configure for `runNodes`
+
+To use with `runNodes`, add your custom or sample webserver JAR in the node folder and renaming the file to replace 
+the default *corda-webserver.jar*:
+
+<pre>
+├── nodes
+│   ├── BankA
+│   │   ├── additional-node-infos
+│   │   ├── certificates
+│   │   ├── corda.jar
+│   │   ├── cordapps
+│   │   ├── <b>corda-webserver.jar</b>
+│   │   ├── drivers
+│   │   ├── logs
+│   │   ├── network-parameters
+│   │   ├── node.conf
+│   │   ├── nodeInfo-4B67...
+│   │   ├── persistence.mv.db
+│   │   ├── persistence.trace.db
+│   │   └── web-server.conf
+│   ├── BankA_node.conf
+│   ├── BankA_web-server.conf
+│   ├── Notary Service
+│   ├── Notary Service_node.conf
+│   ├── runnodes
+│   ├── runnodes.bat
+│   └── runnodes.jar
+</pre>
+
+With cordformation version 4 and up you can also automate this by setting the `webserverJar` property of 
+the `CordForm` plugin, e.g.:
+
+```groovy
+task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
+    //...
+    node {
+        name "O=BankA,L=London,C=GB"
+        p2pPort 10005
+        cordapps = []
+        rpcUsers = ext.rpcUsers
+        rpcSettings {
+            port 10007
+            adminPort 10008
+        }
+        webPort 10009 
+        webserverJar  "/PATH/TO/MY/corbeans-corda-webserver.jar"
+    }
+
+}
+```
+
+Then use `runnodes` as usual to see the corbeans app in place of the original corda wobserver:
+
+
+<img src="/corbeans/img/runnodes.png" alt="runnodes xterm shells" />
+
+
+
+### Configure for Multiple Nodes
+
 There are multiple ways to let Spring Boot know about your Corda nodes using 
 [externalized configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html). 
-
-### Download 
-
-See the available versions at https://oss.sonatype.org/content/repositories/releases/com/github/manosbatsis/corbeans/corbeans-corda-webserver/
-
-### Configure
 
 For a simple example, consider an `application.properties` file like:
 

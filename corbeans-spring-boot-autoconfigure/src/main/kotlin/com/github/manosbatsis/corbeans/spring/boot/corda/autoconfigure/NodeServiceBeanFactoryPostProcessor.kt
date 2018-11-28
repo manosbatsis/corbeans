@@ -52,13 +52,12 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
 
     protected lateinit var cordaNodesProperties: CordaNodesProperties
 
-
     /**
      * Parse spring-boot config manually since it's not available yet
      */
     override fun setEnvironment(env: Environment) {
         this.cordaNodesProperties = this.buildCordaNodesProperties(env as ConfigurableEnvironment)
-        logger.debug("Loaded corda nodes config: {}", cordaNodesProperties)
+        logger.info("Loaded config for Corda nodes: {}", cordaNodesProperties.nodes.keys)
     }
 
     /**
@@ -69,8 +68,7 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
         val beanDefinitionRegistry = beanFactory as BeanDefinitionRegistry
 
         this.cordaNodesProperties.nodes.forEach{ (nodeName, nodeParams) ->
-            logger.debug("postProcessBeanFactory, nodeName: {}, nodeParams: {}", nodeName, nodeParams)
-            System.out.println("postProcessBeanFactory, nodeName: ${nodeName}, nodeParams: ${nodeParams}")
+            logger.debug("Registering, node name: {}, address: {}", nodeName, nodeParams.address)
 
             // register RPC connection wrapper bean
             val rpcConnectionBeanName = "${nodeName}RpcConnection";
@@ -81,7 +79,7 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
                     .getBeanDefinition()
             beanDefinitionRegistry.registerBeanDefinition(rpcConnectionBeanName, rpcConnectionBean)
             logger.debug("Registered RPC connection bean {} for Party {}", rpcConnectionBeanName, nodeName)
-            System.out.println("Registered RPC connection bean ${rpcConnectionBeanName} for Party ${nodeName}")
+
 
             // verify node service type
             val serviceType = Class.forName(nodeParams.primaryServiceType)
@@ -97,7 +95,6 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
                     .getBeanDefinition()
             beanDefinitionRegistry.registerBeanDefinition(nodeServiceBeanName, nodeServiceBean)
             logger.debug("Registered node service {} for Party: {}, type: {}", nodeServiceBeanName, nodeName, serviceType.name)
-            System.out.println("Registered node service ${nodeServiceBeanName} for Party: ${nodeName}, type: ${serviceType.name}")
         }
     }
 

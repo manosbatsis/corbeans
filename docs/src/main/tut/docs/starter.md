@@ -18,6 +18,10 @@ The following sections how to quickly get started with corbeans in your project.
 
 To install the starter, add the dependency to your build  using either the Gradle or Maven example bellow.
 
+> **Note:** to bundle a custom starter-based or the sample webserver with your node for use via CordForm and `runNodes`  
+see the Sample Webserver documentation section: 
+[Configure for runNodes](http://127.0.0.1:4000/corbeans/docs/webserver.html#configure-for-runnodes).
+
 ### For Gradle Users
 
 Corbeans is available in Maven central.
@@ -81,7 +85,8 @@ CordaNodeService   | {nodeName}NodeService    | A Node Service Bean
 ### Endpoints
 
 A controller is also added with endpoints exposing business methods for all
-listing identity, network peers, notaries, flows, states, finding attachments etc.
+listing identity, network peers, notaries, flows, states, finding attachments etc. 
+
 
 Method | Path                                    | Description
 ------ | --------------------------------------- | -------------------
@@ -96,6 +101,9 @@ GET    | /nodes/{nodeName}/addresses             | Returns a list of node addres
 GET    | /nodes/{nodeName}/notaries              | Returns a list of notaries in node's network
 GET    | /nodes/{nodeName}/states                | Returns a list of states
 GET    | /nodes/{nodeName}/flows                 | Returns a list of flow classnames
+
+> **Note:** When corbeans parses node.conf as the configuration (i.e. when using `CordForm` and/or `runnodes`), 
+the corresponding base path for the default node endpoints is simply `node` instead of `nodes/{nodeName}`.
 
 ### Advanced Configuration
 

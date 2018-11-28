@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.io.FileNotFoundException
 import java.time.LocalDateTime
+import java.util.*
 import java.util.jar.JarInputStream
 import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletRequest
@@ -48,11 +49,12 @@ import javax.servlet.http.HttpServletResponse
  */
 // TODO: allow for autoconfigure only @ConditionalOnClass(value = Tomcat.class)
 @RestController
-@RequestMapping("nodes")
+@RequestMapping(path = arrayOf("node", "nodes/{nodeName}"))
 open class CordaNodesController {
 
     companion object {
         private val logger = LoggerFactory.getLogger(CordaNodesController::class.java)
+        val NODE_NAME_DEFAULT = "default"
     }
 
     @Autowired
@@ -63,59 +65,61 @@ open class CordaNodesController {
         logger.debug("Auto-configured RESTful services for Corda nodes:: {}", services.keys)
     }
 
-    fun getService(nodeName: String): CordaNodeService =
-            this.services.get("${nodeName}NodeService") ?: throw IllegalArgumentException("Node not found: $nodeName")
+    fun getService(optionalNodeName: Optional<String>): CordaNodeService {
+        val nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else NODE_NAME_DEFAULT
+        return this.services.get("${nodeName}NodeService") ?: throw IllegalArgumentException("Node not found: $nodeName")
+    }
 
     /** Returns the node's name. */
-    @GetMapping("{nodeName}/me")
-    fun me(@PathVariable nodeName: String) = mapOf("me" to getService(nodeName).myIdentity.name.x500Principal.name.toString())
+    @GetMapping("me")
+    fun me(@PathVariable nodeName: Optional<String>) = mapOf("me" to getService(nodeName).myIdentity.name.x500Principal.name.toString())
 
     /** Returns the node info. */
-    @GetMapping("{nodeName}/whoami")
-    fun whoami(@PathVariable nodeName: String) = mapOf("me" to getService(nodeName).myIdentity.name)
+    @GetMapping("whoami")
+    fun whoami(@PathVariable nodeName: Optional<String>) = mapOf("me" to getService(nodeName).myIdentity.name)
     //fun me() = mapOf("me" to _myIdentity.name.x500Principal.name.toString())
 
     /** Returns a list of the node's network peers. */
-    @GetMapping("{nodeName}/peers")
-    fun peers(@PathVariable nodeName: String) = this.getService(nodeName).peers()
+    @GetMapping("peers")
+    fun peers(@PathVariable nodeName: Optional<String>) = this.getService(nodeName).peers()
 
     /** Returns a list of the node's network peer names. */
-    @GetMapping("{nodeName}/peernames")
-    fun peerNames(@PathVariable nodeName: String) = this.getService(nodeName).peerNames()
+    @GetMapping("peernames")
+    fun peerNames(@PathVariable nodeName: Optional<String>) = this.getService(nodeName).peerNames()
 
     /** Return tbe node time in UTC */
-    @GetMapping("{nodeName}/serverTime")
-    fun serverTime(@PathVariable nodeName: String): LocalDateTime {
+    @GetMapping("serverTime")
+    fun serverTime(@PathVariable nodeName: Optional<String>): LocalDateTime {
         return this.getService(nodeName).serverTime()
     }
 
-    @GetMapping("{nodeName}/addresses")
-    fun addresses(@PathVariable nodeName: String): List<NetworkHostAndPort> {
+    @GetMapping("addresses")
+    fun addresses(@PathVariable nodeName: Optional<String>): List<NetworkHostAndPort> {
         return this.getService(nodeName).addresses()
     }
 
-    @GetMapping("{nodeName}/identities")
-    fun identities(@PathVariable nodeName: String): List<Party> {
+    @GetMapping("identities")
+    fun identities(@PathVariable nodeName: Optional<String>): List<Party> {
         return this.getService(nodeName).identities()
     }
 
-    @GetMapping("{nodeName}/platformVersion")
-    fun platformVersion(@PathVariable nodeName: String): Int {
+    @GetMapping("platformVersion")
+    fun platformVersion(@PathVariable nodeName: Optional<String>): Int {
         return this.getService(nodeName).platformVersion()
     }
 
-    @GetMapping("{nodeName}/flows")
-    fun flows(@PathVariable nodeName: String): List<String> {
+    @GetMapping("flows")
+    fun flows(@PathVariable nodeName: Optional<String>): List<String> {
         return this.getService(nodeName).flows()
     }
 
-    @GetMapping("{nodeName}/notaries")
-    fun notaries(@PathVariable nodeName: String): List<Party> {
+    @GetMapping("notaries")
+    fun notaries(@PathVariable nodeName: Optional<String>): List<Party> {
         return this.getService(nodeName).notaries()
     }
 
-    @GetMapping("{nodeName}/states")
-    fun states(@PathVariable nodeName: String): List<StateAndRef<ContractState>> {
+    @GetMapping("states")
+    fun states(@PathVariable nodeName: Optional<String>): List<StateAndRef<ContractState>> {
         return this.getService(nodeName).states()
     }
 
@@ -129,8 +133,8 @@ open class CordaNodesController {
      *
      * TODO: Provide an endpoint that exposes attachment file listings, to make attachments browsable.
      */
-    @GetMapping("{nodeName}/attachment/{id}/**")
-    fun openArrachment(@PathVariable nodeName: String, @PathVariable id: String, req: HttpServletRequest, resp: HttpServletResponse) {
+    @GetMapping("attachment/{id}/**")
+    fun openArrachment(@PathVariable nodeName: Optional<String>, @PathVariable id: String, req: HttpServletRequest, resp: HttpServletResponse) {
 
         val reqPath = req.pathInfo?.substring(1)
         if (reqPath == null) {
