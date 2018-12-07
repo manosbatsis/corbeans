@@ -56,20 +56,23 @@ Add the dependency in your Maven POM:
 
 ## Configuration
 
-Add nodes in your `application.properties` following the example bellow.
+No configuration is needed When using corbeans app as a drop-in replacement to corda-webserver within a node 
+folder.
+
+For a node independent app, add nodes in your `application.properties` following the example bellow.
 Use the party name for each node you want to the starter to register components for.
-In this example, we create components for nodes e.g.  "PartyA" and, "PartyB":
+In this example, we create components for nodes e.g.  parties A and B:
 
 ```properties
 # node for PartyA
-corbeans.nodes.PartyA.username=user1
-corbeans.nodes.PartyA.password=test
-corbeans.nodes.PartyA.address=localhost:10006
+corbeans.nodes.partyA.username=user1
+corbeans.nodes.partyA.password=test
+corbeans.nodes.partyA.address=localhost:10006
 
 # node for PartyB
-corbeans.nodes.PartyB.username=user1
-corbeans.nodes.PartyB.password=test
-corbeans.nodes.PartyB.address=localhost:10009
+corbeans.nodes.partyB.username=user1
+corbeans.nodes.partyB.password=test
+corbeans.nodes.partyB.address=localhost:10009
 ```  
 
 ### Registered Beans
@@ -109,12 +112,11 @@ the corresponding base path for the default node endpoints is simply `node` inst
 
 You can instruct corbeans to create and register your custom service implementations. 
 The only requirement is that you have to extend `CordaNodeServiceImpl` 
-(or `CordaNodeServiceImpl` and so on), for example:
+(or `CordaNodeServiceImpl` and so on), for example in Kotlin:
 
 ```kotlin
 import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeServiceImpl
 import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeRpcConnection
-
 
 class SampleCustomCordaNodeServiceImpl(
         nodeRpcConnection: NodeRpcConnection
@@ -124,7 +126,23 @@ class SampleCustomCordaNodeServiceImpl(
     fun dummy(): Boolean = true
 
 }
+```
 
+or Java:
+
+
+```java
+import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeServiceImpl;
+import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeRpcConnection;
+
+public class SampleCustomCordaNodeServiceImpl extends CordaNodeServiceImpl {
+
+	public SampleCustomCordaNodeServiceImpl(NodeRpcConnection nodeRpcConnection){
+		super(nodeRpcConnection);
+	}
+    /** dummy method */
+    public Boolean dummy(){return true;}
+}
 ```
 
 Then instruct corbeans to use your custom service type via the 
@@ -138,7 +156,7 @@ corbeans.nodes.PartyA.primaryServiceType=my.subclass.of.CordaNodeServiceImpl
 
 ## Autowiring Services
 
-Service beans registered by corbeans may be autowired as any other component, for example: 
+Service beans registered by corbeans may be autowired as any other component, for example in Kotlin: 
 
 ```kotlin
     // autowire all created services, mapped by name
@@ -153,4 +171,21 @@ Service beans registered by corbeans may be autowired as any other component, fo
     // autowire a unique custom service
     @Autowired
     lateinit var customCervice: SampleCustomCordaNodeServiceImpl
+```
+
+or Java
+
+```java
+    // autowire all created services, mapped by name
+    @Autowired
+    private Map<String, CordaNodeService> services; 
+
+    // autowire a services for a specific node
+    @Autowired
+    @Qualifier("partyANodeService")
+    private CordaNodeService service; 
+
+    // autowire a unique custom service
+    @Autowired
+    private SampleCustomCordaNodeServiceImpl customCervice; 
 ```

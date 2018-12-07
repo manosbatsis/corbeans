@@ -52,10 +52,27 @@ the default *corda-webserver.jar*:
 │   └── runnodes.jar
 </pre>
 
-With cordformation version 4 and up you can also automate this by setting the `webserverJar` property of 
-the `CordForm` plugin, e.g.:
+With Corda and `cordformation` Gradle plugin versions 4 and 4.0.25 and up respectively, you can automate this by setting the `webserverJar` property of 
+the `CordForm` plugin, by applyihng the following changes in your cordapp build:
 
 ```groovy
+// 1: Add proper cordformation and quazar plugin versions 
+buildscript {
+    dependencies {
+        classpath "net.corda.plugins:quasar-utils:4.0.25"
+        classpath "net.corda.plugins:quasar-utils:4.0.25"
+        //...
+    }
+}
+// 2: Add Corda v4
+dependencies {
+    cordaCompile "net.corda:corda-jackson:4.0-SNAPSHOT"
+    cordaCompile "net.corda:corda-rpc:4.0-SNAPSHOT"
+    cordaCompile "net.corda:corda-core:4.0-SNAPSHOT"
+    cordaRuntime "net.corda:corda:4.0-SNAPSHOT"
+}
+
+// 3: Add webserverJar to each node 
 task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     //...
     node {

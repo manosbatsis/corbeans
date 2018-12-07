@@ -61,7 +61,9 @@ Add the dependency in your Maven POM:
 
 ## Use in your components:
 
-Assuming you are using the starter:
+Examples in Kotlin and Java, assuming you are using the starter.
+
+In Kotlin:
 
 ```kotlin
 // autowire RPC repos
@@ -71,4 +73,16 @@ Assuming you are using the starter:
 
 // Use repos in your code, e.g.
 val user = rpcUserRepository.save(RpcUser("user1", "user1", emptyList()))
+```
+
+In Java:
+
+```java
+// autowire RPC repos
+@Autowired private RpcUserRepository rpcUserRepository;
+@Autowired private RpcPermissionRepository rpcPermissionRepository;
+@Autowired private RpcRoleRepository rpcRoleRepository;
+
+// Use repos in your code, e.g.
+RpcUser user = rpcUserRepository.save(ne RpcUser("user1", "user1", emptyList()));
 ```

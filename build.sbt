@@ -26,7 +26,7 @@ lazy val micrositeSettings = Seq(
   micrositeHighlightTheme := "github",
   micrositeHighlightLanguages := Seq("kotlin", "java", "gradle", "xml", "bash", "properties"),
   micrositeStaticDirectory := file("build/dokka"),
-  micrositeFooterText := Some("we are in accord"),
+  micrositeFooterText := Some("<p>see also <a href='/corbeans/docs/acknowledgements.html'>acknowledgements</a></p>"),
   micrositeShareOnSocial := false,
 )
 
