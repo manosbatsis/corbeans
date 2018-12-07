@@ -56,10 +56,10 @@ With Corda and `cordformation` Gradle plugin versions 4 and 4.0.25 and up respec
 the `CordForm` plugin, by applyihng the following changes in your cordapp build:
 
 ```groovy
-// 1: Add proper cordformation and quazar plugin versions 
+// 1: Add proper cordformation and quasar plugin versions 
 buildscript {
     dependencies {
-        classpath "net.corda.plugins:quasar-utils:4.0.25"
+        classpath "net.corda.plugins:cordformation:4.0.25"
         classpath "net.corda.plugins:quasar-utils:4.0.25"
         //...
     }
