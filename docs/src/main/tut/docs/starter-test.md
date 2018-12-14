@@ -5,6 +5,16 @@ title: "Starter Test"
 
 # Spring-Boot Starter Test
 
+<!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+
+- [Installation](#installation)
+	- [For Gradle Users](#for-gradle-users)
+	- [For Maven Users](#for-maven-users)
+- [With Driver Nodes](#with-driver-nodes)
+- [Implicit Network](#implicit-network)
+
+<!-- /TOC -->
+
 The `corbeans-spring-boot-starter-test` depends on Junit5 and provides Corda network support for your automated tests.
 The following sections how to quickly get started with corbeans in your project.
 
@@ -46,11 +56,11 @@ Add the dependency in your Maven POM:
 	<version>0.18</version>
 </dependency>
 ```
- 
+
 ## With Driver Nodes
 
-Extending `WithDriverNodesIT` allows creating a network per 'withDriverNodes' block, using the corbeans' 
-config from `application.properties`. You may override the latter with an additional file in your test classpath, 
+Extending `WithDriverNodesIT` allows creating a network per 'withDriverNodes' block, using the corbeans'
+config from `application.properties`. You may override the latter with an additional file in your test classpath,
 i.e. `src/test/resources/application.properties`:
 
 

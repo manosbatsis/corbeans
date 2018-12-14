@@ -5,26 +5,36 @@ title: "Sample Webserver"
 
 # Sample Webserver
 
+<!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+
+- [Download](#download)
+- [Running the Server](#running-the-server)
+	- [Configure for `runNodes`](#configure-for-runnodes)
+	- [Configure for Multiple Nodes](#configure-for-multiple-nodes)
+	- [Run](#run)
+- [API Reference](#api-reference)
+
+<!-- /TOC -->
 
 The `corbeans-corda-webserver` example project implements an alternative to Corda's default
-Node webserver using modules of corbeans. The server exposes basic endpoints by default but supports either a single 
+Node webserver using modules of corbeans. The server exposes basic endpoints by default but supports either a single
 node via `runNodes` or multiple manually configured nodes, see bellow for a configuration examples.
 
-## Download 
+## Download
 
-You can use your own custom webserver based on the [starter](starter.html) or download the sample at 
+You can use your own custom webserver based on the [starter](starter.html) or download the sample at
 https://oss.sonatype.org/content/repositories/releases/com/github/manosbatsis/corbeans/corbeans-corda-webserver/
 
 ## Running the Server
 
-Spring Boot applications using the [starter](starter.html) can be run either manually or via `runNodes` as a 
-drop-in replacement to the corda-webserver. 
+Spring Boot applications using the [starter](starter.html) can be run either manually or via `runNodes` as a
+drop-in replacement to the corda-webserver.
 
 
 
 ### Configure for `runNodes`
 
-To use with `runNodes`, add your custom or sample webserver JAR in the node folder and renaming the file to replace 
+To use with `runNodes`, add your custom or sample webserver JAR in the node folder and renaming the file to replace
 the default *corda-webserver.jar*:
 
 <pre>
@@ -52,11 +62,11 @@ the default *corda-webserver.jar*:
 │   └── runnodes.jar
 </pre>
 
-With Corda and `cordformation` Gradle plugin versions 4 and 4.0.25 and up respectively, you can automate this by setting the `webserverJar` property of 
+With Corda and `cordformation` Gradle plugin versions 4 and 4.0.25 and up respectively, you can automate this by setting the `webserverJar` property of
 the `CordForm` plugin, by applyihng the following changes in your cordapp build:
 
 ```groovy
-// 1: Add proper cordformation and quasar plugin versions 
+// 1: Add proper cordformation and quasar plugin versions
 buildscript {
     dependencies {
         classpath "net.corda.plugins:cordformation:4.0.25"
@@ -72,7 +82,7 @@ dependencies {
     cordaRuntime "net.corda:corda:4.0-SNAPSHOT"
 }
 
-// 3: Add webserverJar to each node 
+// 3: Add webserverJar to each node
 task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     //...
     node {
@@ -84,7 +94,7 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
             port 10007
             adminPort 10008
         }
-        webPort 10009 
+        webPort 10009
         webserverJar  "/PATH/TO/MY/corbeans-corda-webserver.jar"
     }
 
@@ -100,8 +110,8 @@ Then use `runnodes` as usual to see the corbeans app in place of the original co
 
 ### Configure for Multiple Nodes
 
-There are multiple ways to let Spring Boot know about your Corda nodes using 
-[externalized configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html). 
+There are multiple ways to let Spring Boot know about your Corda nodes using
+[externalized configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html).
 
 For a simple example, consider an `application.properties` file like:
 
@@ -135,12 +145,12 @@ java -jar corbeans-corda-webserver-0.18.jar  --spring.config.location=/path/to/a
 ```
 
 For more alternatives see [Externalized Configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)
-in Spring Boot docs. 
+in Spring Boot docs.
 
 
 ## API Reference
 
-You can browse a running server's [swagger-ui](http://localhost:8080/swagger-ui.html) to view documentation of the 
+You can browse a running server's [swagger-ui](http://localhost:8080/swagger-ui.html) to view documentation of the
 available endpoints:
 
 <img src="/corbeans/img/corda-webserver-spring-boot-swagger.png" alt="Corda Webserver Boot'sSwagger UI" />

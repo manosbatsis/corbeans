@@ -5,13 +5,26 @@ title: "Spring-Boot Starter"
 
 # Spring-Boot Starter
 
-The`corbeans-spring-boot-starter` module makes it easy for Spring Boot applications to interact with Corda networks. The starter 
-reads your application.properties and auto-configures Spring components to expose Corda nodes via 
-[RPC](https://docs.corda.net/clientrpc.html). 
+<!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
-The components include REST Controller, Service components and simple 
-RPC connection wrappers used to obtain a `CordaRPCOps` proxy for each Corda node. 
- 
+- [Installation](#installation)
+	- [For Gradle Users](#for-gradle-users)
+	- [For Maven Users](#for-maven-users)
+- [Configuration](#configuration)
+	- [Registered Beans](#registered-beans)
+	- [Endpoints](#endpoints)
+	- [Advanced Configuration](#advanced-configuration)
+- [Autowiring Services](#autowiring-services)
+
+<!-- /TOC -->
+
+The`corbeans-spring-boot-starter` module makes it easy for Spring Boot applications to interact with Corda networks. The starter
+reads your application.properties and auto-configures Spring components to expose Corda nodes via
+[RPC](https://docs.corda.net/clientrpc.html).
+
+The components include REST Controller, Service components and simple
+RPC connection wrappers used to obtain a `CordaRPCOps` proxy for each Corda node.
+
 The following sections how to quickly get started with corbeans in your project.
 
 ## Installation
@@ -19,7 +32,7 @@ The following sections how to quickly get started with corbeans in your project.
 To install the starter, add the dependency to your build  using either the Gradle or Maven example bellow.
 
 > **Note:** to bundle a custom starter-based or the sample webserver with your node for use via CordForm and `runNodes`  
-see the Sample Webserver documentation section: 
+see the Sample Webserver documentation section:
 [Configure for runNodes](http://127.0.0.1:4000/corbeans/docs/webserver.html#configure-for-runnodes).
 
 ### For Gradle Users
@@ -56,7 +69,7 @@ Add the dependency in your Maven POM:
 
 ## Configuration
 
-No configuration is needed When using corbeans app as a drop-in replacement to corda-webserver within a node 
+No configuration is needed When using corbeans app as a drop-in replacement to corda-webserver within a node
 folder.
 
 For a node independent app, add nodes in your `application.properties` following the example bellow.
@@ -88,7 +101,7 @@ CordaNodeService   | {nodeName}NodeService    | A Node Service Bean
 ### Endpoints
 
 A controller is also added with endpoints exposing business methods for all
-listing identity, network peers, notaries, flows, states, finding attachments etc. 
+listing identity, network peers, notaries, flows, states, finding attachments etc.
 
 
 Method | Path                                    | Description
@@ -105,13 +118,13 @@ GET    | /nodes/{nodeName}/notaries              | Returns a list of notaries in
 GET    | /nodes/{nodeName}/states                | Returns a list of states
 GET    | /nodes/{nodeName}/flows                 | Returns a list of flow classnames
 
-> **Note:** When corbeans parses node.conf as the configuration (i.e. when using `CordForm` and/or `runnodes`), 
+> **Note:** When corbeans parses node.conf as the configuration (i.e. when using `CordForm` and/or `runnodes`),
 the corresponding base path for the default node endpoints is simply `node` instead of `nodes/{nodeName}`.
 
 ### Advanced Configuration
 
-You can instruct corbeans to create and register your custom service implementations. 
-The only requirement is that you have to extend `CordaNodeServiceImpl` 
+You can instruct corbeans to create and register your custom service implementations.
+The only requirement is that you have to extend `CordaNodeServiceImpl`
 (or `CordaNodeServiceImpl` and so on), for example in Kotlin:
 
 ```kotlin
@@ -145,7 +158,7 @@ public class SampleCustomCordaNodeServiceImpl extends CordaNodeServiceImpl {
 }
 ```
 
-Then instruct corbeans to use your custom service type via the 
+Then instruct corbeans to use your custom service type via the
 `primaryServiceType` property for the desired node:
 
 ```properties
@@ -156,7 +169,7 @@ corbeans.nodes.PartyA.primaryServiceType=my.subclass.of.CordaNodeServiceImpl
 
 ## Autowiring Services
 
-Service beans registered by corbeans may be autowired as any other component, for example in Kotlin: 
+Service beans registered by corbeans may be autowired as any other component, for example in Kotlin:
 
 ```kotlin
     // autowire all created services, mapped by name
@@ -178,14 +191,14 @@ or Java
 ```java
     // autowire all created services, mapped by name
     @Autowired
-    private Map<String, CordaNodeService> services; 
+    private Map<String, CordaNodeService> services;
 
     // autowire a services for a specific node
     @Autowired
     @Qualifier("partyANodeService")
-    private CordaNodeService service; 
+    private CordaNodeService service;
 
     // autowire a unique custom service
     @Autowired
-    private SampleCustomCordaNodeServiceImpl customCervice; 
+    private SampleCustomCordaNodeServiceImpl customCervice;
 ```
