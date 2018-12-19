@@ -18,11 +18,11 @@ title: "Spring-Boot Starter"
 
 <!-- /TOC -->
 
-The`corbeans-spring-boot-starter` module makes it easy for Spring Boot applications to interact with Corda networks. The starter
-reads your application.properties and auto-configures Spring components to expose Corda nodes via
-[RPC](https://docs.corda.net/clientrpc.html).
+The`corbeans-spring-boot-starter` module makes it easy for Spring Boot applications to interact with Corda networks. 
+The starter reads the `application.properties` of your Spring Boot project and auto-configures Spring beans that 
+expose Corda nodes via [RPC](https://docs.corda.net/clientrpc.html).
 
-The components include REST Controller, Service components and simple
+Those beans include REST Controller, Service components and simple
 RPC connection wrappers used to obtain a `CordaRPCOps` proxy for each Corda node.
 
 The following sections how to quickly get started with corbeans in your project.
