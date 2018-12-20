@@ -22,7 +22,7 @@ The`corbeans-spring-boot-starter` module makes it easy for Spring Boot applicati
 The starter reads the `application.properties` of your Spring Boot project and auto-configures Spring beans that 
 expose Corda nodes via [RPC](https://docs.corda.net/clientrpc.html).
 
-Those beans include REST Controller, Service components and simple
+Those beans include a REST Controller, Service components and simple
 RPC connection wrappers used to obtain a `CordaRPCOps` proxy for each Corda node.
 
 The following sections how to quickly get started with corbeans in your project.
@@ -125,7 +125,7 @@ the corresponding base path for the default node endpoints is simply `node` inst
 
 You can instruct corbeans to create and register your custom service implementations.
 The only requirement is that you have to extend `CordaNodeServiceImpl`
-(or `CordaNodeServiceImpl` and so on), for example in Kotlin:
+(or otherwise implement `CordaNodeService`), for example in Kotlin:
 
 ```kotlin
 import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeServiceImpl
