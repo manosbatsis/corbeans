@@ -1,0 +1,56 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>com.github.manosbatsis.corbeans.spring.boot.corda - corbeans</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">corbeans</a>&nbsp;/&nbsp;<a href="./index.html">com.github.manosbatsis.corbeans.spring.boot.corda</a><br/>
+<br/>
+<h2>Package com.github.manosbatsis.corbeans.spring.boot.corda</h2>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-corda-node-service/index.html">CordaNodeService</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">CordaNodeService</span></code>
+<p>Basic interface for RPC-based node services</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-corda-node-service-impl/index.html">CordaNodeServiceImpl</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">CordaNodeServiceImpl</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-corda-node-service/index.html"><span class="identifier">CordaNodeService</span></a></code>
+<p>Basic RPC-based node service implementation</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-corda-nodes-controller/index.html">CordaNodesController</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">CordaNodesController</span></code>
+<p>Rest controller with basic endpoints for multiple corda nodes. Supports multiple nodes by
+using the nodeName  *  path variable to construct a Service Bean name,
+then uses it as a key to lookup and obtain  *  a CordaNodeService for the specific node
+from the autowired services map.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-secure-hash-converter/index.html">SecureHashConverter</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">SecureHashConverter</span></code>
+<p>Custom converter for transparent String&lt;&gt;SecureHash binding</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
