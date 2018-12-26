@@ -28,6 +28,7 @@ lazy val micrositeSettings = Seq(
   micrositeStaticDirectory := file("build/dokka"),
   micrositeFooterText := Some("<p>see also <a href='/corbeans/docs/acknowledgements.html'>acknowledgements</a></p>"),
   micrositeShareOnSocial := false,
+  micrositeAnalyticsToken := "UA-131279953-1"
 )
 
 

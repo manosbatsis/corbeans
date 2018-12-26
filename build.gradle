@@ -27,7 +27,7 @@ buildscript {
 
 		h2 = '1.4.196'
 
-		dependency_managemen_version ="1.0.6.RELEASE"
+		dependency_management_version ="1.0.6.RELEASE"
 
 	}
 
@@ -48,7 +48,7 @@ buildscript {
 
 		// spring plugins
 		classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version"
-		classpath "io.spring.gradle:dependency-management-plugin:$dependency_managemen_version"
+		classpath "io.spring.gradle:dependency-management-plugin:$dependency_management_version"
 
 		// kotlin plugins
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
