@@ -91,7 +91,10 @@ abstract class WithImplicitNetworkIT: WithDriverNodesIT() {
         try {
             finished = true
             // give time for a clean shutdown
-            while (!stopped) {
+            val oneMinute = 60000
+            var elapsed = 0
+            while (!stopped && elapsed < oneMinute) {
+                elapsed += 1000
                 Thread.sleep(1000)
             }
         } catch (e: Exception) {

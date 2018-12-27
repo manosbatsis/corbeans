@@ -28,7 +28,6 @@ import net.corda.testing.driver.driver
 import net.corda.testing.node.User
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import java.lang.RuntimeException
 
 /**
  *

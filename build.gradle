@@ -1,18 +1,18 @@
 
 buildscript {
 	ext {
-		arrow_version = "0.7.3"
-		kotlin_version = '1.1.60'
+		kotlin_version = '1.2.71'
 		kotlinx_coroutines_version = '0.30.2'
 		dokka_version = '0.9.17'
 
 		corda_release_group = 'net.corda'
-		corda_release_version = '3.3-corda'
-		corda_gradle_plugins_version = '3.1.0'
+		corda_release_version = '4.0-SNAPSHOT'
+		corda_gradle_plugins_version = '4.0.37'
 
-		quasar_version = '0.7.9'
-		capsule_version = '1.0.1'
-		asm_version = '0.5.3'
+		hibernate_version = '5.3.6.Final'
+		quasar_version = '0.7.10'
+		capsule_version = '1.0.3'
+		asm_version = '5.0.4'
 		junit_version = '4.12'
 		slf4j_version = '1.7.25'
 
@@ -20,14 +20,15 @@ buildscript {
 		springBootVersion = '2.0.6.RELEASE'
 		spring_version = '5.0.10.RELEASE'
 
-		artemis_version = "2.2.0"
+		artemis_version = "2.6.2"
 		jackson_version = "2.9.5"
 		jopt_simple_version = '5.0.2'
-		guava_version = '21.0'
+		guava_version = '25.1-jre'
+		//netty_version = '4.1.22.Final'
 
 		h2 = '1.4.196'
 
-		dependency_managemen_version ="1.0.6.RELEASE"
+		dependency_management_version ="1.0.6.RELEASE"
 
 	}
 
@@ -38,6 +39,8 @@ buildscript {
 		maven { url 'https://dl.bintray.com/kotlin/exposed' }
 		maven { url 'https://jitpack.io' }
 		maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
+		//Needed only for Corda SNAPSHOT versions
+		maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-dev/' }
 		//Needed only for SNAPSHOT versions
 		maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 
@@ -48,7 +51,7 @@ buildscript {
 
 		// spring plugins
 		classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version"
-		classpath "io.spring.gradle:dependency-management-plugin:$dependency_managemen_version"
+		classpath "io.spring.gradle:dependency-management-plugin:$dependency_management_version"
 
 		// kotlin plugins
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -98,6 +101,10 @@ allprojects {
 		maven { url 'https://jitpack.io' }
 		maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
 		maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
+		//Needed only for Corda SNAPSHOT versions
+		maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-dev/' }
+		//Needed only for SNAPSHOT versions
+		maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 	}
 
 	version = "0.19-SNAPSHOT"
@@ -125,8 +132,13 @@ subprojects {
 			exclude group: 'junit', module: 'junit'
 			resolutionStrategy {
 				eachDependency { details ->
+
+					// Force our version of hibernate
+					if (details.requested.group == 'org.hibernate' && details.requested.name.startsWith('hibernate-core')) {
+						details.useVersion hibernate_version
+					}
 					// Force our version of artemis
-					if (details.requested.group == 'org.apache.activemq' && details.requested.name.startsWith('artemis-')) {
+					else if (details.requested.group == 'org.apache.activemq' && details.requested.name.startsWith('artemis-')) {
 						details.useVersion artemis_version
 					}
 					// Force our version of jackson
@@ -187,7 +199,7 @@ task dokka (type: org.jetbrains.dokka.gradle.DokkaTask, overwrite: true) {
 	outputDirectory = "$buildDir/dokka"
 	outputFormat = "html"
 	processConfigurations = []
-
+	
 	sourceDirs = files(subprojects.collect {
 		p ->
 
