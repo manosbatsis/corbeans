@@ -7,4 +7,4 @@ before_install:
   - chmod +x gradlew
 
 script:
-  - ./gradlew build integrationTest --stacktrace
+  - ./gradlew build integrationTest --stacktrace --debug
