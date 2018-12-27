@@ -1,6 +1,6 @@
 name := "corbeans"
 organizationName := "Manos Batsis"
-version := "0.17"
+version := "0.18"
 scalaVersion := "2.11.8"
 
 lazy val noPublishSettings = Seq(
@@ -27,7 +27,7 @@ lazy val micrositeSettings = Seq(
   micrositeHighlightTheme := "github",
   micrositeHighlightLanguages := Seq("kotlin", "java", "gradle", "xml", "bash", "properties"),
   micrositeStaticDirectory := file("build/dokka"),
-  micrositeFooterText := Some("we are in accord"),
+  micrositeFooterText := Some("<p>see also <a href='/corbeans/docs/acknowledgements.html'>acknowledgements</a></p>"),
   micrositeShareOnSocial := false,
 )
 

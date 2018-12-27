@@ -1,2 +1,3 @@
+# Auto-Configurations
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure.CordaNodesAutoConfiguration

@@ -24,7 +24,32 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
 
 /**
- * Corda nodes configuration
+ * Application properties configuration for one or multiple
+ * Corda nodes. Sample config:
+ *
+ * ```properties
+ * # first node
+ * corbeans.nodes.partyA.username=user1
+ * corbeans.nodes.partyA.password=test
+ * corbeans.nodes.partyA.lazy=true
+ * corbeans.nodes.partyA.address=localhost:10006
+ * corbeans.nodes.partyA.adminAddress=localhost:10046
+ *
+ * # second node
+ * corbeans.nodes.partyB.username=user1
+ * corbeans.nodes.partyB.password=test
+ * corbeans.nodes.partyB.lazy=true
+ * corbeans.nodes.partyB.address=localhost:10009
+ * corbeans.nodes.partyB.adminAddress=localhost:10049
+ * corbeans.nodes.partyB.primaryServiceType=com.github.manosbatsis.corbeans.corda.webserver.components.SampleCustomCordaNodeServiceImpl
+ *
+ * # more nodes...
+ *
+ * # logging config etc.
+ * logging.level.root=INFO
+ * logging.level.com.github.manosbatsis=DEBUG
+ * logging.level.net.corda=INFO
+ * ```
  */
 @Component
 @ConfigurationProperties(prefix = "corbeans")

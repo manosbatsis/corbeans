@@ -21,14 +21,8 @@ package com.github.manosbatsis.corbeans.test.integration
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
 import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeParams
-import net.corda.core.identity.CordaX500Name
-import net.corda.core.utilities.getOrThrow
-import net.corda.testing.driver.DriverParameters
-import net.corda.testing.driver.driver
-import net.corda.testing.node.User
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import java.lang.RuntimeException
 
 /**
  *
@@ -107,23 +101,37 @@ abstract class WithDriverNodesIT {
     open fun withDriverNodes(action: () -> Unit) {
         logger.debug("withDriverNodes: starting network")
         try {
+            // Get node configurations
+            val nodeParameters = getNodeParams()
+            val startedRpcAddresses = mutableSetOf<String>()
             // start the driver
             driver(DriverParameters(
                     startNodesInProcess = true,
                     extraCordappPackagesToScan = getCordappPackages())) {
 
-                // configure nodes per application.properties
+                // Configure nodes per application.properties
                 getNodeParams().forEach {
-                    val nodeName = it.key
-                    val nodeParams = it.value
-                    val user = User(nodeParams.username, nodeParams.password, setOf("ALL"))
-                    @Suppress("UNUSED_VARIABLE")
-                    val handle = startNode(
-                            providedName = CordaX500Name(nodeName, "Athens", "GR"),
-                            rpcUsers = listOf(user),
-                            customOverrides = mapOf(
-                                    "rpcSettings.address" to nodeParams.address,
-                                    "rpcSettings.adminAddress" to nodeParams.adminAddress)).getOrThrow()
+                    try {
+                        val nodeName = it.key
+                        val nodeParams = it.value
+
+                        // Only start a node per unique address
+                        if (!startedRpcAddresses.contains(nodeParams.address)) {
+                            // note the address as started
+                            startedRpcAddresses.add(nodeParams.address)
+
+                            val user = User(nodeParams.username, nodeParams.password, setOf("ALL"))
+                            @Suppress("UNUSED_VARIABLE")
+                            val handle = startNode(
+                                    providedName = CordaX500Name(nodeName, "Athens", "GR"),
+                                    rpcUsers = listOf(user),
+                                    customOverrides = mapOf(
+                                            "rpcSettings.address" to nodeParams.address,
+                                            "rpcSettings.adminAddress" to nodeParams.adminAddress)).getOrThrow()
+                        }
+                    } catch (e: Exception) {
+                        logger.error("Failed starting node {}", e)
+                    }
                 }
 
                 // mark as started

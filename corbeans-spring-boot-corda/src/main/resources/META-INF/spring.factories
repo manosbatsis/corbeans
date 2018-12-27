@@ -1,0 +1,2 @@
+org.springframework.context.ApplicationListener=\
+com.github.manosbatsis.corbeans.spring.boot.corda.config.cordform.NodeConfCheckingListener
