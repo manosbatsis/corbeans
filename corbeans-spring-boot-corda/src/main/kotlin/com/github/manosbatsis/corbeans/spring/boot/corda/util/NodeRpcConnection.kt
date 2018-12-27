@@ -20,11 +20,11 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.util
 
 import net.corda.client.rpc.CordaRPCClient
+import net.corda.client.rpc.CordaRPCClientConfiguration
 import net.corda.client.rpc.CordaRPCConnection
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.utilities.NetworkHostAndPort
 import org.slf4j.LoggerFactory
-import java.util.concurrent.TimeUnit
 import javax.annotation.PreDestroy
 
 
@@ -37,43 +37,47 @@ abstract class NodeRpcConnection(private val nodeParams: NodeParams) {
         private val logger = LoggerFactory.getLogger(NodeRpcConnection::class.java)
     }
 
-
     private lateinit var rpcConnection: CordaRPCConnection
     abstract val proxy: CordaRPCOps
 
-
     fun createProxy(): CordaRPCOps {
-        var created: CordaRPCOps? = null
-        var i = 0
-        while (created == null) {
-            i++
-            try {
+        logger.debug("Initializing RPC connection for address {}", nodeParams.address)
+        val rpcClient = CordaRPCClient(buildRpcAddress(), buildRpcClientConfig())
+        rpcConnection = rpcClient.start(nodeParams.username!!, nodeParams.password!!)
+        return rpcConnection.proxy
+    }
 
-                val addressParts = nodeParams.address.split(":")
-                val rpcAddress = NetworkHostAndPort(addressParts[0], addressParts[1].toInt())
-                val rpcClient = CordaRPCClient(rpcAddress)
+    private fun buildRpcAddress(): NetworkHostAndPort {
+        val addressParts = nodeParams.address!!.split(":")
+        val rpcAddress = NetworkHostAndPort(addressParts[0], addressParts[1].toInt())
+        return rpcAddress
+    }
 
-                rpcConnection = rpcClient.start(nodeParams.username, nodeParams.password)
-                created = rpcConnection.proxy
-            } catch (e: Exception) {
-                logger.error("Failed initializing RPC connection to ${nodeParams.address}", e)
-                if (i < 0)//nodeParams.retries)
-                    TimeUnit.SECONDS.sleep(nodeParams.retryDelaySeconds)
-                else {
-                    throw RuntimeException(e)
-                }
-            }
-        }
-        logger.debug("Initialized RPC connection for {}, name: {}",
-                nodeParams.address, created.nodeInfo().legalIdentities.first().name)
-        return created
+    /** Build a [CordaRPCClientConfiguration] based on the provided [NodeParams] */
+    private fun buildRpcClientConfig(): CordaRPCClientConfiguration {
+        var cordaRPCClientConfiguration = CordaRPCClientConfiguration(
+                connectionMaxRetryInterval = nodeParams.connectionMaxRetryInterval,
+                connectionRetryInterval = nodeParams.connectionRetryInterval,
+                connectionRetryIntervalMultiplier = nodeParams.connectionRetryIntervalMultiplier,
+                deduplicationCacheExpiry = nodeParams.deduplicationCacheExpiry,
+                maxFileSize = nodeParams.maxFileSize,
+                maxReconnectAttempts = nodeParams.maxReconnectAttempts,
+                observationExecutorPoolSize = nodeParams.observationExecutorPoolSize,
+                reapInterval = nodeParams.reapInterval,
+                trackRpcCallSites = nodeParams.trackRpcCallSites,
+                minimumServerProtocolVersion = nodeParams.minimumServerProtocolVersion
+        )
+        return cordaRPCClientConfiguration
     }
 
     /** Try cleaning up on [PreDestroy] */
     @PreDestroy
     fun onPreDestroy() {
-        logger.debug(
-            "onPreDestroy, closing RPC connection for {}:{}", nodeParams.address)
-        rpcConnection.notifyServerAndClose()
+        try{
+            rpcConnection.notifyServerAndClose()
+        }
+        catch (e: Exception){
+            logger.warn("Error notifying server ${nodeParams.address}", e)
+        }
     }
 }

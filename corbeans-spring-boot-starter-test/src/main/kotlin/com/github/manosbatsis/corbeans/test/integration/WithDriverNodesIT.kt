@@ -106,8 +106,6 @@ abstract class WithDriverNodesIT {
     open fun withDriverNodes(action: () -> Unit) {
         logger.debug("withDriverNodes: starting network")
         try {
-            // Get node configurations
-            val nodeParameters = getNodeParams()
             val startedRpcAddresses = mutableSetOf<String>()
             // start the driver
             driver(DriverParameters(
@@ -123,9 +121,9 @@ abstract class WithDriverNodesIT {
                         // Only start a node per unique address
                         if (!startedRpcAddresses.contains(nodeParams.address)) {
                             // note the address as started
-                            startedRpcAddresses.add(nodeParams.address)
+                            startedRpcAddresses.add(nodeParams.address!!)
 
-                            val user = User(nodeParams.username, nodeParams.password, setOf("ALL"))
+                            val user = User(nodeParams.username!!, nodeParams.password!!, setOf("ALL"))
                             @Suppress("UNUSED_VARIABLE")
                             val handle = startNode(
                                     providedName = CordaX500Name(nodeName, "Athens", "GR"),

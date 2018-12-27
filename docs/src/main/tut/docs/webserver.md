@@ -11,6 +11,7 @@ title: "Sample Webserver"
 - [Running the Server](#running-the-server)
 	- [Configure for `runNodes`](#configure-for-runnodes)
 	- [Configure for Multiple Nodes](#configure-for-multiple-nodes)
+	- [Optional Properties](#optional-properties)
 	- [Run](#run)
 - [API Reference](#api-reference)
 
@@ -134,6 +135,24 @@ corbeans.nodes.partyB.primaryServiceType=com.github.manosbatsis.corbeans.corda.w
 logging.level.root=INFO
 logging.level.com.github.manosbatsis=DEBUG
 logging.level.net.corda=INFO
+```
+
+### Optional Properties
+
+The following properties are optional per node (e.g. partA) 
+with defaults taken from `CordaRPCClientConfiguration.DEFAULT`
+
+```properties
+#corbeans.nodes.partyA.connectionMaxRetryInterval=
+#corbeans.nodes.partyA.connectionRetryInterval=
+#corbeans.nodes.partyA.connectionRetryIntervalMultiplier=
+#corbeans.nodes.partyA.deduplicationCacheExpiry=
+#corbeans.nodes.partyA.maxFileSize=
+#corbeans.nodes.partyA.maxReconnectAttempts=
+#corbeans.nodes.partyA.minimumServerProtocolVersion=
+#corbeans.nodes.partyA.observationExecutorPoolSize=
+#corbeans.nodes.partyA.reapInterval=
+#corbeans.nodes.partyA.trackRpcCallSites=
 ```
 
 ### Run
