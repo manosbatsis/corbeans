@@ -13,7 +13,9 @@ before_install:
   - chmod +x gradlew
 
 install: echo "skip 'gradle assemble' step"
-script: travis_wait ./gradlew build integrationTest --console=plain
+script:
+  - ./gradlew build --quiet
+  - TERM=dumb travis_wait ./gradlew integrationTest --debug --console=plain
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
