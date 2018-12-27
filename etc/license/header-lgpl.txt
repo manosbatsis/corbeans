@@ -1,4 +1,4 @@
-    Corda-Spring: integration and other utilities for developers working with Spring-Boot and Corda.
+    Corbeans: Corda integration for Spring Boot
     Copyright (C) 2018 Manos Batsis
 
     This library is free software; you can redistribute it and/or
