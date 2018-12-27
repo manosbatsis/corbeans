@@ -7,8 +7,9 @@ buildscript {
 
 		corda_release_group = 'net.corda'
 		corda_release_version = '4.0-SNAPSHOT'
-		corda_gradle_plugins_version = '3.1.0'
+		corda_gradle_plugins_version = '4.0.37'
 
+		hibernate_version = '5.3.6.Final'
 		quasar_version = '0.7.10'
 		capsule_version = '1.0.3'
 		asm_version = '5.0.4'
@@ -20,13 +21,13 @@ buildscript {
 		spring_version = '5.0.10.RELEASE'
 
 		artemis_version = "2.6.2"
-		jackson_version = "2.9.5"
+		jackson_version = "2.9.7"
 		guava_version = '25.1-jre'
 		//netty_version = '4.1.22.Final'
 
 		h2 = '1.4.196'
 
-		dependency_managemen_version ="1.0.6.RELEASE"
+		dependency_management_version ="1.0.6.RELEASE"
 
 	}
 
@@ -47,7 +48,7 @@ buildscript {
 
 		// spring plugins
 		classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version"
-		classpath "io.spring.gradle:dependency-management-plugin:$dependency_managemen_version"
+		classpath "io.spring.gradle:dependency-management-plugin:$dependency_management_version"
 
 		// kotlin plugins
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -124,8 +125,13 @@ subprojects {
 			exclude group: 'junit', module: 'junit'
 			resolutionStrategy {
 				eachDependency { details ->
+
+					// Force our version of hibernate
+					if (details.requested.group == 'org.hibernate' && details.requested.name.startsWith('hibernate-core')) {
+						details.useVersion hibernate_version
+					}
 					// Force our version of artemis
-					if (details.requested.group == 'org.apache.activemq' && details.requested.name.startsWith('artemis-')) {
+					else if (details.requested.group == 'org.apache.activemq' && details.requested.name.startsWith('artemis-')) {
 						details.useVersion artemis_version
 					}
 					// Force our version of jackson
