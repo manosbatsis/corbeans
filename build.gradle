@@ -101,6 +101,10 @@ allprojects {
 		maven { url 'https://jitpack.io' }
 		maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
 		maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
+		//Needed only for Corda SNAPSHOT versions
+		maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-dev/' }
+		//Needed only for SNAPSHOT versions
+		maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 	}
 
 	version = "0.19-SNAPSHOT"
