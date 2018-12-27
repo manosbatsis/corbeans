@@ -22,6 +22,7 @@ buildscript {
 
 		artemis_version = "2.6.2"
 		jackson_version = "2.9.7"
+		jopt_simple_version = '5.0.2'
 		guava_version = '25.1-jre'
 		//netty_version = '4.1.22.Final'
 
