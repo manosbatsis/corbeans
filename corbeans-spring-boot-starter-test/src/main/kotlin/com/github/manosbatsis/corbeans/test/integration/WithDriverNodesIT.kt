@@ -21,6 +21,11 @@ package com.github.manosbatsis.corbeans.test.integration
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
 import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeParams
+import net.corda.core.identity.CordaX500Name
+import net.corda.core.utilities.getOrThrow
+import net.corda.testing.driver.DriverParameters
+import net.corda.testing.driver.driver
+import net.corda.testing.node.User
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 

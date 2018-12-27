@@ -22,6 +22,8 @@ package com.github.manosbatsis.corbeans.corda.webserver
 import com.github.manosbatsis.corbeans.corda.webserver.components.SampleCustomCordaNodeServiceImpl
 import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeService
 import com.github.manosbatsis.corbeans.test.integration.WithDriverNodesIT
+import net.corda.core.identity.Party
+import net.corda.core.utilities.NetworkHostAndPort
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test

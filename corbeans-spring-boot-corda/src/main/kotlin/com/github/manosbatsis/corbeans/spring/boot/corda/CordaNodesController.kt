@@ -19,6 +19,12 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda
 
+import net.corda.core.contracts.ContractState
+import net.corda.core.contracts.StateAndRef
+import net.corda.core.crypto.SecureHash
+import net.corda.core.identity.Party
+import net.corda.core.internal.extractFile
+import net.corda.core.utilities.NetworkHostAndPort
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders

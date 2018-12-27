@@ -20,6 +20,7 @@
 package com.github.manosbatsis.corbeans.corda.webserver.config
 
 import com.fasterxml.jackson.databind.Module
+import net.corda.client.jackson.JacksonSupport
 import org.springframework.boot.jackson.JsonComponentModule
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

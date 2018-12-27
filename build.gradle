@@ -21,7 +21,7 @@ buildscript {
 		spring_version = '5.0.10.RELEASE'
 
 		artemis_version = "2.6.2"
-		jackson_version = "2.9.7"
+		jackson_version = "2.9.5"
 		jopt_simple_version = '5.0.2'
 		guava_version = '25.1-jre'
 		//netty_version = '4.1.22.Final'
@@ -193,7 +193,7 @@ task dokka (type: org.jetbrains.dokka.gradle.DokkaTask, overwrite: true) {
 	outputDirectory = "$buildDir/dokka"
 	outputFormat = "html"
 	processConfigurations = []
-
+	
 	sourceDirs = files(subprojects.collect {
 		p ->
 
