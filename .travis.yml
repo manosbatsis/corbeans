@@ -7,4 +7,4 @@ before_install:
   - chmod +x gradlew
 
 script:
-  - TERM=dumb ./gradlew build integrationTest --stacktrace
+  - TERM=dumb travis_wait ./gradlew integrationTest
