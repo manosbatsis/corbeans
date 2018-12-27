@@ -6,5 +6,17 @@ jdk:
 before_install:
   - chmod +x gradlew
 
+env:
+  - CI=true
+
 script:
-  - TERM=dumb travis_wait ./gradlew integrationTest
+  - TERM=dumb travis_wait ./gradlew build integrationTest --scan -s
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
