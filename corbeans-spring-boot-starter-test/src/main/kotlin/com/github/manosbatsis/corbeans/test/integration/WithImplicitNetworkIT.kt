@@ -17,9 +17,8 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corda.webserver.spring
+package com.github.manosbatsis.corbeans.test.integration
 
-import com.github.manosbatsis.corbeans.test.integration.WithDriverNodesIT
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.async
 import org.junit.jupiter.api.AfterAll

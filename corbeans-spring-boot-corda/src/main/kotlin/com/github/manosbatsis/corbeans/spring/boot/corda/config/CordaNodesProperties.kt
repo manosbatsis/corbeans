@@ -50,6 +50,11 @@ import org.springframework.stereotype.Component
  * logging.level.com.github.manosbatsis=DEBUG
  * logging.level.net.corda=INFO
  * ```
+ *
+ * In the case of CordForm/runnodes an instance of this class is initialised by `NodeConfCheckingListener`
+ * (see `corbeans-spring-boot-corda` module)
+ *
+ * @see com.github.manosbatsis.corbeans.spring.boot.corda.config.cordform.NodeConfCheckingListener
  */
 @Component
 @ConfigurationProperties(prefix = "corbeans")

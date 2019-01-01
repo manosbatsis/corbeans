@@ -19,11 +19,12 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure
 
-
-import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeServiceImpl
+import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeService
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
 import com.github.manosbatsis.corbeans.spring.boot.corda.util.EagerNodeRpcConnection
 import com.github.manosbatsis.corbeans.spring.boot.corda.util.LazyNodeRpcConnection
+import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeParams
+import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeRpcConnection
 import org.slf4j.LoggerFactory
 import org.springframework.beans.BeansException
 import org.springframework.beans.factory.config.BeanDefinition.SCOPE_SINGLETON
@@ -40,8 +41,9 @@ import org.springframework.core.env.Environment
 
 
 /**
- * Dynamically creates and registers CordaNodeService beans based on
- * the Spring Boot application configuration
+ * Dynamically creates and registers [NodeRpcConnection] and [CordaNodeService] beans based on
+ * the node or Spring Boot application configuration, i.e. `node.conf` and `application.properties`
+ * respectively
  */
 @Order
 open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, EnvironmentAware {
@@ -66,44 +68,69 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
     @Throws(BeansException::class)
     override fun postProcessBeanFactory(beanFactory: ConfigurableListableBeanFactory) {
         val beanDefinitionRegistry = beanFactory as BeanDefinitionRegistry
-
-        this.cordaNodesProperties.nodes.forEach{ (nodeName, nodeParams) ->
-            logger.debug("Registering, node name: {}, address: {}", nodeName, nodeParams.address)
-
-            // register RPC connection wrapper bean
-            val rpcConnectionBeanName = "${nodeName}RpcConnection";
-            val rpcConnectionBean = BeanDefinitionBuilder
-                    .rootBeanDefinition(if(nodeParams.lazy) LazyNodeRpcConnection::class.java else EagerNodeRpcConnection::class.java)
-                    .setScope(SCOPE_SINGLETON)
-                    .addConstructorArgValue(nodeParams)
-                    .getBeanDefinition()
-            beanDefinitionRegistry.registerBeanDefinition(rpcConnectionBeanName, rpcConnectionBean)
-            logger.debug("Registered RPC connection bean {} for Party {}", rpcConnectionBeanName, nodeName)
-
-
-            // verify node service type
-            val serviceType = Class.forName(nodeParams.primaryServiceType)
-            if(!CordaNodeServiceImpl::class.java.isAssignableFrom(serviceType)){
-                throw IllegalArgumentException("Provided service type for node ${nodeName} does not extend CordaNodeServiceImpl or CordaNodeServiceImpl")
+        // Pickup any user-defined global defaultParams, use defaults if missing
+        val defaultParams = this.cordaNodesProperties.nodes.getOrDefault(NodeParams.NODENAME_DEFAULT, NodeParams.DEFAULT)
+        // Process node connection definitions
+        this.cordaNodesProperties.nodes.forEach{ (nodeName, partialParams) ->
+            // Ignore "default" overrides
+            if(nodeName != NodeParams.NODENAME_DEFAULT){
+                logger.debug("Registering, node name: {}, address: {}", nodeName, partialParams.address)
+                // Merge params to complete config
+                val nodeParams = NodeParams.mergeParams(partialParams, defaultParams)
+                // register RPC connection wrapper bean
+                registerConnectionWrapper(nodeParams, nodeName, beanDefinitionRegistry)
+                // register Node service
+                registerNodeService(nodeParams, nodeName, beanDefinitionRegistry)
             }
-            // register Node service
-            val nodeServiceBeanName = "${nodeName}NodeService";
-            val nodeServiceBean = BeanDefinitionBuilder
-                    // TODO: make service class configurable
-                    .rootBeanDefinition(serviceType)
-                    .addConstructorArgReference(rpcConnectionBeanName)
-                    .getBeanDefinition()
-            beanDefinitionRegistry.registerBeanDefinition(nodeServiceBeanName, nodeServiceBean)
-            logger.debug("Registered node service {} for Party: {}, type: {}", nodeServiceBeanName, nodeName, serviceType.name)
         }
     }
 
+    /** Register Node service */
+    private fun registerNodeService(nodeParams: NodeParams, nodeName: String, beanDefinitionRegistry: BeanDefinitionRegistry) {
+        // Convention-based rpc wrapper bean name
+        val rpcConnectionBeanName = "${nodeName}RpcConnection";
+        // Verify the node service type
+        val serviceType = verifyNodeServiceType(nodeParams, nodeName)
+        val nodeServiceBeanName = "${nodeName}NodeService";
+        val nodeServiceBean = BeanDefinitionBuilder
+                .rootBeanDefinition(serviceType)
+                .addConstructorArgReference(rpcConnectionBeanName)
+                .getBeanDefinition()
+        beanDefinitionRegistry.registerBeanDefinition(nodeServiceBeanName, nodeServiceBean)
+        logger.debug("Registered node service {} for Party: {}, type: {}", nodeServiceBeanName, nodeName, serviceType.name)
+    }
+
+    /** Verify node service type */
+    private fun verifyNodeServiceType(nodeParams: NodeParams, nodeName: String): Class<*> {
+        // Verify interface implementation
+        val serviceType = Class.forName(nodeParams.primaryServiceType)
+        if (!CordaNodeService::class.java.isAssignableFrom(serviceType)) {
+            throw IllegalArgumentException("Provided service type for node ${nodeName} does not implement CordaNodeService")
+        }
+        return serviceType
+    }
+
+    /** Register RPC connection wrapper bean */
+    private fun registerConnectionWrapper(nodeParams: NodeParams, nodeName: String, beanDefinitionRegistry: BeanDefinitionRegistry): String {
+        val rpcConnectionBeanName = "${nodeName}RpcConnection"
+        val rpcConnectionBean = BeanDefinitionBuilder
+                .rootBeanDefinition(if (nodeParams.lazy!!) LazyNodeRpcConnection::class.java else EagerNodeRpcConnection::class.java)
+                .setScope(SCOPE_SINGLETON)
+                .addConstructorArgValue(nodeParams)
+                .getBeanDefinition()
+        beanDefinitionRegistry.registerBeanDefinition(rpcConnectionBeanName, rpcConnectionBean)
+        logger.debug("Registered RPC connection bean {} for Party {}", rpcConnectionBeanName, nodeName)
+        return rpcConnectionBeanName
+    }
+
     /**
-     * Parse spring-boot config files to a [CordaNodesProperties] instance
+     * Parse spring-boot config files to a [CordaNodesProperties] instance,
+     * as it's too soon for spring to have application properties available
      */
     fun buildCordaNodesProperties(environment: ConfigurableEnvironment): CordaNodesProperties {
         val sources = ConfigurationPropertySources.from(environment.propertySources)
         val binder = Binder(sources)
         return binder.bind("corbeans", CordaNodesProperties::class.java).orElseCreate(CordaNodesProperties::class.java)
     }
+
 }

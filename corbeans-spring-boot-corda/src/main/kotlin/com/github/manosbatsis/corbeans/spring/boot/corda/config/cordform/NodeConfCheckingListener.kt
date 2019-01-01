@@ -77,15 +77,15 @@ class NodeConfCheckingListener : ApplicationListener<ApplicationEnvironmentPrepa
         nodeProperties.put("server.port", webAddress.substringAfterLast(':'))
 
         // Set RPC connection URLs
-        nodeProperties.put("corbeans.nodes.default.lazy", true) // to work with `runNodes` script
+        nodeProperties.put("corbeans.nodes.cordform.lazy", true) // to work with `runNodes` script
         val rpcAddress = getConfigRequiredString(finalConfig, "rpcSettings.address")
-        nodeProperties.put("corbeans.nodes.default.address", rpcAddress)
-        nodeProperties.put("corbeans.nodes.default.adminAddress", getConfigRequiredString(finalConfig, "rpcSettings.adminAddress"))
+        nodeProperties.put("corbeans.nodes.cordform.address", rpcAddress)
+        nodeProperties.put("corbeans.nodes.cordform.adminAddress", getConfigRequiredString(finalConfig, "rpcSettings.adminAddress"))
 
         // Set RPC connection credentials
         var user: Config = selectRpcUser(finalConfig)
-        nodeProperties.put("corbeans.nodes.default.username", getConfigRequiredString(user, "username"))
-        nodeProperties.put("corbeans.nodes.default.password", getConfigRequiredString(user, "password"))
+        nodeProperties.put("corbeans.nodes.cordform.username", getConfigRequiredString(user, "username"))
+        nodeProperties.put("corbeans.nodes.cordform.password", getConfigRequiredString(user, "password"))
 
         val partyName = getConfigRequiredString(finalConfig, "myLegalName")
         logger.debug("Added corbeans config for party {}, RPC address: {}", partyName, rpcAddress)

@@ -112,14 +112,17 @@ abstract class WithDriverNodesIT {
                     startNodesInProcess = true,
                     extraCordappPackagesToScan = getCordappPackages())) {
 
+                val nodeParamsMap = getNodeParams()
                 // Configure nodes per application.properties
-                getNodeParams().forEach {
+                nodeParamsMap.forEach {
                     try {
                         val nodeName = it.key
                         val nodeParams = it.value
 
-                        // Only start a node per unique address
-                        if (!startedRpcAddresses.contains(nodeParams.address)) {
+                        // Only start a node per unique address,
+                        // ignoring "default" overrides
+                        if (!startedRpcAddresses.contains(nodeParams.address)
+                                && nodeName != NodeParams.NODENAME_DEFAULT ) {
                             // note the address as started
                             startedRpcAddresses.add(nodeParams.address!!)
 

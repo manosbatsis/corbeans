@@ -25,6 +25,7 @@ import net.corda.core.contracts.ContractState
 import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.identity.Party
+import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.vaultQueryBy
 import net.corda.core.node.services.vault.*
 import org.apache.commons.io.IOUtils
@@ -65,6 +66,9 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
     var defaultSort = Sort(listOf(sortByUid))
 
 
+    /** Returns a [CordaRPCOps] proxy for this node. */
+    override fun proxy(): CordaRPCOps = this.nodeRpcConnection.proxy
+
     /** Returns a list of the node's network peers. */
     override fun peers() = mapOf("peers" to nodeRpcConnection.proxy.networkMapSnapshot()
             .filter { nodeInfo -> nodeInfo.legalIdentities.first() != myIdentity }
@@ -78,6 +82,17 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
         val filteredNodeNamesToStr = filteredNodeNames.map { it.toString() }
         return mapOf("peers" to filteredNodeNamesToStr)
     }
+
+    /**
+     * Returns a list of candidate matches for a given string, with optional fuzzy(ish) matching. Fuzzy matching may
+     * get smarter with time e.g. to correct spelling errors, so you should not hard-code indexes into the results
+     * but rather show them via a user interface and let the user pick the one they wanted.
+     *
+     * @param query The string to check against the X.500 name components
+     * @param exactMatch If true, a case sensitive match is done against each component of each X.500 name.
+     */
+    override fun partiesFromName(query: String, exactMatch: Boolean): Set<Party> =
+            this.nodeRpcConnection.proxy.partiesFromName(query, exactMatch)
 
     override fun serverTime(): LocalDateTime {
         return LocalDateTime.ofInstant(nodeRpcConnection.proxy.currentNodeTime(), ZoneId.of("UTC"))

@@ -19,6 +19,7 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda
 
+import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeParams
 import net.corda.core.contracts.ContractState
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.crypto.SecureHash
@@ -54,19 +55,23 @@ open class CordaNodesController {
 
     companion object {
         private val logger = LoggerFactory.getLogger(CordaNodesController::class.java)
-        val NODE_NAME_DEFAULT = "default"
+
     }
 
+    protected lateinit var defaultNodeName: String
+
     @Autowired
-    protected lateinit var services: Map<String, CordaNodeService>// = HashMap()
+    protected lateinit var services: Map<String, CordaNodeService>
 
     @PostConstruct
     fun postConstruct() {
-        logger.debug("Auto-configured RESTful services for Corda nodes:: {}", services.keys)
+        // if single node config, use the only node name as default, else reserve explicitly for cordform
+        defaultNodeName = if(services.keys.size == 1) services.keys.first() else NodeParams.NODENAME_CORDFORM
+        logger.debug("Auto-configured RESTful services for Corda nodes:: {}, default node: {}", services.keys, defaultNodeName)
     }
 
     fun getService(optionalNodeName: Optional<String>): CordaNodeService {
-        val nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else NODE_NAME_DEFAULT
+        val nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName
         return this.services.get("${nodeName}NodeService") ?: throw IllegalArgumentException("Node not found: $nodeName")
     }
 

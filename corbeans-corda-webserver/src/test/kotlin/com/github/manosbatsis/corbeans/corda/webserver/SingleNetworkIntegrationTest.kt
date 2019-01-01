@@ -21,7 +21,7 @@ package com.github.manosbatsis.corbeans.corda.webserver
 
 import com.github.manosbatsis.corbeans.corda.webserver.components.SampleCustomCordaNodeServiceImpl
 import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeService
-import com.github.manosbatsis.corda.webserver.spring.WithImplicitNetworkIT
+import com.github.manosbatsis.corbeans.test.integration.WithImplicitNetworkIT
 import net.corda.core.identity.Party
 import net.corda.core.utilities.NetworkHostAndPort
 import org.junit.jupiter.api.Assertions
@@ -58,6 +58,7 @@ class SingleNetworkIntegrationTest : WithImplicitNetworkIT() {
 
     // autowire a unique custom service
     @Autowired
+    @Qualifier("partyBNodeService")
     lateinit var customCervice: SampleCustomCordaNodeServiceImpl
 
     @Autowired
@@ -65,14 +66,8 @@ class SingleNetworkIntegrationTest : WithImplicitNetworkIT() {
 
     @Test
     fun `Can use both default node and multiple node controller endpoints`() {
-        //val defaultNodeMe = this.restTemplate.getForObject("/node/me", Map::class.java)
-        //assertEquals("me", defaultNodeMe.keys.first())
-
         val defaultNodeMe = this.restTemplate.getForObject("/node/me", Map::class.java)
         Assertions.assertEquals("me", defaultNodeMe.keys.first())
-        //val defaultNodeMe = this.restTemplate.getForObject("/node/me", Map::class.java)
-        //assertEquals("me", defaultNodeMe.keys.first())
-
         val partyANodeMe = this.restTemplate.getForObject("/nodes/partyA/me", Map::class.java)
         Assertions.assertEquals("me", partyANodeMe.keys.first())
     }

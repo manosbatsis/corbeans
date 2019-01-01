@@ -23,6 +23,7 @@ import net.corda.core.contracts.ContractState
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.Party
+import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.utilities.NetworkHostAndPort
 import java.io.InputStream
 import java.time.LocalDateTime
@@ -35,13 +36,22 @@ interface CordaNodeService {
     /** Get the node identity */
     val myIdentity: Party
 
+    /** Returns a [CordaRPCOps] proxy for this node. */
+    fun proxy(): CordaRPCOps
     /** Returns a list of the node's network peers. */
     fun peers(): Map<String, List<String>>
 
-
     /** Returns a list of the node's network peer names. */
     fun peerNames(): Map<String, List<String>>
-
+    /**
+     * Returns a list of candidate matches for a given string, with optional fuzzy(ish) matching. Fuzzy matching may
+     * get smarter with time e.g. to correct spelling errors, so you should not hard-code indexes into the results
+     * but rather show them via a user interface and let the user pick the one they wanted.
+     *
+     * @param query The string to check against the X.500 name components
+     * @param exactMatch If true, a case sensitive match is done against each component of each X.500 name.
+     */
+    fun partiesFromName(query: String, exactMatch: Boolean = false): Set<Party>
     fun serverTime(): LocalDateTime
 
     fun states(): List<StateAndRef<ContractState>>
@@ -52,4 +62,5 @@ interface CordaNodeService {
     fun addresses(): List<NetworkHostAndPort>
     fun openArrachment(hash: SecureHash): InputStream
     fun openArrachment(hash: String): InputStream
+
 }

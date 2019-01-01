@@ -56,16 +56,16 @@ abstract class NodeRpcConnection(private val nodeParams: NodeParams) {
     /** Build a [CordaRPCClientConfiguration] based on the provided [NodeParams] */
     private fun buildRpcClientConfig(): CordaRPCClientConfiguration {
         var cordaRPCClientConfiguration = CordaRPCClientConfiguration(
-                connectionMaxRetryInterval = nodeParams.connectionMaxRetryInterval,
-                connectionRetryInterval = nodeParams.connectionRetryInterval,
-                connectionRetryIntervalMultiplier = nodeParams.connectionRetryIntervalMultiplier,
-                deduplicationCacheExpiry = nodeParams.deduplicationCacheExpiry,
-                maxFileSize = nodeParams.maxFileSize,
-                maxReconnectAttempts = nodeParams.maxReconnectAttempts,
-                observationExecutorPoolSize = nodeParams.observationExecutorPoolSize,
-                reapInterval = nodeParams.reapInterval,
-                trackRpcCallSites = nodeParams.trackRpcCallSites,
-                minimumServerProtocolVersion = nodeParams.minimumServerProtocolVersion
+                connectionMaxRetryInterval = nodeParams.connectionMaxRetryInterval!!,
+                connectionRetryInterval = nodeParams.connectionRetryInterval!!,
+                connectionRetryIntervalMultiplier = nodeParams.connectionRetryIntervalMultiplier!!,
+                deduplicationCacheExpiry = nodeParams.deduplicationCacheExpiry!!,
+                maxFileSize = nodeParams.maxFileSize!!,
+                maxReconnectAttempts = nodeParams.maxReconnectAttempts!!,
+                observationExecutorPoolSize = nodeParams.observationExecutorPoolSize!!,
+                reapInterval = nodeParams.reapInterval!!,
+                trackRpcCallSites = nodeParams.trackRpcCallSites!!,
+                minimumServerProtocolVersion = nodeParams.minimumServerProtocolVersion!!
         )
         return cordaRPCClientConfiguration
     }
