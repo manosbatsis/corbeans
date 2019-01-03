@@ -70,17 +70,17 @@ the `CordForm` plugin, by applyihng the following changes in your cordapp build:
 // 1: Add proper cordformation and quasar plugin versions
 buildscript {
     dependencies {
-        classpath "net.corda.plugins:cordformation:4.0.25"
-        classpath "net.corda.plugins:quasar-utils:4.0.25"
+        classpath "net.corda.plugins:cordformation:$corda_gradle_plugins_version"
+        classpath "net.corda.plugins:quasar-utils:$corda_gradle_plugins_version"
         //...
     }
 }
 // 2: Add Corda v4
 dependencies {
-    cordaCompile "net.corda:corda-jackson:4.0-SNAPSHOT"
-    cordaCompile "net.corda:corda-rpc:4.0-SNAPSHOT"
-    cordaCompile "net.corda:corda-core:4.0-SNAPSHOT"
-    cordaRuntime "net.corda:corda:4.0-SNAPSHOT"
+    cordaCompile "net.corda:corda-jackson:$corda_release_version"
+    cordaCompile "net.corda:corda-rpc:$corda_release_version"
+    cordaCompile "net.corda:corda-core:$corda_release_version"
+    cordaRuntime "net.corda:corda:$corda_release_version"
 }
 
 // 3: Add webserverJar to each node

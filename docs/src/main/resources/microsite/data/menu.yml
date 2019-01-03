@@ -2,6 +2,9 @@ options:
   - title: Introduction
     url: docs/index.html
 
+  - title: Project Template
+    url: docs/project-template.html
+
   - title: Spring Boot Starter
     url: docs/starter.html
 
