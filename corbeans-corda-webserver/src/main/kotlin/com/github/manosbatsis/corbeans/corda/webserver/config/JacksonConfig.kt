@@ -19,8 +19,8 @@
  */
 package com.github.manosbatsis.corbeans.corda.webserver.config
 
-import com.fasterxml.jackson.databind.Module
 import net.corda.client.jackson.JacksonSupport
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.jackson.JsonComponentModule
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -33,17 +33,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 @Configuration
 class JacksonConfig: WebMvcConfigurationSupport() {
 
-    /** Register any other custom (de)Serializer classes. */
+    /** Force Spring/Jackson to use the provided Corda ObjectMapper for serialization */
     @Bean
-    fun jsonComponentModule(): Module {
-        return JsonComponentModule()
-    }
-
-    /** Force Spring/Jackson to use only provided Corda ObjectMapper for serialization */
-    @Bean
-    fun mappingJackson2HttpMessageConverter(): MappingJackson2HttpMessageConverter {
+    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
+    fun mappingJackson2HttpMessageConverter(
+            @Autowired jsonComponentModule: JsonComponentModule
+    ): MappingJackson2HttpMessageConverter {
         var mapper = JacksonSupport.createNonRpcMapper()
-        mapper.registerModule(jsonComponentModule())
+        mapper.registerModule(jsonComponentModule)
 
         val converter = MappingJackson2HttpMessageConverter()
         converter.objectMapper = mapper

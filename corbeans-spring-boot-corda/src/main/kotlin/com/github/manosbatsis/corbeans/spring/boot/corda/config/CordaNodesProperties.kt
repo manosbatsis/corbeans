@@ -28,17 +28,20 @@ import org.springframework.stereotype.Component
  * Corda nodes. Sample config:
  *
  * ```properties
+ * # The cordapp packages to scan for during tests
+ * corbeans.cordapPackages=net.corda.finance
+ *
  * # first node
  * corbeans.nodes.partyA.username=user1
  * corbeans.nodes.partyA.password=test
- * corbeans.nodes.partyA.lazy=true
+ * corbeans.nodes.partyA.eager=true
  * corbeans.nodes.partyA.address=localhost:10006
  * corbeans.nodes.partyA.adminAddress=localhost:10046
  *
  * # second node
  * corbeans.nodes.partyB.username=user1
  * corbeans.nodes.partyB.password=test
- * corbeans.nodes.partyB.lazy=true
+ * corbeans.nodes.partyB.eager=true
  * corbeans.nodes.partyB.address=localhost:10009
  * corbeans.nodes.partyB.adminAddress=localhost:10049
  * corbeans.nodes.partyB.primaryServiceType=com.github.manosbatsis.corbeans.corda.webserver.components.SampleCustomCordaNodeServiceImpl
@@ -59,8 +62,6 @@ import org.springframework.stereotype.Component
 @Component
 @ConfigurationProperties(prefix = "corbeans")
 class CordaNodesProperties {
-
+    var cordapPackages: List<String> = mutableListOf()
     var nodes: Map<String, NodeParams> = mutableMapOf()
-
-
 }

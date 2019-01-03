@@ -21,7 +21,8 @@ package com.github.manosbatsis.corbeans.corda.webserver
 
 import com.github.manosbatsis.corbeans.corda.webserver.components.SampleCustomCordaNodeServiceImpl
 import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeService
-import com.github.manosbatsis.corbeans.test.integration.WithDriverNodesIT
+import com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension
+import com.github.manosbatsis.corbeans.test.integration.WithImplicitNetworkIT
 import net.corda.core.identity.Party
 import net.corda.core.utilities.NetworkHostAndPort
 import org.junit.jupiter.api.Assertions
@@ -33,15 +34,19 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import kotlin.test.assertTrue
 
+/**
+ * Same as [SingleNetworkIntegrationTest] only using [CorbeansSpringExtension]
+ * instead of extending [WithImplicitNetworkIT]
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ExtendWith(SpringExtension::class)
-class MultiNetworkIntegrationTest : WithDriverNodesIT() {
+// Note we are using CorbeansSpringExtension Instead of SpringExtension
+@ExtendWith(CorbeansSpringExtension::class)
+class CorbeansSpringExtensionIntegrationTest {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(MultiNetworkIntegrationTest::class.java)
+        private val logger = LoggerFactory.getLogger(CorbeansSpringExtensionIntegrationTest::class.java)
 
     }
 
@@ -64,62 +69,49 @@ class MultiNetworkIntegrationTest : WithDriverNodesIT() {
 
     @Test
     fun `Can use both default node and multiple node controller endpoints`() {
-        withDriverNodes {
-            val defaultNodeMe = this.restTemplate.getForObject("/node/me", Map::class.java)
-            Assertions.assertEquals("me", defaultNodeMe.keys.first())
-            val partyANodeMe = this.restTemplate.getForObject("/nodes/partyA/me", Map::class.java)
-            Assertions.assertEquals("me", partyANodeMe.keys.first())
-        }
+        val defaultNodeMe = this.restTemplate.getForObject("/node/me", Map::class.java)
+        Assertions.assertEquals("me", defaultNodeMe.keys.first())
+        val partyANodeMe = this.restTemplate.getForObject("/nodes/partyA/me", Map::class.java)
+        Assertions.assertEquals("me", partyANodeMe.keys.first())
     }
+
 
     @Test
     fun `Can inject services`() {
-        withDriverNodes {
-            logger.info("services: {}", services)
-            assertNotNull(this.services)
-            assertNotNull(this.service)
-            assertTrue(this.services.keys.isNotEmpty())
-        }
+        logger.info("services: {}", services)
+        assertNotNull(this.services)
+        assertNotNull(this.service)
+        assertTrue(this.services.keys.isNotEmpty())
     }
 
     @Test
     fun `Can inject custom service`() {
-        withDriverNodes {
-            logger.info("customCervice: {}", customCervice)
-            assertNotNull(this.customCervice)
-            assertTrue(this.customCervice.dummy())
-        }
+        logger.info("customCervice: {}", customCervice)
+        assertNotNull(this.customCervice)
+        assertTrue(this.customCervice.dummy())
     }
 
     @Test
     fun `Can retrieve node identity`() {
-        withDriverNodes {
-            assertNotNull(service.myIdentity)
-        }
+        assertNotNull(service.myIdentity)
     }
 
     @Test
     fun `Can retrieve notaries`() {
-        withDriverNodes {
-            val notaries: List<Party> = service.notaries()
-            assertNotNull(notaries)
-        }
+        val notaries: List<Party> = service.notaries()
+        assertNotNull(notaries)
     }
 
     @Test
     fun `Can retrieve flows`() {
-        withDriverNodes {
-            val flows: List<String> = service.flows()
-            assertNotNull(flows)
-        }
+        val flows: List<String> = service.flows()
+        assertNotNull(flows)
     }
 
     @Test
     fun `Can retrieve addresses`() {
-        withDriverNodes {
-            val addresses: List<NetworkHostAndPort> = service.addresses()
-            assertNotNull(addresses)
-        }
+        val addresses: List<NetworkHostAndPort> = service.addresses()
+        assertNotNull(addresses)
     }
 
 }

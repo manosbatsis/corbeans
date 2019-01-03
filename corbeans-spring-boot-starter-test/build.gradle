@@ -6,22 +6,23 @@ dependencies {
 
 	compile ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_coroutines_version")
 	
-	implementation 'org.junit.jupiter:junit-jupiter-api'
+	compile 'org.junit.jupiter:junit-jupiter-api'
 	runtimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 
-	implementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-	implementation "org.springframework.boot:spring-boot-test:$spring_boot_version"
-	implementation('org.springframework.boot:spring-boot-starter-test')
+	compile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+	compile "org.springframework:spring-test:$spring_version"
+	compile "org.springframework.boot:spring-boot-test:$spring_boot_version"
+	compile('org.springframework.boot:spring-boot-starter-test')
 
-	implementation "$corda_release_group:corda-node-driver:$corda_release_version"
-	implementation "$corda_release_group:corda-test-common:$corda_release_version"
+	compile "$corda_release_group:corda-node-driver:$corda_release_version"
+	compile "$corda_release_group:corda-test-common:$corda_release_version"
 
-	implementation "$corda_release_group:corda-node-api:$corda_release_version"
-	implementation "$corda_release_group:corda-webserver-impl:$corda_release_version"
-	implementation "$corda_release_group:corda-webserver:$corda_release_version"
+	compile "$corda_release_group:corda-node-api:$corda_release_version"
+	compile "$corda_release_group:corda-webserver-impl:$corda_release_version"
+	compile "$corda_release_group:corda-webserver:$corda_release_version"
 
-	implementation "$corda_release_group:corda-finance:$corda_release_version"
-	implementation "$corda_release_group:corda-node-driver:$corda_release_version"
+	compile "$corda_release_group:corda-finance:$corda_release_version"
+	compile "$corda_release_group:corda-node-driver:$corda_release_version"
 
 
 }

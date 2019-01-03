@@ -74,7 +74,7 @@ abstract class NodeRpcConnection(private val nodeParams: NodeParams) {
     @PreDestroy
     fun onPreDestroy() {
         try{
-            rpcConnection.notifyServerAndClose()
+            if (::rpcConnection.isInitialized) rpcConnection.notifyServerAndClose()
         }
         catch (e: Exception){
             logger.warn("Error notifying server ${nodeParams.address}", e)

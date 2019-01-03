@@ -39,7 +39,7 @@ class NodeParams {
         @JvmStatic
         val DEFAULT = NodeParams()
         init {
-            DEFAULT.lazy = false
+            DEFAULT.eager = false
             DEFAULT.primaryServiceType = CordaNodeServiceImpl::class.java.canonicalName
             DEFAULT.connectionMaxRetryInterval = CordaRPCClientConfiguration.DEFAULT.connectionMaxRetryInterval
             DEFAULT.connectionRetryInterval = CordaRPCClientConfiguration.DEFAULT.connectionRetryInterval
@@ -61,7 +61,7 @@ class NodeParams {
             nodeParams.password = partialParams.password ?: throw IllegalArgumentException("Node configuration is missing a password property")
             nodeParams.address = partialParams.address ?: throw IllegalArgumentException("Node configuration is missing an address property")
             nodeParams.adminAddress = partialParams.adminAddress ?: throw IllegalArgumentException("Node configuration is missing an adminAddress property")
-            nodeParams.lazy = partialParams.lazy ?: defaultParams.lazy ?: NodeParams.DEFAULT.lazy!!
+            nodeParams.eager = partialParams.eager ?: defaultParams.eager ?: NodeParams.DEFAULT.eager!!
             nodeParams.primaryServiceType = partialParams.primaryServiceType ?: defaultParams.primaryServiceType ?: NodeParams.DEFAULT.primaryServiceType!!
             nodeParams.connectionMaxRetryInterval = partialParams.connectionMaxRetryInterval ?: defaultParams.connectionMaxRetryInterval ?: NodeParams.DEFAULT.connectionMaxRetryInterval!!
             nodeParams.connectionRetryInterval = partialParams.connectionRetryInterval ?: defaultParams.connectionRetryInterval ?: NodeParams.DEFAULT.connectionRetryInterval!!
@@ -73,7 +73,7 @@ class NodeParams {
             nodeParams.observationExecutorPoolSize = partialParams.observationExecutorPoolSize ?: defaultParams.observationExecutorPoolSize ?: NodeParams.DEFAULT.observationExecutorPoolSize!!
             nodeParams.reapInterval = partialParams.reapInterval ?: defaultParams.reapInterval ?: NodeParams.DEFAULT.reapInterval!!
             nodeParams.trackRpcCallSites = partialParams.trackRpcCallSites ?: defaultParams.trackRpcCallSites ?: NodeParams.DEFAULT.trackRpcCallSites!!
-            nodeParams.lazy = partialParams.lazy ?: defaultParams.lazy ?: NodeParams.DEFAULT.lazy!!
+            nodeParams.eager = partialParams.eager ?: defaultParams.eager ?: NodeParams.DEFAULT.eager!!
             return nodeParams
         }
     }
@@ -85,8 +85,12 @@ class NodeParams {
     var address: String? = null
     /** Node administration RPC address */
     var adminAddress: String? = null
-    /** Whether to use a lazily initialised [NodeRpcConnection] implementation */
-    var lazy: Boolean? = null
+    /**
+     * Whether to use an eagerly initialised [NodeRpcConnection] implementation.
+     * Default is `false`. Setting to `true` will break integration tests so you will need separate
+     * application.properties for those.
+     */
+    var eager: Boolean? = null
     /** The [CordaNodeService] implementation to use when creating and registering the corresponding bean */
     var primaryServiceType: String? = null
     // Configuration properties for Corda v4.0+

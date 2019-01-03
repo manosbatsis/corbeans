@@ -114,7 +114,7 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
     private fun registerConnectionWrapper(nodeParams: NodeParams, nodeName: String, beanDefinitionRegistry: BeanDefinitionRegistry): String {
         val rpcConnectionBeanName = "${nodeName}RpcConnection"
         val rpcConnectionBean = BeanDefinitionBuilder
-                .rootBeanDefinition(if (nodeParams.lazy!!) LazyNodeRpcConnection::class.java else EagerNodeRpcConnection::class.java)
+                .rootBeanDefinition(if (nodeParams.eager!!) EagerNodeRpcConnection::class.java else LazyNodeRpcConnection::class.java)
                 .setScope(SCOPE_SINGLETON)
                 .addConstructorArgValue(nodeParams)
                 .getBeanDefinition()

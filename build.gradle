@@ -16,8 +16,8 @@ buildscript {
 		junit_version = '4.12'
 		slf4j_version = '1.7.25'
 
-		spring_boot_version = '2.0.6.RELEASE'
-		springBootVersion = '2.0.6.RELEASE'
+		spring_boot_version = '2.1.1.RELEASE'
+		springBootVersion = '2.1.1.RELEASE'
 		spring_version = '5.0.10.RELEASE'
 
 		artemis_version = "2.6.2"
@@ -25,10 +25,13 @@ buildscript {
 		jopt_simple_version = '5.0.2'
 		guava_version = '25.1-jre'
 		//netty_version = '4.1.22.Final'
-
 		h2 = '1.4.196'
-
 		dependency_management_version ="1.0.6.RELEASE"
+
+		// Customise depdendency versions for spring-boot-dependencies
+		ext['hibernate.version'] = hibernate_version
+		ext['artemis.version'] = artemis_version
+		ext['jackson.version'] = jackson_version
 
 	}
 
@@ -126,25 +129,12 @@ subprojects {
 
 	configurations {
 		all {
-			//resolutionStrategy.cacheChangingModulesFor 0, 'minutes'
-			//resolutionStrategy.cacheDynamicVersionsFor 0, 'minutes'
+			// Exclude old Junit since we use jupiter
 			exclude group: 'junit', module: 'junit'
+			// Stop deprecation warnings since we use stdlib-jdkX
+			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre8'
+			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre7'
 			resolutionStrategy {
-				eachDependency { details ->
-
-					// Force our version of hibernate
-					if (details.requested.group == 'org.hibernate' && details.requested.name.startsWith('hibernate-core')) {
-						details.useVersion hibernate_version
-					}
-					// Force our version of artemis
-					else if (details.requested.group == 'org.apache.activemq' && details.requested.name.startsWith('artemis-')) {
-						details.useVersion artemis_version
-					}
-					// Force our version of jackson
-					else if (details.requested.group.startsWith('com.fasterxml.jackson')) {
-						details.useVersion jackson_version
-					}
-				}
 				// Force dependencies to use the same version of Guava as Corda.
 				force "com.google.guava:guava:$guava_version"
 			}
@@ -157,17 +147,17 @@ subprojects {
 		}
 
 		dependencies{
-			compile('org.springframework.boot:spring-boot-starter')
-			implementation("org.jetbrains.kotlin:kotlin-stdlib-jre8")
-			implementation("org.jetbrains.kotlin:kotlin-reflect")
+			compile("org.springframework.boot:spring-boot-starter:$spring_boot_version")
+			implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
+			implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
 
-			compileOnly('org.springframework.boot:spring-boot-configuration-processor')
+			compileOnly("org.springframework.boot:spring-boot-configuration-processor:$spring_boot_version")
 			
-			testImplementation('org.springframework.boot:spring-boot-starter-test')
-			testImplementation("org.jetbrains.kotlin:kotlin-test")
-			testImplementation('org.junit.jupiter:junit-jupiter-api')
+			testCompile("org.springframework.boot:spring-boot-starter-test:$spring_boot_version")
+			testCompile("org.jetbrains.kotlin:kotlin-test:$kotlin_version")
+			testCompile("org.junit.jupiter:junit-jupiter-api")
 
-			testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
+			testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
 		}
 	}

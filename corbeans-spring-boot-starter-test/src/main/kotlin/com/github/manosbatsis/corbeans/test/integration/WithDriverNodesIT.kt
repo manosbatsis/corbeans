@@ -20,12 +20,6 @@
 package com.github.manosbatsis.corbeans.test.integration
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
-import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeParams
-import net.corda.core.identity.CordaX500Name
-import net.corda.core.utilities.getOrThrow
-import net.corda.testing.driver.DriverParameters
-import net.corda.testing.driver.driver
-import net.corda.testing.node.User
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -75,91 +69,14 @@ abstract class WithDriverNodesIT {
         private val logger = LoggerFactory.getLogger(WithDriverNodesIT::class.java)
     }
 
-    /**
-     * Implement to specify cordapp packages to be scanned by the node driver
-     * TODO: move to application config?
-     */
-    abstract fun getCordappPackages(): List<String>
-
     @Autowired
     lateinit var cordaNodesProperties: CordaNodesProperties
-
-    protected var started = false
-    protected var finished = false
-    protected var stopped = false
-
-
-    /**
-     * Load node config from spring-boot application
-     */
-    open fun getNodeParams(): Map<String, NodeParams> {
-        return if (this.cordaNodesProperties.nodes.isNotEmpty()) {
-            this.cordaNodesProperties.nodes
-        } else {
-            throw RuntimeException("Could not find node configurations in application properties")
-        }
-    }
 
     /**
      * Launch a network, execute the action code, and shut the network down
      */
     open fun withDriverNodes(action: () -> Unit) {
-        logger.debug("withDriverNodes: starting network")
-        try {
-            val startedRpcAddresses = mutableSetOf<String>()
-            // start the driver
-            driver(DriverParameters(
-                    startNodesInProcess = true,
-                    extraCordappPackagesToScan = getCordappPackages())) {
-
-                val nodeParamsMap = getNodeParams()
-                // Configure nodes per application.properties
-                nodeParamsMap.forEach {
-                    try {
-                        val nodeName = it.key
-                        val nodeParams = it.value
-
-                        // Only start a node per unique address,
-                        // ignoring "default" overrides
-                        if (!startedRpcAddresses.contains(nodeParams.address)
-                                && nodeName != NodeParams.NODENAME_DEFAULT ) {
-                            // note the address as started
-                            startedRpcAddresses.add(nodeParams.address!!)
-
-                            val user = User(nodeParams.username!!, nodeParams.password!!, setOf("ALL"))
-                            @Suppress("UNUSED_VARIABLE")
-                            val handle = startNode(
-                                    providedName = CordaX500Name(nodeName, "Athens", "GR"),
-                                    rpcUsers = listOf(user),
-                                    customOverrides = mapOf(
-                                            "rpcSettings.address" to nodeParams.address,
-                                            "rpcSettings.adminAddress" to nodeParams.adminAddress)).getOrThrow()
-                        }
-                    } catch (e: Exception) {
-                        logger.error("Failed starting node {}", e)
-                    }
-                }
-
-                // mark as started
-                started = true
-                // call any initialization handling code in subclass
-                onNetworkInitialized()
-                // execure code in context
-                action()
-
-            }
-
-        } catch (e: Exception) {
-            logger.error("Failed starting nodes {}", e)
-            throw e
-        } finally {
-            stopped = true
-        }
-        logger.debug("withDriverNodes: stopping network")
+        NodeDriverHelper(cordaNodesProperties).withDriverNodes(action)
     }
 
-    /** Perform any required initializatioon here */
-    open fun onNetworkInitialized(){
-        // NO-OP
-    }
 }

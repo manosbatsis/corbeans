@@ -20,15 +20,13 @@
 package com.github.manosbatsis.corbeans.test.integration
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.extension.ExtensionContext
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.context.junit.jupiter.SpringExtension
 
 /**
- * Alternative you can subclass VS using [CorbeansSpringExtension].
  *
+ * Alternative JUnit extension VS subclassing [WithImplicitNetworkIT]. To be used instead of [SpringExtension]
  * Automatically creates and maintains a single Corda network throughout test execution,
  * using the corbeans' config from `application.properties`. You may override the latter with an
  * additional file in your test classpath, i.e. `src/test/resources/application.properties`.
@@ -37,8 +35,9 @@ import org.springframework.beans.factory.annotation.Autowired
  *
  * ```
  * @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
- * @ExtendWith(SpringExtension::class)
- * class MyWithSingleNetworkIntegrationTest : WithImplicitNetworkIT() {
+ * // Use CorbeansSpringExtension instead of SpringExtension
+ * @ExtendWith(CorbeansSpringExtension::class)
+ * class MyWithSingleNetworkIntegrationTest {
  *
  *      // autowire a service for a specific node
  *      @Autowired
@@ -62,36 +61,40 @@ import org.springframework.beans.factory.annotation.Autowired
  * }
  * ```
  */
-
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-abstract class WithImplicitNetworkIT {
+class CorbeansSpringExtension: SpringExtension() {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(WithImplicitNetworkIT::class.java)
+        private val logger = LoggerFactory.getLogger(CorbeansSpringExtension::class.java)
     }
 
-    @Autowired
+    lateinit var nodeDriverHelper: NodeDriverHelper
     lateinit var cordaNodesProperties: CordaNodesProperties
 
-    lateinit var nodeDriverHelper: NodeDriverHelper
-
     /**
-     * Starts the Corda network
+     * Delegate to [SpringExtension.beforeAll],
+     * then start the Corda network
      */
-    @BeforeAll
-    open fun startNetwork() {
-        logger.debug("startNetwork for nodes: {}", cordaNodesProperties.nodes.keys)
-        this.nodeDriverHelper = NodeDriverHelper(cordaNodesProperties)
+    @Throws(Exception::class)
+    override fun beforeAll(context: ExtensionContext) {
+        // Delegate to super
+        super.beforeAll(context)
+        // Get the nodes config from spring's application context
+        this.cordaNodesProperties = SpringExtension.getApplicationContext(context)
+                .getBean(CordaNodesProperties::class.java)
+        logger.debug("beforeAll for nodes: {}", this.cordaNodesProperties.nodes.keys)
+        // Start the network
+        this.nodeDriverHelper = NodeDriverHelper(this.cordaNodesProperties)
         this.nodeDriverHelper.startNetwork()
     }
 
     /**
-     * Stops the Corda network
+     * Delegate to [SpringExtension.afterAll],
+     * then stop the Corda network
      */
-    @AfterAll
-    open fun stopNetwork() {
-        logger.debug("stopNetwork for nodes: {}", cordaNodesProperties.nodes.keys)
+    @Throws(Exception::class)
+    override fun afterAll(context: ExtensionContext) {
+        super.afterAll(context)
+        logger.debug("afterAll for nodes: {}", this.cordaNodesProperties.nodes.keys)
         this.nodeDriverHelper.stopNetwork()
     }
-
 }

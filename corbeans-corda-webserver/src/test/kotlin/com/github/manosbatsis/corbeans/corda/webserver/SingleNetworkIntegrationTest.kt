@@ -21,6 +21,7 @@ package com.github.manosbatsis.corbeans.corda.webserver
 
 import com.github.manosbatsis.corbeans.corda.webserver.components.SampleCustomCordaNodeServiceImpl
 import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeService
+import com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension
 import com.github.manosbatsis.corbeans.test.integration.WithImplicitNetworkIT
 import net.corda.core.identity.Party
 import net.corda.core.utilities.NetworkHostAndPort
@@ -36,6 +37,10 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import kotlin.test.assertTrue
 
+/**
+ * Same as [CorbeansSpringExtensionIntegrationTest] only extending [WithImplicitNetworkIT]
+ * instead of using [CorbeansSpringExtension]
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(SpringExtension::class)
 class SingleNetworkIntegrationTest : WithImplicitNetworkIT() {
@@ -44,8 +49,6 @@ class SingleNetworkIntegrationTest : WithImplicitNetworkIT() {
         private val logger = LoggerFactory.getLogger(SingleNetworkIntegrationTest::class.java)
 
     }
-
-    override fun getCordappPackages(): List<String> = listOf("net.corda.finance")
 
     // autowire all created services, mapped by name
     @Autowired
