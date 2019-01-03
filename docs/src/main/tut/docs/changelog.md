@@ -15,4 +15,5 @@ and can be helpful with version upgrades.
 - Removed `WithDriverNodesIT.getCordappPackages` 
 and `WithImplicitNetworkIT.getCordappPackages` methods 
 in favor of using `corbeans.cordapPackages` in `application.properties`
-- Added `CorbeansSpringExtension` for implicit network in integration tests
+- Added `CorbeansSpringExtension` for implicit network in integration tests as an alternative to subclassing `WithImplicitNetworkIT`
+- Fixed `WithImplicitNetworkIT` issue with test hanging in some cases
