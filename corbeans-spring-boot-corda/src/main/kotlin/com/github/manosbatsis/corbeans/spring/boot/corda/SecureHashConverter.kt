@@ -1,4 +1,4 @@
-/**
+/*
  *     Corbeans: Corda integration for Spring Boot
  *     Copyright (C) 2018 Manos Batsis
  *

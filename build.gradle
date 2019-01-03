@@ -168,7 +168,7 @@ subprojects {
 		header rootProject.file("${rootProject.rootDir}/etc/license/header-lgpl.txt")
 		includes(["**/*.java", "**/*.kt"])
 		mapping {
-			kt='JAVADOC_STYLE'
+			kt='SLASHSTAR_STYLE'
 		}
 		strictCheck true
 	}
