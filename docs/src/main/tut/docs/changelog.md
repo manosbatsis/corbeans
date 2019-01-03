@@ -14,6 +14,5 @@ and can be helpful with version upgrades.
 - Added Corda 4.0 as minimum required version  
 - Removed `WithDriverNodesIT.getCordappPackages` 
 and `WithImplicitNetworkIT.getCordappPackages` methods 
-in favor of `corbeans.cordapPackages` property
+in favor of using `corbeans.cordapPackages` in `application.properties`
 - Added `CorbeansSpringExtension` for implicit network in integration tests
-- Deprecated `WithImplicitNetworkIT` in favor of the new `CorbeansSpringExtension`
