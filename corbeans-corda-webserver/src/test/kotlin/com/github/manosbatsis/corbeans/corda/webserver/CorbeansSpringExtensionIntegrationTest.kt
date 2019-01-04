@@ -69,9 +69,9 @@ class CorbeansSpringExtensionIntegrationTest {
 
     @Test
     fun `Can use both default node and multiple node controller endpoints`() {
-        val defaultNodeMe = this.restTemplate.getForObject("/node/me", Map::class.java)
+        val defaultNodeMe = this.restTemplate.getForObject("/api/node/me", Map::class.java)
         Assertions.assertEquals("me", defaultNodeMe.keys.first())
-        val partyANodeMe = this.restTemplate.getForObject("/nodes/partyA/me", Map::class.java)
+        val partyANodeMe = this.restTemplate.getForObject("/api/nodes/partyA/me", Map::class.java)
         Assertions.assertEquals("me", partyANodeMe.keys.first())
     }
 

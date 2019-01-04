@@ -17,3 +17,6 @@ and `WithImplicitNetworkIT.getCordappPackages` methods
 in favor of using `corbeans.cordapPackages` in `application.properties`
 - Added `CorbeansSpringExtension` for implicit network in integration tests as an alternative to subclassing `WithImplicitNetworkIT`
 - Fixed `WithImplicitNetworkIT` issue with test hanging in some cases
+- Moved REST controller endpoints from `/node` and `/nodes/{nodeName}` to 
+`/api/node` and `/api/nodes/{nodeName}` respectively
+

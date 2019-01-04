@@ -25,13 +25,12 @@ import org.springframework.boot.jackson.JsonComponentModule
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport
 
 /**
  * Configure Corda RPC ObjectMapper for Jackson
  */
 @Configuration
-class JacksonConfig: WebMvcConfigurationSupport() {
+class JacksonConfig {
 
     /** Force Spring/Jackson to use the provided Corda ObjectMapper for serialization */
     @Bean

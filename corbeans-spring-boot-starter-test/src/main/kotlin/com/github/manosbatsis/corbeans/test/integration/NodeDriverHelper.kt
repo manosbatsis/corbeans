@@ -113,7 +113,7 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
     /**
      * Launch a network, execute the action code, and shut the network down
      */
-    open fun withDriverNodes(action: () -> Unit) {
+    fun withDriverNodes(action: () -> Unit) {
         logger.debug("withDriverNodes: starting network")
         // Ensure single network instance
         if (state == State.RUNNING) throw IllegalStateException("Corda network is already running");

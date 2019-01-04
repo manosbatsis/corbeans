@@ -50,7 +50,7 @@ import javax.servlet.http.HttpServletResponse
  */
 // TODO: allow for autoconfigure only @ConditionalOnClass(value = Tomcat.class)
 @RestController
-@RequestMapping(path = arrayOf("node", "nodes/{nodeName}"))
+@RequestMapping(path = arrayOf("api/node", "api/nodes/{nodeName}"))
 open class CordaNodesController {
 
     companion object {
