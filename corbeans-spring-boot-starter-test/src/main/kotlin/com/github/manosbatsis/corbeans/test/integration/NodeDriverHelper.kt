@@ -28,6 +28,7 @@ import net.corda.core.utilities.getOrThrow
 import net.corda.testing.driver.DriverParameters
 import net.corda.testing.driver.driver
 import net.corda.testing.node.User
+import net.corda.testing.node.internal.findCordapp
 import org.slf4j.LoggerFactory
 
 /**
@@ -53,7 +54,7 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
      * Starts the Corda network
      */
     fun startNetwork() {
-        logger.debug("startNetwork for nodes: {}", cordaNodesProperties.nodes.keys)
+        logger.debug("startNetwork called, nodes: {}", cordaNodesProperties.nodes.keys)
         // Start the network asynchronously
         @Suppress("DeferredResultUnused")
         startNetworkAsync()
@@ -74,7 +75,7 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
      * Stops the Corda network
      */
     fun stopNetwork() {
-        logger.debug("stopNetwork for nodes: {}", cordaNodesProperties.nodes.keys)
+        logger.debug("stopNetwork called, nodes: {}", cordaNodesProperties.nodes.keys)
         try {
             state = State.STOPPING
             // give time for a clean shutdown
@@ -101,11 +102,13 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
      */
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     private fun startNetworkAsync() = GlobalScope.async {
+        logger.debug("startNetworkAsync called")
         withDriverNodes{
             var elapsed = 0
             while (state == State.RUNNING) {
                 // wait for tests to finish
                 Thread.sleep(1000)
+                elapsed += 1000
                 logger.debug("startNetworkAsync waiting, elapsed: {}", elapsed)
             }
         }
@@ -114,7 +117,7 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
      * Launch a network, execute the action code, and shut the network down
      */
     fun withDriverNodes(action: () -> Unit) {
-        logger.debug("withDriverNodes: starting network")
+        logger.debug("withDriverNodes called")
         // Ensure single network instance
         if (state == State.RUNNING) throw IllegalStateException("Corda network is already running");
         try {
@@ -122,7 +125,10 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
             // start the driver
             driver(DriverParameters(
                     startNodesInProcess = true,
-                    extraCordappPackagesToScan = cordaNodesProperties.cordapPackages)) {
+                    cordappsForAllNodes = cordaNodesProperties.cordapPackages.map {
+                        logger.debug("Adding cordapp to all driver nodes: {}", it)
+                        findCordapp(it)
+                    })) {
 
                 val nodeParamsMap = getNodeParams()
                 // Configure nodes per application.properties
@@ -176,6 +182,7 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
      * Load node config from spring-boot application
      */
     fun getNodeParams(): Map<String, NodeParams> {
+        logger.debug("getNodeParams called")
         return if (this.cordaNodesProperties.nodes.isNotEmpty()) {
             this.cordaNodesProperties.nodes
         } else {

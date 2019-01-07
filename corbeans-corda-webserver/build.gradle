@@ -23,7 +23,11 @@ dependencies {
 
 	compile("org.springframework.boot:spring-boot-starter:$spring_boot_version")
 	compile("org.springframework.boot:spring-boot-starter-web:$spring_boot_version")
-	
+	// Corda
+	compile "net.corda:corda-core:$corda_release_version"
+	compile "net.corda:corda-jackson:$corda_release_version"
+	compile "net.corda:corda-rpc:$corda_release_version"
+	// Springfox/Swagger
 	compile "io.springfox:springfox-swagger2:2.9.2"
 	compile "io.springfox:springfox-swagger-ui:2.9.2"
 	compile "io.springfox:springfox-bean-validators:2.9.2"

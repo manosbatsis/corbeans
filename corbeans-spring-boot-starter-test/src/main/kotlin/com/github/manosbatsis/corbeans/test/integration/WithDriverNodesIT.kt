@@ -36,9 +36,6 @@ import org.springframework.beans.factory.annotation.Autowired
  * @ExtendWith(SpringExtension::class)
  * class MyWithDriverNodesIntegrationTest : WithDriverNodesIT() {
  *
- *      // tell the driver which cordapp packages to load
- *      override fun getCordappPackages(): List<String> = listOf("net.corda.finance")
- *
  *      @Test
  *      fun `Can create services`() {
  *          withDriverNodes {

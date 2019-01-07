@@ -69,9 +69,6 @@ i.e. `src/test/resources/application.properties`:
 @ExtendWith(SpringExtension::class)
 class MyWithDriverNodesIntegrationTest : WithDriverNodesIT() {
 
-     // tell the driver which cordapp packages to load
-     override fun getCordappPackages(): List<String> = listOf("net.corda.finance")
-
      @Test
      fun `Can create services`() {
          withDriverNodes {
@@ -108,9 +105,6 @@ Example:
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(SpringExtension::class)
 class MyWithSingleNetworkIntegrationTest : WithImplicitNetworkIT() {
-
-     // tell the driver which cordapp packages to load
-     override fun getCordappPackages(): List<String> = listOf("net.corda.finance")
 
      // autowire a service for a specific node
      @Autowired

@@ -70,6 +70,10 @@ open class CordaNodesController {
         logger.debug("Auto-configured RESTful services for Corda nodes:: {}, default node: {}", services.keys, defaultNodeName)
     }
 
+    /**
+     * Handle both "api/yo" and "api/yo/{nodeName}" by using `cordform` as the default
+     * node name to support optional dedicated webserver per node when using `runnodes`.
+     */
     fun getService(optionalNodeName: Optional<String>): CordaNodeService {
         val nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName
         return this.services.get("${nodeName}NodeService") ?: throw IllegalArgumentException("Node not found: $nodeName")
