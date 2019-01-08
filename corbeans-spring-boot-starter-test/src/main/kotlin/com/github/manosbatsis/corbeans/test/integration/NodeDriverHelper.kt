@@ -20,7 +20,7 @@
 package com.github.manosbatsis.corbeans.test.integration
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
-import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeParams
+import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.async
 import net.corda.core.identity.CordaX500Name

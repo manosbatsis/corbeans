@@ -17,8 +17,9 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda.util
+package com.github.manosbatsis.corbeans.spring.boot.corda.rpc
 
+import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
 import net.corda.client.rpc.CordaRPCClient
 import net.corda.client.rpc.CordaRPCClientConfiguration
 import net.corda.client.rpc.CordaRPCConnection

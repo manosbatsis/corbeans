@@ -20,7 +20,8 @@
 package com.github.manosbatsis.corbeans.corda.webserver
 
 import com.github.manosbatsis.corbeans.corda.webserver.components.SampleCustomCordaNodeServiceImpl
-import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeService
+import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
+import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 import com.github.manosbatsis.corbeans.test.integration.WithDriverNodesIT
 import net.corda.core.identity.Party
 import net.corda.core.utilities.NetworkHostAndPort
@@ -45,11 +46,15 @@ class MultiNetworkIntegrationTest : WithDriverNodesIT() {
 
     }
 
-    // autowire all created services, mapped by name
+    // autowire a network service, used to access node services
+    @Autowired
+    lateinit var networkService: CordaNetworkService
+
+    // autowire all created node services directly, mapped by name
     @Autowired
     lateinit var services: Map<String, CordaNodeService>
 
-    // autowire a services for a specific node
+    // autowire a node service for a specific node
     @Autowired
     @Qualifier("partyANodeService")
     lateinit var service: CordaNodeService
@@ -76,6 +81,7 @@ class MultiNetworkIntegrationTest : WithDriverNodesIT() {
     fun `Can inject services`() {
         withDriverNodes {
             logger.info("services: {}", services)
+            assertNotNull(this.networkService)
             assertNotNull(this.services)
             assertNotNull(this.service)
             assertTrue(this.services.keys.isNotEmpty())

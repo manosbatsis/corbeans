@@ -17,10 +17,28 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda.util
+package com.github.manosbatsis.corbeans.spring.boot.corda.rpc
 
-import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.ResponseStatus
+import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
+import net.corda.core.messaging.CordaRPCOps
+import org.slf4j.LoggerFactory
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-class NodeNotFoundException(message: String): RuntimeException(message)
+/**
+ * Lazily initialised wrapper of a Node RPC connection proxy.
+ *
+ * @param nodeParams the RPC connection params
+ * @property proxy The RPC proxy.
+ */
+open class LazyNodeRpcConnection(
+        nodeParams: NodeParams): NodeRpcConnection(nodeParams) {
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(LazyNodeRpcConnection::class.java)
+    }
+
+    /** Provides eager access to an identity service */
+    override val proxy: CordaRPCOps by lazy {
+        createProxy()
+    }
+
+}

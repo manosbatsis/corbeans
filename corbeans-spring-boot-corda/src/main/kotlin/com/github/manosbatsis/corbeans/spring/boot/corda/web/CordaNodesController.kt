@@ -17,9 +17,10 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda
+package com.github.manosbatsis.corbeans.spring.boot.corda.web
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeParams
+import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
+import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 import net.corda.core.contracts.ContractState
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.crypto.SecureHash

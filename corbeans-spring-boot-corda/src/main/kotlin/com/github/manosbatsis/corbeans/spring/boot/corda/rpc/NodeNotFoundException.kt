@@ -17,17 +17,10 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.corda.webserver.components
+package com.github.manosbatsis.corbeans.spring.boot.corda.rpc
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection
-import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeServiceImpl
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.ResponseStatus
 
-
-class SampleCustomCordaNodeServiceImpl(
-        nodeRpcConnection: NodeRpcConnection
-) : CordaNodeServiceImpl(nodeRpcConnection) {
-
-    /** dummy method */
-    fun dummy(): Boolean = true
-
-}
+@ResponseStatus(HttpStatus.NOT_FOUND)
+class NodeNotFoundException(message: String): RuntimeException(message)

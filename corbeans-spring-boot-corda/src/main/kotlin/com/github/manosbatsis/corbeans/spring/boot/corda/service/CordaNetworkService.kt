@@ -17,17 +17,14 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.corda.webserver.components
+package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection
-import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeServiceImpl
+/**
+ *  Corda network service
+ */
+interface CordaNetworkService {
 
-
-class SampleCustomCordaNodeServiceImpl(
-        nodeRpcConnection: NodeRpcConnection
-) : CordaNodeServiceImpl(nodeRpcConnection) {
-
-    /** dummy method */
-    fun dummy(): Boolean = true
+    /** Services per node, mapped by configured name */
+    abstract var services: Map<String, CordaNodeService>
 
 }

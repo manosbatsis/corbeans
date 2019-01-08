@@ -20,7 +20,7 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure
 
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.SecureHashConverter
+import com.github.manosbatsis.corbeans.spring.boot.corda.bind.SecureHashConverter
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean

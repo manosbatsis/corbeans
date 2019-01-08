@@ -17,7 +17,7 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda
+package com.github.manosbatsis.corbeans.spring.boot.corda.bind
 
 import net.corda.core.crypto.SecureHash
 import org.springframework.core.convert.converter.Converter

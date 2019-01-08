@@ -17,10 +17,10 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda
+package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
 //import org.springframework.messaging.simp.SimpMessagingTemplate
-import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeRpcConnection
+import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection
 import net.corda.core.contracts.ContractState
 import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.CordaX500Name

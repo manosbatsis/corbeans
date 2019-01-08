@@ -19,12 +19,13 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeService
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
-import com.github.manosbatsis.corbeans.spring.boot.corda.util.EagerNodeRpcConnection
-import com.github.manosbatsis.corbeans.spring.boot.corda.util.LazyNodeRpcConnection
-import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeParams
-import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeRpcConnection
+import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
+import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.EagerNodeRpcConnection
+import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.LazyNodeRpcConnection
+import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection
+import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkServiceImpl
+import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.BeansException
 import org.springframework.beans.factory.config.BeanDefinition.SCOPE_SINGLETON
@@ -83,9 +84,20 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
                 registerNodeService(nodeParams, nodeName, beanDefinitionRegistry)
             }
         }
+        // Register a corda network service
+        registerNetworkService(beanDefinitionRegistry)
+
     }
 
-    /** Register Node service */
+    /** Register Corda network service */
+    private fun registerNetworkService(beanDefinitionRegistry: BeanDefinitionRegistry) {
+        val networkServiceBean = BeanDefinitionBuilder
+                .rootBeanDefinition(CordaNetworkServiceImpl::class.java)
+                .getBeanDefinition()
+        beanDefinitionRegistry.registerBeanDefinition("cordaNetworkService", networkServiceBean)
+    }
+
+    /** Register Corda Node service */
     private fun registerNodeService(nodeParams: NodeParams, nodeName: String, beanDefinitionRegistry: BeanDefinitionRegistry) {
         // Convention-based rpc wrapper bean name
         val rpcConnectionBeanName = "${nodeName}RpcConnection";

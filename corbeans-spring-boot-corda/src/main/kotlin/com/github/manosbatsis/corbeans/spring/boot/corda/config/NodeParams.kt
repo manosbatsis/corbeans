@@ -17,9 +17,9 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda.util
+package com.github.manosbatsis.corbeans.spring.boot.corda.config
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeServiceImpl
+import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeServiceImpl
 import net.corda.client.rpc.CordaRPCClientConfiguration
 import java.time.Duration
 
@@ -61,19 +61,19 @@ class NodeParams {
             nodeParams.password = partialParams.password ?: throw IllegalArgumentException("Node configuration is missing a password property")
             nodeParams.address = partialParams.address ?: throw IllegalArgumentException("Node configuration is missing an address property")
             nodeParams.adminAddress = partialParams.adminAddress ?: throw IllegalArgumentException("Node configuration is missing an adminAddress property")
-            nodeParams.eager = partialParams.eager ?: defaultParams.eager ?: NodeParams.DEFAULT.eager!!
-            nodeParams.primaryServiceType = partialParams.primaryServiceType ?: defaultParams.primaryServiceType ?: NodeParams.DEFAULT.primaryServiceType!!
-            nodeParams.connectionMaxRetryInterval = partialParams.connectionMaxRetryInterval ?: defaultParams.connectionMaxRetryInterval ?: NodeParams.DEFAULT.connectionMaxRetryInterval!!
-            nodeParams.connectionRetryInterval = partialParams.connectionRetryInterval ?: defaultParams.connectionRetryInterval ?: NodeParams.DEFAULT.connectionRetryInterval!!
-            nodeParams.connectionRetryIntervalMultiplier = partialParams.connectionRetryIntervalMultiplier ?: defaultParams.connectionRetryIntervalMultiplier ?: NodeParams.DEFAULT.connectionRetryIntervalMultiplier!!
-            nodeParams.deduplicationCacheExpiry = partialParams.deduplicationCacheExpiry ?: defaultParams.deduplicationCacheExpiry ?: NodeParams.DEFAULT.deduplicationCacheExpiry!!
-            nodeParams.maxFileSize = partialParams.maxFileSize ?: defaultParams.maxFileSize ?: NodeParams.DEFAULT.maxFileSize!!
-            nodeParams.maxReconnectAttempts = partialParams.maxReconnectAttempts ?: defaultParams.maxReconnectAttempts ?: NodeParams.DEFAULT.maxReconnectAttempts!!
-            nodeParams.minimumServerProtocolVersion = partialParams.minimumServerProtocolVersion ?: defaultParams.minimumServerProtocolVersion ?: NodeParams.DEFAULT.minimumServerProtocolVersion!!
-            nodeParams.observationExecutorPoolSize = partialParams.observationExecutorPoolSize ?: defaultParams.observationExecutorPoolSize ?: NodeParams.DEFAULT.observationExecutorPoolSize!!
-            nodeParams.reapInterval = partialParams.reapInterval ?: defaultParams.reapInterval ?: NodeParams.DEFAULT.reapInterval!!
-            nodeParams.trackRpcCallSites = partialParams.trackRpcCallSites ?: defaultParams.trackRpcCallSites ?: NodeParams.DEFAULT.trackRpcCallSites!!
-            nodeParams.eager = partialParams.eager ?: defaultParams.eager ?: NodeParams.DEFAULT.eager!!
+            nodeParams.eager = partialParams.eager ?: defaultParams.eager ?: DEFAULT.eager!!
+            nodeParams.primaryServiceType = partialParams.primaryServiceType ?: defaultParams.primaryServiceType ?: DEFAULT.primaryServiceType!!
+            nodeParams.connectionMaxRetryInterval = partialParams.connectionMaxRetryInterval ?: defaultParams.connectionMaxRetryInterval ?: DEFAULT.connectionMaxRetryInterval!!
+            nodeParams.connectionRetryInterval = partialParams.connectionRetryInterval ?: defaultParams.connectionRetryInterval ?: DEFAULT.connectionRetryInterval!!
+            nodeParams.connectionRetryIntervalMultiplier = partialParams.connectionRetryIntervalMultiplier ?: defaultParams.connectionRetryIntervalMultiplier ?: DEFAULT.connectionRetryIntervalMultiplier!!
+            nodeParams.deduplicationCacheExpiry = partialParams.deduplicationCacheExpiry ?: defaultParams.deduplicationCacheExpiry ?: DEFAULT.deduplicationCacheExpiry!!
+            nodeParams.maxFileSize = partialParams.maxFileSize ?: defaultParams.maxFileSize ?: DEFAULT.maxFileSize!!
+            nodeParams.maxReconnectAttempts = partialParams.maxReconnectAttempts ?: defaultParams.maxReconnectAttempts ?: DEFAULT.maxReconnectAttempts!!
+            nodeParams.minimumServerProtocolVersion = partialParams.minimumServerProtocolVersion ?: defaultParams.minimumServerProtocolVersion ?: DEFAULT.minimumServerProtocolVersion!!
+            nodeParams.observationExecutorPoolSize = partialParams.observationExecutorPoolSize ?: defaultParams.observationExecutorPoolSize ?: DEFAULT.observationExecutorPoolSize!!
+            nodeParams.reapInterval = partialParams.reapInterval ?: defaultParams.reapInterval ?: DEFAULT.reapInterval!!
+            nodeParams.trackRpcCallSites = partialParams.trackRpcCallSites ?: defaultParams.trackRpcCallSites ?: DEFAULT.trackRpcCallSites!!
+            nodeParams.eager = partialParams.eager ?: defaultParams.eager ?: DEFAULT.eager!!
             return nodeParams
         }
     }

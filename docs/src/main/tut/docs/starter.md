@@ -131,7 +131,7 @@ The only requirement is that you have to extend `CordaNodeServiceImpl`
 
 ```kotlin
 import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeServiceImpl
-import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeRpcConnection
+import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection
 
 class SampleCustomCordaNodeServiceImpl(
         nodeRpcConnection: NodeRpcConnection
@@ -148,7 +148,7 @@ or Java:
 
 ```java
 import com.github.manosbatsis.corbeans.spring.boot.corda.CordaNodeServiceImpl;
-import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeRpcConnection;
+import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection;
 
 public class SampleCustomCordaNodeServiceImpl extends CordaNodeServiceImpl {
 

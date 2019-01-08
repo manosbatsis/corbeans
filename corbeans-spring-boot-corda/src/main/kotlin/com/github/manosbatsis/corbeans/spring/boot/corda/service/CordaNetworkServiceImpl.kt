@@ -17,23 +17,24 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda.util
+package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
-import net.corda.core.messaging.CordaRPCOps
+//import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+
 
 /**
- * Eagerly initialised wrapper of a Node RPC connection proxy.
- *
- * @param nodeParams the RPC connection params
- * @property proxy The RPC proxy.
+ * Default Corda network service
  */
-open class EagerNodeRpcConnection(
-        nodeParams: NodeParams): NodeRpcConnection(nodeParams) {
+open class CordaNetworkServiceImpl: CordaNetworkService {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(EagerNodeRpcConnection::class.java)
+        private val logger = LoggerFactory.getLogger(CordaNetworkServiceImpl::class.java)
     }
 
-    override val proxy: CordaRPCOps = createProxy()
+    /** Services per node, mapped by configured name */
+    @Autowired
+    override lateinit var services: Map<String, CordaNodeService>
+
 }

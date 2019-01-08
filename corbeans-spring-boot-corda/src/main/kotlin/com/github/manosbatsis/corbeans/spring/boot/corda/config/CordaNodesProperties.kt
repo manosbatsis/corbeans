@@ -19,7 +19,6 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.config
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.util.NodeParams
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
 
