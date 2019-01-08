@@ -20,21 +20,44 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
 //import org.springframework.messaging.simp.SimpMessagingTemplate
+import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.*
+import javax.annotation.PostConstruct
 
 
 /**
  * Default Corda network service
  */
-open class CordaNetworkServiceImpl: CordaNetworkService {
+open class CordaNetworkServiceImpl : CordaNetworkService {
 
     companion object {
         private val logger = LoggerFactory.getLogger(CordaNetworkServiceImpl::class.java)
     }
 
-    /** Services per node, mapped by configured name */
-    @Autowired
-    override lateinit var services: Map<String, CordaNodeService>
+    protected lateinit var defaultNodeName: String
 
+    /** Node services by configured name */
+    @Autowired
+    override lateinit var nodeServices: Map<String, CordaNodeService>
+
+    @PostConstruct
+    fun postConstruct() {
+        // if single node config, use the only node name as default, else reserve explicitly for cordform
+        defaultNodeName = if (nodeServices.keys.size == 1) nodeServices.keys.first()
+        else NodeParams.NODENAME_CORDFORM
+        logger.debug("Auto-configured RESTful services for Corda nodes:: {}, default node: {}",
+                nodeServices.keys, defaultNodeName)
+    }
+
+    /**
+     * Get a Node service by name. Default is either the only node name if single,
+     * or `cordform` based on node.conf otherwise
+     */
+    override fun getNodeService(optionalNodeName: Optional<String>): CordaNodeService {
+        val nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName
+        return this.nodeServices.get("${nodeName}NodeService")
+                ?: throw IllegalArgumentException("Node not found: $nodeName")
+    }
 }

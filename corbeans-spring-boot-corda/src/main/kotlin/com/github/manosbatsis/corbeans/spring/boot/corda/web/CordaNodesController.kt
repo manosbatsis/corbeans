@@ -19,8 +19,7 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.web
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
-import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
+import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
 import net.corda.core.contracts.ContractState
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.crypto.SecureHash
@@ -39,7 +38,6 @@ import java.io.FileNotFoundException
 import java.time.LocalDateTime
 import java.util.*
 import java.util.jar.JarInputStream
-import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -59,78 +57,61 @@ open class CordaNodesController {
 
     }
 
-    protected lateinit var defaultNodeName: String
-
     @Autowired
-    protected lateinit var services: Map<String, CordaNodeService>
+    protected lateinit var networkService: CordaNetworkService
 
-    @PostConstruct
-    fun postConstruct() {
-        // if single node config, use the only node name as default, else reserve explicitly for cordform
-        defaultNodeName = if(services.keys.size == 1) services.keys.first() else NodeParams.NODENAME_CORDFORM
-        logger.debug("Auto-configured RESTful services for Corda nodes:: {}, default node: {}", services.keys, defaultNodeName)
-    }
-
-    /**
-     * Handle both "api/yo" and "api/yo/{nodeName}" by using `cordform` as the default
-     * node name to support optional dedicated webserver per node when using `runnodes`.
-     */
-    fun getService(optionalNodeName: Optional<String>): CordaNodeService {
-        val nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName
-        return this.services.get("${nodeName}NodeService") ?: throw IllegalArgumentException("Node not found: $nodeName")
-    }
 
     /** Returns the node's name. */
     @GetMapping("me")
-    fun me(@PathVariable nodeName: Optional<String>) = mapOf("me" to getService(nodeName).myIdentity.name.x500Principal.name.toString())
+    fun me(@PathVariable nodeName: Optional<String>) = mapOf("me" to networkService.getNodeService(nodeName).myIdentity.name.x500Principal.name.toString())
 
     /** Returns the node info. */
     @GetMapping("whoami")
-    fun whoami(@PathVariable nodeName: Optional<String>) = mapOf("me" to getService(nodeName).myIdentity.name)
+    fun whoami(@PathVariable nodeName: Optional<String>) = mapOf("me" to networkService.getNodeService(nodeName).myIdentity.name)
     //fun me() = mapOf("me" to _myIdentity.name.x500Principal.name.toString())
 
     /** Returns a list of the node's network peers. */
     @GetMapping("peers")
-    fun peers(@PathVariable nodeName: Optional<String>) = this.getService(nodeName).peers()
+    fun peers(@PathVariable nodeName: Optional<String>) = this.networkService.getNodeService(nodeName).peers()
 
     /** Returns a list of the node's network peer names. */
     @GetMapping("peernames")
-    fun peerNames(@PathVariable nodeName: Optional<String>) = this.getService(nodeName).peerNames()
+    fun peerNames(@PathVariable nodeName: Optional<String>) = this.networkService.getNodeService(nodeName).peerNames()
 
     /** Return tbe node time in UTC */
     @GetMapping("serverTime")
     fun serverTime(@PathVariable nodeName: Optional<String>): LocalDateTime {
-        return this.getService(nodeName).serverTime()
+        return this.networkService.getNodeService(nodeName).serverTime()
     }
 
     @GetMapping("addresses")
     fun addresses(@PathVariable nodeName: Optional<String>): List<NetworkHostAndPort> {
-        return this.getService(nodeName).addresses()
+        return this.networkService.getNodeService(nodeName).addresses()
     }
 
     @GetMapping("identities")
     fun identities(@PathVariable nodeName: Optional<String>): List<Party> {
-        return this.getService(nodeName).identities()
+        return this.networkService.getNodeService(nodeName).identities()
     }
 
     @GetMapping("platformVersion")
     fun platformVersion(@PathVariable nodeName: Optional<String>): Int {
-        return this.getService(nodeName).platformVersion()
+        return this.networkService.getNodeService(nodeName).platformVersion()
     }
 
     @GetMapping("flows")
     fun flows(@PathVariable nodeName: Optional<String>): List<String> {
-        return this.getService(nodeName).flows()
+        return this.networkService.getNodeService(nodeName).flows()
     }
 
     @GetMapping("notaries")
     fun notaries(@PathVariable nodeName: Optional<String>): List<Party> {
-        return this.getService(nodeName).notaries()
+        return this.networkService.getNodeService(nodeName).notaries()
     }
 
     @GetMapping("states")
     fun states(@PathVariable nodeName: Optional<String>): List<StateAndRef<ContractState>> {
-        return this.getService(nodeName).states()
+        return this.networkService.getNodeService(nodeName).states()
     }
 
     /**
@@ -154,8 +135,8 @@ open class CordaNodesController {
 
         try {
             val hash = SecureHash.parse(reqPath.substringBefore('/'))
-            //val service = this.getService(nodeName)
-            val attachment = this.getService(nodeName).openArrachment(hash)
+            //val service = this.networkService.getNodeService(nodeName)
+            val attachment = this.networkService.getNodeService(nodeName).openArrachment(hash)
 
             // Don't allow case sensitive matches inside the jar, it'd just be confusing.
             val subPath = reqPath.substringAfter('/', missingDelimiterValue = "").toLowerCase()
