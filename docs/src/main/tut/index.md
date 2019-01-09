@@ -13,7 +13,7 @@ technologies:
 		  <div class="panel-body">
 			<p>Use standard Corda APIs with Spring Boot components auto-configured for your nodes.</p>
 		  </div>
-		  <div class="panel-footer text-right"><a href="docs/starter.html">More details</a></div>
+		  <div class="panel-footer text-right"><a href="docs/getting-started.html">More details</a></div>
 		</div>
 	</div>
 	<div class="col-md-3">

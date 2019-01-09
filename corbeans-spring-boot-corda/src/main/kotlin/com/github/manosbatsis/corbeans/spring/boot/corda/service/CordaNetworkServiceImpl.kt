@@ -60,4 +60,12 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
         return this.nodeServices.get("${nodeName}NodeService")
                 ?: throw IllegalArgumentException("Node not found: $nodeName")
     }
+
+    /**
+     * Get a Node service by name. Default is either the only node name if single,
+     * or `cordform` based on node.conf otherwise
+     */
+    override fun getNodeService(nodeName: String?): CordaNodeService {
+        return this.getNodeService(Optional.ofNullable(nodeName))
+    }
 }

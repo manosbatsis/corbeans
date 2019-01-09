@@ -63,4 +63,6 @@ interface CordaNodeService {
     fun openArrachment(hash: SecureHash): InputStream
     fun openArrachment(hash: String): InputStream
 
+    /** Get a state service targeting the given `ContractState` type */
+    fun <T : ContractState> createStateService(contractStateType: Class<T>): StateService<T>
 }

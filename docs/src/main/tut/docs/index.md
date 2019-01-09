@@ -8,13 +8,25 @@ title: "Introduction"
 Current modules:
 
 <div class="list-group">
-  <a href="starter.html" class="list-group-item">
-    <h4 class="list-group-item-heading">Spring Boot Starter</h4>
-    <p class="list-group-item-text">Start here to add Corda support to your Spring Boot app.</p>
+  <a href="getting-started.html" class="list-group-item">
+    <h4 class="list-group-item-heading">Getting Started</h4>
+    <p class="list-group-item-text">Add and configure Corda support for your Spring Boot app using Corbeans starters.</p>
+  </a>
+  <a href="project-template.html" class="list-group-item">
+    <h4 class="list-group-item-heading">Project Template</h4>
+    <p class="list-group-item-text">Starting a new project? Get going with a fully testable project in minutes.</p>
+  </a>
+  <a href="web-api.html" class="list-group-item">
+    <h4 class="list-group-item-heading">Web API</h4>
+    <p class="list-group-item-text">Documentation on the default controller endpoints.</p>
+  </a>
+  <a href="component-api.html" class="list-group-item">
+    <h4 class="list-group-item-heading">Component API</h4>
+    <p class="list-group-item-text">Overview of Corbeans' Spring beans API.</p>
   </a>
   <a href="starter-test.html" class="list-group-item">
-    <h4 class="list-group-item-heading">Starter Test</h4>
-    <p class="list-group-item-text">Good companion to the main starter, adds Corda network capabilities to your Spring Boot tests.</p>
+    <h4 class="list-group-item-heading">Testing</h4>
+    <p class="list-group-item-text">Add Corda network capabilities to your Spring Boot/JUnit5 tests.</p>
   </a>
   <a href="data-rpc.html" class="list-group-item">
     <h4 class="list-group-item-heading">Data RPC</h4>
@@ -22,6 +34,7 @@ Current modules:
   </a>
   <a href="webserver.html" class="list-group-item">
     <h4 class="list-group-item-heading">Sample Webserver</h4>
-    <p class="list-group-item-text">Project example, provides a Spring Boot alternative to Corda’s standard webserver with support for multiple nodes.</p>
+    <p class="list-group-item-text">Project example, provides a Spring Boot alternative to Corda’s standard webserver with support for multiple nodes. 
+    Used to test the Corbeans project modules.</p>
   </a>
 </div>

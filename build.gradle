@@ -46,36 +46,28 @@ buildscript {
 		maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-dev/' }
 		//Needed only for SNAPSHOT versions
 		maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
-
-
 	}
 
 	dependencies {
-
 		// spring plugins
 		classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version"
 		classpath "io.spring.gradle:dependency-management-plugin:$dependency_management_version"
-
 		// kotlin plugins
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 		classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
 		classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlin_version"
 		classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
-
 		// corda plugins
 		classpath "net.corda.plugins:publish-utils:$corda_gradle_plugins_version"
 		classpath "net.corda.plugins:quasar-utils:$corda_gradle_plugins_version"
 		classpath "net.corda.plugins:cordformation:$corda_gradle_plugins_version"
 		classpath "net.corda.plugins:cordapp:$corda_gradle_plugins_version"
 		classpath "net.corda.plugins:api-scanner:$corda_gradle_plugins_version"
-
 		// plugins for asciidoctor
 		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.6'
-
 		// release to Maven Central through Sonatype OSSRH
 		// without the need to use Nexus GUI
 		classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.12.0"
-
 	}
 }
 
@@ -95,7 +87,6 @@ nexusStaging {
 }
 
 allprojects {
-
 	repositories {
 		mavenLocal()
 		jcenter()
@@ -111,22 +102,17 @@ allprojects {
 
 	version = "0.19-SNAPSHOT"
 	group = 'com.github.manosbatsis.corbeans'
-
 	apply from: "$rootDir/gradle/published.gradle"
-
 	apply plugin: 'project-report'
 }
 
 subprojects {
 	apply from: "$rootDir/gradle/kotlin.gradle"
-
 	apply plugin: 'kotlin-spring'
 	apply plugin: 'io.spring.dependency-management'
-
 	apply plugin: 'idea'
 	apply plugin: 'license'
 	//apply plugin: 'kotlin-kapt' //optional
-
 	configurations {
 		all {
 			// Exclude old Junit since we use jupiter
@@ -145,20 +131,15 @@ subprojects {
 				mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
 			}
 		}
-
 		dependencies{
 			compile("org.springframework.boot:spring-boot-starter:$spring_boot_version")
 			implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
 			implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
-
 			compileOnly("org.springframework.boot:spring-boot-configuration-processor:$spring_boot_version")
-			
 			testCompile("org.springframework.boot:spring-boot-starter-test:$spring_boot_version")
 			testCompile("org.jetbrains.kotlin:kotlin-test:$kotlin_version")
 			testCompile("org.junit.jupiter:junit-jupiter-api")
-
 			testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-
 		}
 	}
 

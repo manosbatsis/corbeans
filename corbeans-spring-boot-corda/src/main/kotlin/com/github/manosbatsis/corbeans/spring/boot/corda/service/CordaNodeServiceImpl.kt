@@ -74,7 +74,7 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
             .filter { nodeInfo -> nodeInfo.legalIdentities.first() != myIdentity }
             .map { it.legalIdentities.first().name.organisation })
 
-    /** Returns a list of the node's network peer names. */
+    /** Returns a each of the node's network peer names. */
     override fun peerNames(): Map<String, List<String>> {
         val nodes = nodeRpcConnection.proxy.networkMapSnapshot()
         val nodeNames = nodes.map { it.legalIdentities.first().name }
@@ -110,6 +110,10 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
 
     override fun states() = nodeRpcConnection.proxy.vaultQueryBy<ContractState>().states
 
+    /** Get a state service targeting the given `ContractState` type */
+    override fun <T : ContractState> createStateService(contractStateType: Class<T>): StateService<T>{
+        return StateService(contractStateType, this.proxy())
+    }
 
     override fun openArrachment(hash: String): InputStream = this.openArrachment(SecureHash.parse(hash))
     override fun openArrachment(hash: SecureHash): InputStream = nodeRpcConnection.proxy.openAttachment(hash)

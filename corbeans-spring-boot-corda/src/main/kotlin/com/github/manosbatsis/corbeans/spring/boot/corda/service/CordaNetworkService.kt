@@ -34,4 +34,10 @@ interface CordaNetworkService {
      * or `cordform` based on node.conf otherwise
      */
     fun getNodeService(optionalNodeName: Optional<String> = Optional.empty()): CordaNodeService
+
+    /**
+     * Get a Node service by name. Default is either the only node name if single,
+     * or `cordform` based on node.conf otherwise
+     */
+    fun getNodeService(nodeName: String?): CordaNodeService
 }

@@ -23,12 +23,12 @@ node via `runNodes` or multiple manually configured nodes, see bellow for a conf
 
 ## Download
 
-You can use your own custom webserver based on the [starter](starter.html) or download the sample at
+You can use your own custom webserver based on the [starter](getting-started.html) or download the sample at
 https://oss.sonatype.org/content/repositories/releases/com/github/manosbatsis/corbeans/corbeans-corda-webserver/
 
 ## Running the Server
 
-Spring Boot applications using the [starter](starter.html) can be run either manually or via `runNodes` as a
+Spring Boot applications using the [starter](getting-started.html) can be run either manually or via `runNodes` as a
 drop-in replacement to the corda-webserver.
 
 

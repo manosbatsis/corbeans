@@ -2,13 +2,19 @@ options:
   - title: Introduction
     url: docs/index.html
 
+  - title: Getting Started
+    url: docs/getting-started.html
+
   - title: Project Template
     url: docs/project-template.html
 
-  - title: Spring Boot Starter
-    url: docs/starter.html
+  - title: Web API
+    url: docs/web-api.html
 
-  - title: Starter Test
+  - title: Components API
+    url: docs/component-api.html
+
+  - title: Testing
     url: docs/starter-test.html
 
   - title: Data RPC

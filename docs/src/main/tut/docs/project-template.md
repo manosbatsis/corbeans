@@ -6,12 +6,14 @@ title: "Project Template"
 # Project Template
 
 
-The Corbeans Yo! Cordap is a project sample and templace that can help you setup a proper project in minutes.
+Creating a complete Spring Boot/Corda project from scratch can be a time consuming task.   
+The Corbeans Yo! Cordap project templace can help you bootstrap a fully testable 
+application in minutes.
 
+<!--- [Project Modules](#project-modules) -->
 <!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
 - [Quick HowTo](#quick-howto)
-- [Project Modules](#project-modules)
 - [Customisation](#customisation)
 	- [Application Properties](#application-properties)
 	- [Custom Package](#custom-package)
@@ -64,7 +66,7 @@ call cordapp/build/nodes/runnodes.bat
 
 
 
-
+<!--
 ## Project Modules
 
 ```bash
@@ -74,7 +76,7 @@ corbeans-yo-cordapp
 ├── cordapp-workflow   # Flows cordapp and tests
 └── server             # Spring Boot server app and tests
 ```
-
+-->
 
 ## Customisation
 
