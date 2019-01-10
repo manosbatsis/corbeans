@@ -3,6 +3,9 @@
 Corbeans provides Corda support to Spring Boot applications. More details can be found in the docs, 
 see https://manosbatsis.github.io/corbeans
 
+> Current version/docs is 0.19-SNAPSHOT, waiting for Corda 4.0 release. 
+For Corda 3.x, use version 0.18
+
 For feedback or support check out the issues or create a new one at https://github.com/manosbatsis/corbeans/issues
 
 If you find this project useful please let me know by adding a star on github.
