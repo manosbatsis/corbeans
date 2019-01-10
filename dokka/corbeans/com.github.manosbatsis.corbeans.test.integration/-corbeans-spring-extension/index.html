@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>CorbeansSpringExtension - corbeans</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">corbeans</a>&nbsp;/&nbsp;<a href="../index.html">com.github.manosbatsis.corbeans.test.integration</a>&nbsp;/&nbsp;<a href="./index.html">CorbeansSpringExtension</a><br/>
+<br/>
+<h1>CorbeansSpringExtension</h1>
+<code><span class="keyword">class </span><span class="identifier">CorbeansSpringExtension</span></code> <a href="https://....../blob/master/corbeans-spring-boot-starter-test/src/main/kotlin/com/github/manosbatsis/corbeans/test/integration/CorbeansSpringExtension.kt#L64">(source)</a>
+<p>Alternative JUnit extension VS subclassing <a href="../-with-implicit-network-i-t/index.html">WithImplicitNetworkIT</a>. To be used instead of <a href="#">SpringExtension</a>
+Automatically creates and maintains a single Corda network throughout test execution,
+using the corbeans' config from <code>application.properties</code>. You may override the latter with an
+additional file in your test classpath, i.e. <code>src/test/resources/application.properties</code>.</p>
+<p>Example:</p>
+<pre><code>@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// Use CorbeansSpringExtension instead of SpringExtension
+@ExtendWith(CorbeansSpringExtension::class)
+class MyWithSingleNetworkIntegrationTest {
+
+     // autowire a service for a specific node
+     @Autowired
+     @Qualifier("partyANodeService")
+     lateinit var service: CordaNodeService
+
+     // autowire a unique-typed custom node service
+     @Autowired
+     lateinit var customCervice: SampleCustomCordaNodeServiceImpl
+
+     @Test
+     fun `Can inject services`() {
+         assertNotNull(this.service)
+         assertNotNull(this.customCervice)
+     }
+
+     @Test
+     fun `Can retrieve node identity`() {
+         assertNotNull(service.myIdentity)
+     }
+}
+</code></pre>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">CorbeansSpringExtension</span><span class="symbol">(</span><span class="symbol">)</span></code>
+<p>Alternative JUnit extension VS subclassing <a href="../-with-implicit-network-i-t/index.html">WithImplicitNetworkIT</a>. To be used instead of <a href="#">SpringExtension</a>
+Automatically creates and maintains a single Corda network throughout test execution,
+using the corbeans' config from <code>application.properties</code>. You may override the latter with an
+additional file in your test classpath, i.e. <code>src/test/resources/application.properties</code>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="corda-nodes-properties.html">cordaNodesProperties</a></p>
+</td>
+<td>
+<code><span class="keyword">lateinit</span> <span class="keyword">var </span><span class="identifier">cordaNodesProperties</span><span class="symbol">: </span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.config/-corda-nodes-properties/index.html"><span class="identifier">CordaNodesProperties</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="node-driver-helper.html">nodeDriverHelper</a></p>
+</td>
+<td>
+<code><span class="keyword">lateinit</span> <span class="keyword">var </span><span class="identifier">nodeDriverHelper</span><span class="symbol">: </span><a href="../-node-driver-helper/index.html"><span class="identifier">NodeDriverHelper</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="after-all.html">afterAll</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">afterAll</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension$afterAll()/context">context</span><span class="symbol">:</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Delegate to <a href="#">SpringExtension.afterAll</a>,
+then stop the Corda network</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="before-all.html">beforeAll</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">beforeAll</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension$beforeAll()/context">context</span><span class="symbol">:</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Delegate to <a href="#">SpringExtension.beforeAll</a>,
+then start the Corda network</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
