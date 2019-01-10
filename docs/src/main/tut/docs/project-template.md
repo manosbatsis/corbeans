@@ -7,13 +7,13 @@ title: "Project Template"
 
 
 Creating a complete Spring Boot/Corda project from scratch can be a time consuming task.   
-The Corbeans Yo! Cordap project templace can help you bootstrap a fully testable 
+The [Corbeans Yo! Cordap](https://github.com/manosbatsis/corbeans-yo-cordapp) project templace can help you bootstrap a fully testable 
 application in minutes.
 
-<!--- [Project Modules](#project-modules) -->
 <!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
 - [Quick HowTo](#quick-howto)
+- [Project Modules](#project-modules) 
 - [Customisation](#customisation)
 	- [Application Properties](#application-properties)
 	- [Custom Package](#custom-package)
@@ -54,7 +54,7 @@ cd corbeans-yo-cordapp
 Linux/Unix:
 
 ```bash
-cordapp/build/nodes/runnodes
+cordapp-workflow/build/nodes/runnodes
 ```
 Windows:
 
@@ -64,19 +64,18 @@ call cordapp/build/nodes/runnodes.bat
 
 5. Browse the API
 
+(Party A node) 
 
+http://localhost:10007/swagger-ui.html
 
-<!--
 ## Project Modules
 
 ```bash
 corbeans-yo-cordapp
-├── cordapp            # Aggregate cordapp
-├── cordapp-contract   # States and contracts cordapp and tests
-├── cordapp-workflow   # Flows cordapp and tests
-└── server             # Spring Boot server app and tests
+├── cordapp-contract   # States , contracts and tests with MockServices
+├── cordapp-workflow   # Flows and tests with MockNetwork
+└── server             # Spring Boot server app and integration tests
 ```
--->
 
 ## Customisation
 
@@ -88,11 +87,11 @@ or __server/src/test/resources/application.properties__ respectively.
 
 ### Custom Package
 
-If you refactor from `mypackage` to your actual package, make sure to make the appropriate
-changes in both __application.properties__ files, including
+If you refactor from `mypackage` to your actual package, make sure to update the 
+`corbeans.cordapPackages` property in both __application.properties__ files.
 
 ### Multiple Webservers
 
 By default `runnodes` will only create a single webserver instance.
 If a webserver per node is desired, uncomment "PartyB" node's `webPort` and `webserverJar`
-in __cordapp/build.gradle__'s `Cordform` task.  
+in __cordapp-workflow/build.gradle__'s `Cordform` task.  
