@@ -1,0 +1,19 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>CordaNodesController.openArrachment - corbeans</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">corbeans</a>&nbsp;/&nbsp;<a href="../index.html">com.github.manosbatsis.corbeans.spring.boot.corda.web</a>&nbsp;/&nbsp;<a href="index.html">CordaNodesController</a>&nbsp;/&nbsp;<a href="./open-arrachment.html">openArrachment</a><br/>
+<br/>
+<h1>openArrachment</h1>
+<a name="com.github.manosbatsis.corbeans.spring.boot.corda.web.CordaNodesController$openArrachment(java.util.Optional((kotlin.String)), kotlin.String, , )"></a>
+<code><span class="keyword">fun </span><span class="identifier">openArrachment</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CordaNodesController$openArrachment(java.util.Optional((kotlin.String)), kotlin.String, , )/nodeName">nodeName</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Optional.html"><span class="identifier">Optional</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CordaNodesController$openArrachment(java.util.Optional((kotlin.String)), kotlin.String, , )/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CordaNodesController$openArrachment(java.util.Optional((kotlin.String)), kotlin.String, , )/req">req</span><span class="symbol">:</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">, </span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CordaNodesController$openArrachment(java.util.Optional((kotlin.String)), kotlin.String, , )/resp">resp</span><span class="symbol">:</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code> <a href="https://....../blob/master/corbeans-spring-boot-corda/src/main/kotlin/com/github/manosbatsis/corbeans/spring/boot/corda/web/CordaNodesController.kt#L128">(source)</a>
+<p>Allows the node administrator to either download full attachment zips, or individual files within those zips.</p>
+<p>GET /attachments/123abcdef12121            -&gt; download the zip identified by this hash
+GET /attachments/123abcdef12121/foo.txt    -&gt; download that file specifically</p>
+<p>Files are always forced to be downloads, they may not be embedded into web pages for security reasons.</p>
+<p>TODO: Provide an endpoint that exposes attachment file listings, to make attachments browsable.</p>
+</BODY>
+</HTML>
