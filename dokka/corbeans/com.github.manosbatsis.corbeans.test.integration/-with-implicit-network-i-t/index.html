@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>WithImplicitNetworkIT - corbeans</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">corbeans</a>&nbsp;/&nbsp;<a href="../index.html">com.github.manosbatsis.corbeans.test.integration</a>&nbsp;/&nbsp;<a href="./index.html">WithImplicitNetworkIT</a><br/>
+<br/>
+<h1>WithImplicitNetworkIT</h1>
+<code><span class="keyword">abstract</span> <span class="keyword">class </span><span class="identifier">WithImplicitNetworkIT</span></code> <a href="https://....../blob/master/corbeans-spring-boot-starter-test/src/main/kotlin/com/github/manosbatsis/corbeans/test/integration/WithImplicitNetworkIT.kt#L67">(source)</a>
+<p>Alternative you can subclass VS using <a href="../-corbeans-spring-extension/index.html">CorbeansSpringExtension</a>.</p>
+<p>Automatically creates and maintains a single Corda network throughout test execution,
+using the corbeans' config from <code>application.properties</code>. You may override the latter with an
+additional file in your test classpath, i.e. <code>src/test/resources/application.properties</code>.</p>
+<p>Example:</p>
+<pre><code>@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ExtendWith(SpringExtension::class)
+class MyWithSingleNetworkIntegrationTest : WithImplicitNetworkIT() {
+
+     // autowire a service for a specific node
+     @Autowired
+     @Qualifier("partyANodeService")
+     lateinit var service: CordaNodeService
+
+     // autowire a unique-typed custom node service
+     @Autowired
+     lateinit var customCervice: SampleCustomCordaNodeServiceImpl
+
+     @Test
+     fun `Can inject services`() {
+         assertNotNull(this.service)
+         assertNotNull(this.customCervice)
+     }
+
+     @Test
+     fun `Can retrieve node identity`() {
+         assertNotNull(service.myIdentity)
+     }
+}
+</code></pre>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">WithImplicitNetworkIT</span><span class="symbol">(</span><span class="symbol">)</span></code>
+<p>Alternative you can subclass VS using <a href="../-corbeans-spring-extension/index.html">CorbeansSpringExtension</a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="corda-nodes-properties.html">cordaNodesProperties</a></p>
+</td>
+<td>
+<code><span class="keyword">lateinit</span> <span class="keyword">var </span><span class="identifier">cordaNodesProperties</span><span class="symbol">: </span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.config/-corda-nodes-properties/index.html"><span class="identifier">CordaNodesProperties</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="node-driver-helper.html">nodeDriverHelper</a></p>
+</td>
+<td>
+<code><span class="keyword">lateinit</span> <span class="keyword">var </span><span class="identifier">nodeDriverHelper</span><span class="symbol">: </span><a href="../-node-driver-helper/index.html"><span class="identifier">NodeDriverHelper</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="start-network.html">startNetwork</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">startNetwork</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Starts the Corda network</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="stop-network.html">stopNetwork</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">stopNetwork</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Stops the Corda network</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
