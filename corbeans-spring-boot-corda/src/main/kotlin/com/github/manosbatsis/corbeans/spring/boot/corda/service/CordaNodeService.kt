@@ -19,6 +19,7 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.info.NodeInfo
 import net.corda.core.contracts.ContractState
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.crypto.SecureHash
@@ -33,16 +34,27 @@ import java.time.LocalDateTime
  */
 interface CordaNodeService {
 
+    fun getInfo(): NodeInfo = NodeInfo(
+            identity = myIdentity,
+            identities = identities(),
+            platformVersion = platformVersion(),
+            peers = peers(),
+            peerNames = peerNames(),
+            notaries = notaries(),
+            flows = flows(),
+            addresses = addresses()
+        )
+
     /** Get the node identity */
     val myIdentity: Party
 
     /** Returns a [CordaRPCOps] proxy for this node. */
     fun proxy(): CordaRPCOps
-    /** Returns a list of the node's network peers. */
-    fun peers(): Map<String, List<String>>
+    /** Returns the node's network peers. */
+    fun peers(): List<String>
 
-    /** Returns a list of the node's network peer names. */
-    fun peerNames(): Map<String, List<String>>
+    /** Returns the (organization) name list of the node's network peers. */
+    fun peerNames(): List<String>
     /**
      * Returns a list of candidate matches for a given string, with optional fuzzy(ish) matching. Fuzzy matching may
      * get smarter with time e.g. to correct spelling errors, so you should not hard-code indexes into the results

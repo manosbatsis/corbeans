@@ -20,9 +20,12 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure
 
 
+import com.github.manosbatsis.corbeans.spring.boot.corda.actuator.CordaInfoContributor
+import com.github.manosbatsis.corbeans.spring.boot.corda.actuator.CordaInfoEndpoint
 import com.github.manosbatsis.corbeans.spring.boot.corda.bind.SecureHashConverter
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -47,10 +50,26 @@ class CordaNodesAutoConfiguration {
         }
     }
 
+    /** Add transparent SecureHash conversion */
     @Bean
     @ConditionalOnMissingBean(SecureHashConverter::class)
     fun secureHashConverter(): SecureHashConverter {
         return SecureHashConverter()
+    }
+
+    /** Add custom actuator endpoint based on known nodes */
+    @Bean
+    fun cordaInfoEndpoint(): CordaInfoEndpoint {
+        return CordaInfoEndpoint()
+    }
+
+    /** Extend actuator's info endpoint based on known nodes */
+    @Bean
+    @ConditionalOnProperty(
+            prefix = "corbeans", name = arrayOf("actuator.info.disable"),
+            havingValue="false", matchIfMissing = true)
+    fun cordaInfoContributor(): CordaInfoContributor {
+        return CordaInfoContributor()
     }
 
 }

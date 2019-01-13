@@ -12,12 +12,15 @@ and can be helpful with version upgrades.
 
 - Initial changelog
 - Added Corda 4.0 as minimum required version  
+- Added [template project](project-template.html)
+- Added `corbeans.nodes.default.*` properties for global node defaults
+- Added new config properties per node and `CordaRPCClientConfiguration` updates in Corda 4.0
 - Added `CordaNetworkService` as a convenient, autowirable entry point to API
 - Added `StateService` helpers 
 - Removed `WithDriverNodesIT.getCordappPackages` 
 and `WithImplicitNetworkIT.getCordappPackages` methods 
-in favor of using `corbeans.cordapPackages` in `application.properties`
-- Added `CorbeansSpringExtension` for implicit network in integration tests as an alternative to subclassing `WithImplicitNetworkIT`
+in favor of using `corbeans.cordapPackages` configuration in __application.properties__
+- Added `CorbeansSpringExtension` for implicit network during integration tests as an alternative to subclassing `WithImplicitNetworkIT`
 - Fixed `WithImplicitNetworkIT` issue with test hanging in some cases
 - Moved REST controller endpoints from `/node` and `/nodes/{nodeName}` to 
 `/api/node` and `/api/nodes/{nodeName}` respectively
@@ -35,4 +38,8 @@ in favor of using `corbeans.cordapPackages` in `application.properties`
 	import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 	import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeServiceImpl
 	```
+- Refactored return type of `CordaNodeService.peers` and `CordaNodeService.peerNames` from 
+`Map<String, List<String>>` to simply `List<String>`
+- Added basic Spring boot Actuator components: an __info__ endpoint contributor and a custom 
+__corda__ HTTP/JMX endpoint 
 

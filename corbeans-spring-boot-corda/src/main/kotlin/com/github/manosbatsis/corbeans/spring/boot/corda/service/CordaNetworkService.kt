@@ -19,6 +19,8 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.info.NetworkInfo
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.info.NodeInfo
 import java.util.*
 
 /**
@@ -28,6 +30,11 @@ interface CordaNetworkService {
 
     /** Node services by configured name */
     var nodeServices: Map<String, CordaNodeService>
+
+    /**
+     * Get information about known node network(s) and configuration
+     */
+    fun getInfo(): NetworkInfo
 
     /**
      * Get a Node service by name. Default is either the only node name if single,
@@ -40,4 +47,6 @@ interface CordaNetworkService {
      * or `cordform` based on node.conf otherwise
      */
     fun getNodeService(nodeName: String?): CordaNodeService
+
+    fun getNodesInfo(): Map<String, NodeInfo>
 }

@@ -3,7 +3,7 @@ layout: docs
 title: "Starter Test"
 ---
 
-# Spring-Boot Starter Test
+# Testing
 
 <!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
@@ -12,6 +12,7 @@ title: "Starter Test"
 	- [For Maven Users](#for-maven-users)
 - [With Driver Nodes](#with-driver-nodes)
 - [Implicit Network](#implicit-network)
+- [With CorbeansSpringExtension](#with-corbeansspringextension)
 
 <!-- /TOC -->
 
@@ -125,5 +126,23 @@ class MyWithSingleNetworkIntegrationTest : WithImplicitNetworkIT() {
      fun `Can retrieve node identity`() {
          assertNotNull(service.myIdentity)
      }
+}
+```
+
+## With CorbeansSpringExtension
+
+An alternative to extending `WithImplicitNetworkIT` is to use `CorbeansSpringExtension`. This will also  
+automatically create and maintains a single Corda network throughout test execution,
+agin using the corbeans' config from `application.properties`. You may override the latter with an
+additional file in your test classpath, i.e. `src/test/resources/application.properties`.
+
+Example:
+
+```kotlin
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// Note we are using CorbeansSpringExtension Instead of SpringExtension
+@ExtendWith(CorbeansSpringExtension::class)
+class MyWithSingleNetworkIntegrationTest {
+	// Same members as in the previous section
 }
 ```

@@ -69,18 +69,17 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
     /** Returns a [CordaRPCOps] proxy for this node. */
     override fun proxy(): CordaRPCOps = this.nodeRpcConnection.proxy
 
-    /** Returns a list of the node's network peers. */
-    override fun peers() = mapOf("peers" to nodeRpcConnection.proxy.networkMapSnapshot()
+    /** Returns the (organization) name list of the node's network peers. */
+    override fun peerNames(): List<String> = nodeRpcConnection.proxy.networkMapSnapshot()
             .filter { nodeInfo -> nodeInfo.legalIdentities.first() != myIdentity }
-            .map { it.legalIdentities.first().name.organisation })
+            .map { it.legalIdentities.first().name.organisation }
 
-    /** Returns a each of the node's network peer names. */
-    override fun peerNames(): Map<String, List<String>> {
+    /** Returns the node's network peers. */
+    override fun peers(): List<String> {
         val nodes = nodeRpcConnection.proxy.networkMapSnapshot()
         val nodeNames = nodes.map { it.legalIdentities.first().name }
         val filteredNodeNames = nodeNames.filter { it.organisation !== myIdentity.name.organisation }
-        val filteredNodeNamesToStr = filteredNodeNames.map { it.toString() }
-        return mapOf("peers" to filteredNodeNamesToStr)
+        return filteredNodeNames.map { it.toString() }
     }
 
     /**

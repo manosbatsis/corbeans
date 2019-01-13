@@ -70,12 +70,9 @@ http://localhost:10007/swagger-ui.html
 
 ## Project Modules
 
-```bash
-corbeans-yo-cordapp
-├── cordapp-contract   # States , contracts and tests with MockServices
-├── cordapp-workflow   # Flows and tests with MockNetwork
-└── server             # Spring Boot server app and integration tests
-```
+- **cordapp-contract**: States , contracts and tests with MockServices.
+- **cordapp-workflow**: Flows and tests with MockNetwork.
+- **server**: Spring Boot app with a number of approaches to [integration testing](starter-test.html).
 
 ## Customisation
 
@@ -87,8 +84,9 @@ or __server/src/test/resources/application.properties__ respectively.
 
 ### Custom Package
 
-If you refactor from `mypackage` to your actual package, make sure to update the 
-`corbeans.cordapPackages` property in both __application.properties__ files.
+If you refactor from `mypackage` to your actual base package, make sure to update main and test sources 
+throughout project modules, along with the `corbeans.cordapPackages` property in both __application.properties__ 
+files in the __server__ module.
 
 ### Multiple Webservers
 

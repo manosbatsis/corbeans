@@ -11,7 +11,7 @@ lazy val noPublishSettings = Seq(
 
 lazy val micrositeSettings = Seq(
   micrositeName := "corbeans",
-  micrositeDescription := "Corda integration for Spring-Boot",
+  micrositeDescription := "Corda integration for Spring Boot",
   micrositeUrl := "https://manosbatsis.github.io",
   micrositeBaseUrl := "/corbeans",
   micrositeDocumentationUrl := "/corbeans/docs",
@@ -27,7 +27,7 @@ lazy val micrositeSettings = Seq(
   micrositeHighlightTheme := "github",
   micrositeHighlightLanguages := Seq("kotlin", "java", "gradle", "xml", "bash", "properties"),
   micrositeStaticDirectory := file("build/dokka"),
-  micrositeFooterText := Some("<p>see also <a href='/corbeans/docs/acknowledgements.html'>acknowledgements</a></p>"),
+  micrositeFooterText := Some("<span> Got a remote contract? Contact me by <a href=\"mailto:manosbatsis@gmail.com?subject=Remote Contract\">email</a> or <a href=\"https://www.linkedin.com/in/manosbatsis\">linkedin</a></span>."),
   micrositeShareOnSocial := false,
   micrositeAnalyticsToken := "UA-131279953-1"
 )

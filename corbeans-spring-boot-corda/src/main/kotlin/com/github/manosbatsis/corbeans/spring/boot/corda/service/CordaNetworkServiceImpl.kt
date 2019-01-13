@@ -21,6 +21,7 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
 //import org.springframework.messaging.simp.SimpMessagingTemplate
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.info.NetworkInfo
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
@@ -34,6 +35,7 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
 
     companion object {
         private val logger = LoggerFactory.getLogger(CordaNetworkServiceImpl::class.java)
+        private val serviceNameSuffix = "NodeService"
     }
 
     protected lateinit var defaultNodeName: String
@@ -50,6 +52,27 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
         logger.debug("Auto-configured RESTful services for Corda nodes:: {}, default node: {}",
                 nodeServices.keys, defaultNodeName)
     }
+
+    /**
+     * Get information about known node network(s) and configuration
+     */
+    override fun getInfo(): NetworkInfo {
+        // Gather information per known node
+        val nodeInfos = this.nodeServices.map { property ->
+            val key = property.key.substring(0, property.key.length - serviceNameSuffix.length)
+            key to property.value.getInfo()
+        }.toMap()
+        return NetworkInfo(nodeInfos)
+    }
+
+    /**
+     * Get information about known nodes
+     */
+    override fun getNodesInfo() = this.nodeServices.map { property ->
+        property.key to property.value.getInfo()
+    }.toMap()
+
+
 
     /**
      * Get a Node service by name. Default is either the only node name if single,

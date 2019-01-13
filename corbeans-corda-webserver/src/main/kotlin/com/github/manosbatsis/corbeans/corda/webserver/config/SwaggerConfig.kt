@@ -47,7 +47,7 @@ class SwaggerConfig {
     }
 
     protected fun apiInfo(): ApiInfo {
-        return ApiInfoBuilder().title("Corda Spring-Boot Webserver")
+        return ApiInfoBuilder().title("Corda Spring Boot Webserver")
                 .description("A rest API for Corda Nodes using Spring Boot 2").version("0.1").build()
     }
 
