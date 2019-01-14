@@ -96,8 +96,8 @@ class MyWithDriverNodesIntegrationTest : WithDriverNodesIT() {
 
 ## Implicit Network
 
-Extending `WithImplicitNetworkIT` will automatically create and maintains a single Corda network throughout test execution,
-agin using the corbeans' config from `application.properties`. You may override the latter with an
+Extending `WithImplicitNetworkIT` will automatically create and maintain a single Corda network throughout test 
+execution, using the corbeans' config from `application.properties`. You may override the latter with an
 additional file in your test classpath, i.e. `src/test/resources/application.properties`.
 
 Example:
@@ -132,8 +132,8 @@ class MyWithSingleNetworkIntegrationTest : WithImplicitNetworkIT() {
 ## With CorbeansSpringExtension
 
 An alternative to extending `WithImplicitNetworkIT` is to use `CorbeansSpringExtension`. This will also  
-automatically create and maintains a single Corda network throughout test execution,
-agin using the corbeans' config from `application.properties`. You may override the latter with an
+automatically create and maintain a single Corda network throughout test class execution,
+again using the corbeans' config from `application.properties`. You may override the latter with an
 additional file in your test classpath, i.e. `src/test/resources/application.properties`.
 
 Example:
