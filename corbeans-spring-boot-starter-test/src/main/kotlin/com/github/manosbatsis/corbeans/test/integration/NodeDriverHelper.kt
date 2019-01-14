@@ -68,6 +68,7 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
             elapsed += 1000
             logger.debug("startNetwork waiting, elapsed: {}", elapsed)
         }
+        logger.debug("startNetwork started")
     }
 
 
@@ -87,8 +88,9 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
                 Thread.sleep(1000)
             }
             state = State.STOPPED
+            logger.error("stopNetwork stopped")
         } catch (e: Exception) {
-            logger.error("stopNetwork failed:", e)
+            logger.error("stopNetwork failed: ${e.message}", e)
             throw e
         }
         finally {
@@ -152,6 +154,8 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
                                 customOverrides = mapOf(
                                         "rpcSettings.address" to nodeParams.address,
                                         "rpcSettings.adminAddress" to nodeParams.adminAddress)).getOrThrow()
+
+                        logger.debug("withDriverNodes: started node, params: {}", nodeParams)
                     }
                     else {
                         logger.debug("withDriverNodes: skipping node: {}", nodeParams)

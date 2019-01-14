@@ -64,7 +64,6 @@ test {
 	testLogging {
 		events "passed", "skipped", "failed", "standardOut", "standardError"
 	}
-
 	// Run unit tests using junit5
 	useJUnitPlatform {
 		exclude '**/*IntegrationTest.class'
@@ -73,6 +72,9 @@ test {
 
 // Run integration tests using junit5
 task integrationTest(type: Test) {
+	testLogging {
+		events "passed", "skipped", "failed", "standardOut", "standardError"
+	}
 	useJUnitPlatform {
 		include '**/*IntegrationTest.class'
 

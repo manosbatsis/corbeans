@@ -111,6 +111,12 @@ subprojects {
 	apply plugin: 'kotlin-spring'
 	apply plugin: 'io.spring.dependency-management'
 	apply plugin: 'idea'
+	idea {
+		module {
+			downloadJavadoc = true
+			downloadSources = true
+		}
+	}
 	apply plugin: 'license'
 	//apply plugin: 'kotlin-kapt' //optional
 	configurations {

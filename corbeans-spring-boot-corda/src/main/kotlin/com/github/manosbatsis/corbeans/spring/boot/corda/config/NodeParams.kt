@@ -51,6 +51,7 @@ class NodeParams {
             DEFAULT.observationExecutorPoolSize = CordaRPCClientConfiguration.DEFAULT.observationExecutorPoolSize
             DEFAULT.reapInterval = CordaRPCClientConfiguration.DEFAULT.reapInterval
             DEFAULT.trackRpcCallSites = CordaRPCClientConfiguration.DEFAULT.trackRpcCallSites
+            DEFAULT.skipInfo = false
         }
 
         /** Merge in order of precedence, with NodeParams.DEFAULT being the implicit last option */
@@ -74,6 +75,8 @@ class NodeParams {
             nodeParams.reapInterval = partialParams.reapInterval ?: defaultParams.reapInterval ?: DEFAULT.reapInterval!!
             nodeParams.trackRpcCallSites = partialParams.trackRpcCallSites ?: defaultParams.trackRpcCallSites ?: DEFAULT.trackRpcCallSites!!
             nodeParams.eager = partialParams.eager ?: defaultParams.eager ?: DEFAULT.eager!!
+            nodeParams.skipInfo = partialParams.skipInfo ?: defaultParams.skipInfo ?: DEFAULT.skipInfo!!
+
             return nodeParams
         }
     }
@@ -133,5 +136,11 @@ class NodeParams {
      * constructing call stacks is a moderately expensive operation.
      */
     var trackRpcCallSites: Boolean? = null
+    /** Whether to skip this node from actuator */
+    var skipInfo: Boolean? = null
+
+    override fun toString(): String {
+        return "NodeParams(address=$address, adminAddress=$adminAddress, eager=$eager, primaryServiceType=$primaryServiceType, connectionMaxRetryInterval=$connectionMaxRetryInterval, connectionRetryInterval=$connectionRetryInterval, connectionRetryIntervalMultiplier=$connectionRetryIntervalMultiplier)"
+    }
 
 }

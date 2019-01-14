@@ -26,7 +26,7 @@ import com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension
 import com.github.manosbatsis.corbeans.test.integration.WithImplicitNetworkIT
 import net.corda.core.identity.Party
 import net.corda.core.utilities.NetworkHostAndPort
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -75,9 +75,9 @@ class CorbeansSpringExtensionIntegrationTest {
     @Test
     fun `Can use both default node and multiple node controller endpoints`() {
         val defaultNodeMe = this.restTemplate.getForObject("/api/node/me", Map::class.java)
-        Assertions.assertEquals("me", defaultNodeMe.keys.first())
+        assertEquals("me", defaultNodeMe.keys.first())
         val partyANodeMe = this.restTemplate.getForObject("/api/nodes/partyA/me", Map::class.java)
-        Assertions.assertEquals("me", partyANodeMe.keys.first())
+        assertEquals("me", partyANodeMe.keys.first())
     }
 
 
@@ -100,6 +100,11 @@ class CorbeansSpringExtensionIntegrationTest {
     @Test
     fun `Can retrieve node identity`() {
         assertNotNull(service.myIdentity)
+    }
+
+    @Test
+    fun `Can retrieve peer identities`() {
+        assertNotNull(service.identities())
     }
 
     @Test

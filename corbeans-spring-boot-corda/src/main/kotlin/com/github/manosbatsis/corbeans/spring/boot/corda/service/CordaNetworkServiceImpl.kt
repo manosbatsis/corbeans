@@ -57,19 +57,17 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
      * Get information about known node network(s) and configuration
      */
     override fun getInfo(): NetworkInfo {
-        // Gather information per known node
-        val nodeInfos = this.nodeServices.map { property ->
-            val key = property.key.substring(0, property.key.length - serviceNameSuffix.length)
-            key to property.value.getInfo()
-        }.toMap()
-        return NetworkInfo(nodeInfos)
+        return NetworkInfo(getNodesInfo())
     }
 
     /**
      * Get information about known nodes
      */
-    override fun getNodesInfo() = this.nodeServices.map { property ->
-        property.key to property.value.getInfo()
+    override fun getNodesInfo() = this.nodeServices.filterNot { property ->
+        property.value.skipInfo()
+    }.map { property ->
+        val key = property.key.substring(0, property.key.length - serviceNameSuffix.length)
+        key to property.value.getInfo()
     }.toMap()
 
 

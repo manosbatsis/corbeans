@@ -103,6 +103,11 @@ class SingleNetworkIntegrationTest : WithImplicitNetworkIT() {
     }
 
     @Test
+    fun `Can retrieve peer identities`() {
+        assertNotNull(service.identities())
+    }
+
+    @Test
     fun `Can retrieve notaries`() {
         val notaries: List<Party> = service.notaries()
         assertNotNull(notaries)

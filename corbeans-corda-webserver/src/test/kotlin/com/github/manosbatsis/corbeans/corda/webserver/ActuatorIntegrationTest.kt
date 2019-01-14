@@ -19,6 +19,7 @@
  */
 package com.github.manosbatsis.corbeans.corda.webserver
 
+import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
 import com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -30,9 +31,8 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpStatus
 
-
 /**
- * Corbeans actuator tests
+ * Actuator integration tests
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 // Note we are using CorbeansSpringExtension Instead of SpringExtension
@@ -41,14 +41,23 @@ class ActuatorIntegrationTest {
 
     companion object {
         private val logger = LoggerFactory.getLogger(ActuatorIntegrationTest::class.java)
-
     }
+
+    // autowire a network service, used to access node services
+    @Autowired
+    lateinit var networkService: CordaNetworkService
 
     @Autowired
     lateinit var restTemplate: TestRestTemplate
 
     @Test
-    fun testInfoContributor() {
+    fun `Can inject services`() {
+        assertNotNull(this.networkService)
+    }
+
+
+    @Test
+    fun `Can see Corda details within Actuator info endpoint response`() {
         logger.debug("testInfoContributor, called")
         val entity = this.restTemplate
                 .getForEntity("/actuator/info", Map::class.java)
@@ -63,8 +72,10 @@ class ActuatorIntegrationTest {
     }
 
     @Test
-    fun testCordaEndpoint() {
+    fun `Can access Corda custom Actuator endpoint`() {
         logger.debug("testCordaEndpoint, called")
+        val serviceKeys = this.networkService.nodeServices.keys
+        logger.debug("testCordaEndpoint, serviceKeys: {}", serviceKeys)
         val entity = this.restTemplate
                 .getForEntity("/actuator/corda", Map::class.java)
         // Ensure a 200 OK
@@ -81,5 +92,6 @@ class ActuatorIntegrationTest {
         assertNotNull(cordaNodes["partyA"])
         assertNotNull(cordaNodes["partyB"])
     }
+
 
 }

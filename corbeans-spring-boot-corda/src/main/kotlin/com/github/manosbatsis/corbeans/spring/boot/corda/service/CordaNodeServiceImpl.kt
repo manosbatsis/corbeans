@@ -124,4 +124,6 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
         return ByteArrayInputStream(out.toByteArray())
     }
 
+    /** Returns whether this service should be skipped from actuator */
+    override fun skipInfo(): Boolean = this.nodeRpcConnection.skipInfo()
 }

@@ -44,6 +44,10 @@ class SwaggerIntegrationTest {
 
     @Test
     fun `Can access swagger UI`() {
+        // Check swagger endpoint
+        this.mockMvc.perform(get("/api-docs"))
+                .andExpect(status().isOk())
+        // Check Swagger UI
         this.mockMvc.perform(get("/swagger-ui.html"))
                 .andExpect(status().isOk())
     }

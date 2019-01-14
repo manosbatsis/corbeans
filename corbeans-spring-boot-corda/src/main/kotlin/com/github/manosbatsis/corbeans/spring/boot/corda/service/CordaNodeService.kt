@@ -77,4 +77,7 @@ interface CordaNodeService {
 
     /** Get a state service targeting the given `ContractState` type */
     fun <T : ContractState> createStateService(contractStateType: Class<T>): StateService<T>
+
+    /** Returns whether this service should be skipped from actuator */
+    fun skipInfo(): Boolean
 }

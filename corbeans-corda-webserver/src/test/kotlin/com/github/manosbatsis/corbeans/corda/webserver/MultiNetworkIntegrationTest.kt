@@ -105,6 +105,13 @@ class MultiNetworkIntegrationTest : WithDriverNodesIT() {
     }
 
     @Test
+    fun `Can retrieve peer identities`() {
+        withDriverNodes {
+            assertNotNull(service.identities())
+        }
+    }
+
+    @Test
     fun `Can retrieve notaries`() {
         withDriverNodes {
             val notaries: List<Party> = service.notaries()

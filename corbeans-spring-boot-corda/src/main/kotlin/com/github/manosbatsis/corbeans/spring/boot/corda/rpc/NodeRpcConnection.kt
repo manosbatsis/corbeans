@@ -22,10 +22,12 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.rpc
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
 import net.corda.client.rpc.CordaRPCClient
 import net.corda.client.rpc.CordaRPCClientConfiguration
+import net.corda.client.rpc.CordaRPCClientConfiguration.Companion.DEFAULT
 import net.corda.client.rpc.CordaRPCConnection
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.utilities.NetworkHostAndPort
 import org.slf4j.LoggerFactory
+import java.util.concurrent.TimeUnit
 import javax.annotation.PreDestroy
 
 
@@ -42,10 +44,31 @@ abstract class NodeRpcConnection(private val nodeParams: NodeParams) {
     abstract val proxy: CordaRPCOps
 
     fun createProxy(): CordaRPCOps {
-        logger.debug("Initializing RPC connection for address {}", nodeParams.address)
-        val rpcClient = CordaRPCClient(buildRpcAddress(), buildRpcClientConfig())
-        rpcConnection = rpcClient.start(nodeParams.username!!, nodeParams.password!!)
-        return rpcConnection.proxy
+        var created: CordaRPCOps? = null
+        var attemptCount = 0
+        var attemptInterval = DEFAULT.connectionRetryInterval.toMillis()
+        while (created == null) {
+            logger.debug("Initializing RPC connection for address {}, attempt: {}", nodeParams.address, attemptCount)
+            attemptCount++
+            try {
+                val rpcClient = CordaRPCClient(buildRpcAddress(), buildRpcClientConfig())
+                rpcConnection = rpcClient.start(nodeParams.username!!, nodeParams.password!!)
+                created = rpcConnection.proxy
+            } catch (e: Exception) {
+                logger.error("Failed initializing RPC connection to ${nodeParams.address}", e)
+                e.printStackTrace()
+                if (attemptCount < DEFAULT.maxReconnectAttempts)
+                    TimeUnit.MILLISECONDS.sleep(attemptInterval)
+                else {
+                    throw e
+                }
+                attemptInterval *= DEFAULT.connectionRetryIntervalMultiplier.toLong()
+            }
+        }
+        logger.debug(
+                "Initialized RPC connection for ${nodeParams.address} on port ${nodeParams.adminAddress}, name: {}",
+                created.nodeInfo().legalIdentities.first().name)
+        return created
     }
 
     private fun buildRpcAddress(): NetworkHostAndPort {
@@ -81,4 +104,6 @@ abstract class NodeRpcConnection(private val nodeParams: NodeParams) {
             logger.warn("Error notifying server ${nodeParams.address}", e)
         }
     }
+
+    fun skipInfo(): Boolean = this.nodeParams.skipInfo ?: false
 }

@@ -8,9 +8,12 @@ title: "Actuator API"
 Corbeans registers some [Actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html) 
 add-ons to expose Corda-related information about known nodes. 
 
+> The [project template](project-template.html)'s Actuator endpoints are __enabled and exposed__ by default.
+
 ### Info Contributor
 
 The `CordaInfoContributor` component enriches both HTTP and JMX versions of Actuator's __info__ endpoint with a 
+`corda` section:
 `corda` section:
 
 ```js

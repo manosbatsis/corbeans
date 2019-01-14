@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 
 /**
- * Alternative you can subclass VS using [CorbeansSpringExtension].
+ * Alternative of extending a base class you VS using [CorbeansSpringExtension].
  *
  * Automatically creates and maintains a single Corda network throughout test execution,
  * using the corbeans' config from `application.properties`. You may override the latter with an
