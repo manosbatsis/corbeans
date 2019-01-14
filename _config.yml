@@ -1,6 +1,6 @@
 name: corbeans
 baseurl: /corbeans
-description: Corda integration for Spring-Boot
+description: Corda integration for Spring Boot
 highlighter: rouge
 docs: true
 collections:
