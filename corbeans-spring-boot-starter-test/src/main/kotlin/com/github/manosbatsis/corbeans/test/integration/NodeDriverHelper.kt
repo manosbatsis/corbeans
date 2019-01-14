@@ -80,7 +80,7 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
         try {
             state = State.STOPPING
             // give time for a clean shutdown
-            val maxWait = 30000//ms
+            val maxWait = 10000//ms
             var elapsed = 0
             while (state != State.STOPPED && elapsed < maxWait) {
                 logger.debug("stopNetwork waiting, elapsed: {}", elapsed)
