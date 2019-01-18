@@ -19,6 +19,8 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.web
 
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.file.File
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.file.FileEntry
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
 import net.corda.core.contracts.ContractState
 import net.corda.core.contracts.StateAndRef
@@ -30,16 +32,17 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.io.FileNotFoundException
 import java.time.LocalDateTime
 import java.util.*
 import java.util.jar.JarInputStream
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+
 
 /**
  *  Rest controller with basic endpoints for multiple corda nodes. Supports multiple nodes by
@@ -124,22 +127,21 @@ open class CordaNodesController {
      *
      * TODO: Provide an endpoint that exposes attachment file listings, to make attachments browsable.
      */
-    @GetMapping("attachment/{id}/**")
-    fun openArrachment(@PathVariable nodeName: Optional<String>, @PathVariable id: String, req: HttpServletRequest, resp: HttpServletResponse) {
+    @GetMapping("attachments/{hash}/**")
+    fun openAttachment(
+            @PathVariable nodeName: Optional<String>,
+            @PathVariable hash: SecureHash, req: HttpServletRequest, resp: HttpServletResponse) {
 
         val reqPath = req.pathInfo?.substring(1)
-        if (reqPath == null) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST)
-            return
-        }
 
         try {
-            val hash = SecureHash.parse(reqPath.substringBefore('/'))
+            //val hash = SecureHash.parse(reqPath.substringBefore('/'))
             //val service = this.networkService.getNodeService(nodeName)
-            val attachment = this.networkService.getNodeService(nodeName).openArrachment(hash)
+            val attachment = this.networkService.getNodeService(nodeName).openAttachment(hash)
 
             // Don't allow case sensitive matches inside the jar, it'd just be confusing.
-            val subPath = reqPath.substringAfter('/', missingDelimiterValue = "").toLowerCase()
+
+            val subPath = ""// reqPath.substringAfter('/', missingDelimiterValue = "").toLowerCase()
 
             resp.contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE
             if (subPath.isEmpty()) {
@@ -160,17 +162,28 @@ open class CordaNodesController {
         }
     }
 
-
+    /** Persist the given file attachment to the vault  */
+    @PostMapping(value = ["attachments"], consumes = arrayOf(MediaType.MULTIPART_FORM_DATA_VALUE))
+    fun saveAttachment(@PathVariable nodeName: Optional<String>,
+                       @RequestParam(required = true) file: MultipartFile): ResponseEntity<FileEntry> {
+        val fileEntry = this.networkService.getNodeService(nodeName)
+                .saveAttachment(this.toFile(file))
+        val location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{id}")
+                .buildAndExpand(fileEntry.hash.toString())
+        return ResponseEntity.created(location.toUri()).body(fileEntry)
+    }
 
     /**
      * Converts a MultipartFile to a File DTO
+     */
     protected fun toFile(toFile: MultipartFile) = File(
             name = toFile.name,
-            originalFilename = toFile.originalFilename,
+            originalFilename = toFile.originalFilename?:"unknown-filename",
             inputStream = toFile.inputStream,
             size = toFile.size,
             contentType = toFile.contentType)
-     */
+
 
 
 }

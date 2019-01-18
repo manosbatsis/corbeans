@@ -66,10 +66,11 @@ class CordaNodesAutoConfiguration {
     /** Extend actuator's info endpoint based on known nodes */
     @Bean
     @ConditionalOnProperty(
-            prefix = "corbeans", name = arrayOf("actuator.info.disable"),
-            havingValue="false", matchIfMissing = true)
+            prefix = "corbeans",
+            name = arrayOf("actuator.info.disable"),
+            havingValue="false",
+            matchIfMissing = true)
     fun cordaInfoContributor(): CordaInfoContributor {
         return CordaInfoContributor()
     }
-
 }

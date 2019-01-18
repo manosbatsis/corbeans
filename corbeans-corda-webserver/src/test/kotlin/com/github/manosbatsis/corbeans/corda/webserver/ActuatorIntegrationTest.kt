@@ -62,9 +62,9 @@ class ActuatorIntegrationTest {
         val entity = this.restTemplate
                 .getForEntity("/actuator/info", Map::class.java)
         // Ensure a 200 OK
-        assertEquals(HttpStatus.OK, entity.getStatusCode())
+        assertEquals(HttpStatus.OK, entity.statusCode)
 
-        val body = entity.getBody()
+        val body = entity.body
         assertNotNull(body, "Actuator info must not be null")
         val corda = body!!["corda"] as Map<*, *>?
         // Validate corda information
@@ -79,8 +79,8 @@ class ActuatorIntegrationTest {
         val entity = this.restTemplate
                 .getForEntity("/actuator/corda", Map::class.java)
         // Ensure a 200 OK
-        assertEquals(HttpStatus.OK, entity.getStatusCode())
-        val corda = entity.getBody()
+        assertEquals(HttpStatus.OK, entity.statusCode)
+        val corda = entity.body
         // Validate corda information
         validateCordaInfo(corda)
     }

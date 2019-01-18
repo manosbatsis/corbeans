@@ -20,6 +20,8 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
 //import org.springframework.messaging.simp.SimpMessagingTemplate
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.file.File
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.file.FileEntry
 import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection
 import net.corda.core.contracts.ContractState
 import net.corda.core.crypto.SecureHash
@@ -28,6 +30,8 @@ import net.corda.core.identity.Party
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.vaultQueryBy
 import net.corda.core.node.services.vault.*
+import org.apache.commons.compress.archivers.ArchiveStreamFactory
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
 import java.io.ByteArrayInputStream
@@ -114,14 +118,48 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
         return StateService(contractStateType, this.proxy())
     }
 
-    override fun openArrachment(hash: String): InputStream = this.openArrachment(SecureHash.parse(hash))
-    override fun openArrachment(hash: SecureHash): InputStream = nodeRpcConnection.proxy.openAttachment(hash)
+    /** Retrieve the attachment matching the given hash string from the vault  */
+    override fun openAttachment(hash: String): InputStream = this.openAttachment(SecureHash.parse(hash))
+    /** Retrieve the attachment matching the given secure hash from the vault  */
+    override fun openAttachment(hash: SecureHash): InputStream = nodeRpcConnection.proxy.openAttachment(hash)
 
     @Throws(IOException::class)
     private fun convertToInputStream(inputStreamIn: ZipInputStream): InputStream {
         val out = ByteArrayOutputStream()
         IOUtils.copy(inputStreamIn, out)
         return ByteArrayInputStream(out.toByteArray())
+    }
+
+    /** Persist the given file attachment to the vault  */
+    override fun saveAttachment(file: File): FileEntry {
+
+        // Create archive
+        val tempZipFile = java.io.File.createTempFile(file.originalFilename, "zip.tmp")
+        val os = ArchiveStreamFactory()
+                .createArchiveOutputStream(ArchiveStreamFactory.ZIP, tempZipFile.outputStream())
+
+        // Add archive entry
+        os.putArchiveEntry(ZipArchiveEntry(file.originalFilename));
+        IOUtils.copy(file.inputStream, os);
+        os.closeArchiveEntry()
+        os.finish()
+
+        // Close streams
+        IOUtils.closeQuietly(os)
+        IOUtils.closeQuietly(file.inputStream)
+
+        // Upload to vault
+        val fileEntry = FileEntry(
+                LocalDateTime.now(),
+                this.proxy().uploadAttachment(tempZipFile.inputStream()).toString(),
+                file.originalFilename,
+                this.myIdentity.name.organisation,
+                null
+        )
+
+        // delete tmp file
+        tempZipFile.delete()
+        return fileEntry
     }
 
     /** Returns whether this service should be skipped from actuator */

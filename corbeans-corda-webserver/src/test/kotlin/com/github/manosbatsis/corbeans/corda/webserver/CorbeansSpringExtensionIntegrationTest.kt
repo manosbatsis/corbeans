@@ -19,7 +19,9 @@
  */
 package com.github.manosbatsis.corbeans.corda.webserver
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.manosbatsis.corbeans.corda.webserver.components.SampleCustomCordaNodeServiceImpl
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.file.FileEntry
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 import com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension
@@ -33,9 +35,18 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
+import org.springframework.mock.web.MockMultipartFile
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import kotlin.test.assertTrue
+
 
 /**
  * Same as [SingleNetworkIntegrationTest] only using [CorbeansSpringExtension]
@@ -44,12 +55,17 @@ import kotlin.test.assertTrue
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 // Note we are using CorbeansSpringExtension Instead of SpringExtension
 @ExtendWith(CorbeansSpringExtension::class)
+@AutoConfigureMockMvc
 class CorbeansSpringExtensionIntegrationTest {
 
     companion object {
         private val logger = LoggerFactory.getLogger(CorbeansSpringExtensionIntegrationTest::class.java)
 
     }
+
+    // autowire a JSON object mapper
+    @Autowired
+    lateinit var objectMapper: ObjectMapper
 
     // autowire a network service, used to access node services
     @Autowired
@@ -68,6 +84,9 @@ class CorbeansSpringExtensionIntegrationTest {
     @Autowired
     @Qualifier("partyBNodeService")
     lateinit var customCervice: SampleCustomCordaNodeServiceImpl
+
+    @Autowired
+    lateinit var mockMvc: MockMvc
 
     @Autowired
     lateinit var restTemplate: TestRestTemplate
@@ -125,4 +144,32 @@ class CorbeansSpringExtensionIntegrationTest {
         assertNotNull(addresses)
     }
 
+    @Test
+    @Throws(Exception::class)
+    fun `Can save and retrieve a single attachment`() {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.MULTIPART_FORM_DATA
+
+        val txtFile = MockMultipartFile(
+                "file", "test.txt", "text/plain",
+                this::class.java.getResourceAsStream("/uploadfiles/test.txt"))
+        //val pngFile = this::class.java.classLoader.getResource("/uploadfiles/test.png")
+        var hash: String? = null
+        // Test upload
+        this.mockMvc
+                .perform(multipart("/api/nodes/partyA/attachments").file(txtFile))
+                .andExpect(status().isCreated)
+                .andDo { mvcResult ->
+                    val json = mvcResult.response.contentAsString
+                    val fileEntry = objectMapper.readValue(json, FileEntry::class.java)
+                    hash = fileEntry.hash
+                }
+                .andReturn()
+        assertNotNull(hash)
+        // Test download
+        mockMvc.perform(
+                get("/api/nodes/partyA/attachments/$hash")
+                        .contentType(MediaType.TEXT_PLAIN))
+                .andExpect(status().isOk).andReturn()
+    }
 }
