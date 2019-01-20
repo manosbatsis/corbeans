@@ -172,7 +172,8 @@ class CordaNodesController {
     }
 
     @PostMapping(value = ["attachments"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    @ApiOperation(value = "Persist the given file(s) as a vault attachment")
+    @ApiOperation(value = "Persist the given file(s) as a vault attachment. " +
+            "A single JAR or ZIP file will be persisted as-is, otherwise a new archive will be created.")
     fun saveAttachment(@PathVariable nodeName: Optional<String>,
                        @RequestParam(name = "file", required = true) files: Array<MultipartFile>
     ): ResponseEntity<AttachmentReceipt> {
