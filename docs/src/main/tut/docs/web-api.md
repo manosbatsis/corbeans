@@ -22,8 +22,9 @@ GET    | /nodes/{nodeName}/whoami                | Returns the Node identity's n
 GET    | /nodes/{nodeName}/me                    | Returns the Node identity's x500Principal name
 GET    | /nodes/{nodeName}/peers                 | Returns a list of the node's network peers
 GET    | /nodes/{nodeName}/peersnames            | Returns a list of the node's network peer names
-GET    | /nodes/{nodeName}/peersnames            | Returns a list of node's network peer names
-GET    | /nodes/{nodeName}/attachment/{id}       | Returns the attachment mathing the given ID
+POST   | /nodes/{nodeName}/attachment            | Saves the given file(s) as a vault attachment and returns a receipt
+GET    | /nodes/{nodeName}/attachment/{id}       | Returns the attachment matching the given ID
+GET    | /nodes/{nodeName}/attachment/{id}/{path}| Returns a file from within the attachment matching the given ID
 GET    | /nodes/{nodeName}/addresses             | Returns a list of node addresses
 GET    | /nodes/{nodeName}/notaries              | Returns a list of notaries in node's network
 GET    | /nodes/{nodeName}/states                | Returns a list of states
