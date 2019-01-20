@@ -71,7 +71,6 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
     }.toMap()
 
 
-
     /**
      * Get a Node service by name. Default is either the only node name if single,
      * or `cordform` based on node.conf otherwise

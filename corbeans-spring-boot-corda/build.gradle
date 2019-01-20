@@ -15,7 +15,8 @@ dependencies {
 	compile "$corda_release_group:corda-jackson:$corda_release_version"
 	compile "$corda_release_group:corda-rpc:$corda_release_version"
 	compile "org.apache.commons:commons-compress:1.18"
-	
+
+	compile "io.springfox:springfox-swagger2:$springfox_version"
 	// JOpt: for command line flags.
 	compile "net.sf.jopt-simple:jopt-simple:$jopt_simple_version"
 	

@@ -19,9 +19,10 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.file.File
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.file.FileEntry
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.info.NodeInfo
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.Attachment
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentFile
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
 import net.corda.core.contracts.ContractState
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.crypto.SecureHash
@@ -77,10 +78,14 @@ interface CordaNodeService {
     fun openAttachment(hash: SecureHash): InputStream
     /** Retrieve the attachment matching the given hash string from the vault  */
     fun openAttachment(hash: String): InputStream
-    /** Persist the given file attachment to the vault  */
-    fun saveAttachment(file: File): FileEntry
+    /** Persist the given file as an attachment in the vault  */
+    fun saveAttachment(attachmentFile: AttachmentFile): AttachmentReceipt
+    /** Persist the given files as a single attachment in the vault  */
+    fun saveAttachment(attachmentFiles: List<AttachmentFile>): AttachmentReceipt
+    /** Persist the given attachment to the vault  */
+    fun saveAttachment(attachment: Attachment): AttachmentReceipt
     /** Get a state service targeting the given `ContractState` type */
     fun <T : ContractState> createStateService(contractStateType: Class<T>): StateService<T>
-    /** Returns whether this service should be skipped from actuator */
+    /** Whether this service should be skipped from actuator */
     fun skipInfo(): Boolean
 }

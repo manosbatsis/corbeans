@@ -20,8 +20,10 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
 //import org.springframework.messaging.simp.SimpMessagingTemplate
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.file.File
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.file.FileEntry
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.Attachment
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentFile
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.toAttachment
 import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection
 import net.corda.core.contracts.ContractState
 import net.corda.core.crypto.SecureHash
@@ -30,17 +32,10 @@ import net.corda.core.identity.Party
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.vaultQueryBy
 import net.corda.core.node.services.vault.*
-import org.apache.commons.compress.archivers.ArchiveStreamFactory
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
-import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.IOException
 import java.io.InputStream
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.util.zip.ZipInputStream
 
 
 /**
@@ -123,45 +118,34 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
     /** Retrieve the attachment matching the given secure hash from the vault  */
     override fun openAttachment(hash: SecureHash): InputStream = nodeRpcConnection.proxy.openAttachment(hash)
 
-    @Throws(IOException::class)
-    private fun convertToInputStream(inputStreamIn: ZipInputStream): InputStream {
-        val out = ByteArrayOutputStream()
-        IOUtils.copy(inputStreamIn, out)
-        return ByteArrayInputStream(out.toByteArray())
+    /** Persist the given file(s) as a single attachment in the vault  */
+    override fun saveAttachment(attachmentFile: AttachmentFile): AttachmentReceipt {
+        return this.saveAttachment(listOf(attachmentFile))
     }
 
-    /** Persist the given file attachment to the vault  */
-    override fun saveAttachment(file: File): FileEntry {
+    /** Persist the given file(s) as a single attachment in the vault  */
+    override fun saveAttachment(attachmentFiles: List<AttachmentFile>): AttachmentReceipt {
+        return this.saveAttachment(toAttachment(attachmentFiles))
+    }
 
-        // Create archive
-        val tempZipFile = java.io.File.createTempFile(file.originalFilename, "zip.tmp")
-        val os = ArchiveStreamFactory()
-                .createArchiveOutputStream(ArchiveStreamFactory.ZIP, tempZipFile.outputStream())
-
-        // Add archive entry
-        os.putArchiveEntry(ZipArchiveEntry(file.originalFilename));
-        IOUtils.copy(file.inputStream, os);
-        os.closeArchiveEntry()
-        os.finish()
-
-        // Close streams
-        IOUtils.closeQuietly(os)
-        IOUtils.closeQuietly(file.inputStream)
-
+    /** Persist the given attachment to the vault  */
+    override fun saveAttachment(attachment: Attachment): AttachmentReceipt {
         // Upload to vault
-        val fileEntry = FileEntry(
+        val hash = attachment.use {
+            it.inputStream.use {
+                this.proxy().uploadAttachment(it).toString()
+            }
+        }
+        // Return receipt
+        return AttachmentReceipt(
                 LocalDateTime.now(),
-                this.proxy().uploadAttachment(tempZipFile.inputStream()).toString(),
-                file.originalFilename,
+                hash,
+                attachment.filenames,
                 this.myIdentity.name.organisation,
-                null
+                attachment.original
         )
-
-        // delete tmp file
-        tempZipFile.delete()
-        return fileEntry
     }
 
-    /** Returns whether this service should be skipped from actuator */
+    /** Whether this service should be skipped from actuator */
     override fun skipInfo(): Boolean = this.nodeRpcConnection.skipInfo()
 }

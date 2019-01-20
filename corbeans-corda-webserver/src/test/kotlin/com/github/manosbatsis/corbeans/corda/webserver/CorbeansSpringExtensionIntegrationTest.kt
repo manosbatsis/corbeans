@@ -21,7 +21,7 @@ package com.github.manosbatsis.corbeans.corda.webserver
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.manosbatsis.corbeans.corda.webserver.components.SampleCustomCordaNodeServiceImpl
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.file.FileEntry
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 import com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension
@@ -45,6 +45,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 
@@ -146,30 +147,77 @@ class CorbeansSpringExtensionIntegrationTest {
 
     @Test
     @Throws(Exception::class)
-    fun `Can save and retrieve a single attachment`() {
+    fun `Can save and retrieve regular files as attachments`() {
         val headers = HttpHeaders()
         headers.contentType = MediaType.MULTIPART_FORM_DATA
+        // Upload a couple of files
+        var attachmentReceipt: AttachmentReceipt = uploadAttachmentFiles(
+                createMockMultipartFile("test.txt", "text/plain"),
+                createMockMultipartFile("test.png", "image/png"))
+        // Make sure the attachment has a hash, is not marked as original and contains all uploaded files
+        assertNotNull(attachmentReceipt.hash)
+        assertFalse(attachmentReceipt.savedOriginal)
+        assertTrue(attachmentReceipt.files.containsAll(listOf("test.txt", "test.png")))
+        // Test archive download
+        mockMvc.perform(
+                get("/api/nodes/partyA/attachments/${attachmentReceipt.hash}"))
+                .andExpect(status().isOk)
+                .andReturn()
+        // Test archive file entry download
+        mockMvc.perform(
+                get("/api/nodes/partyA/attachments/${attachmentReceipt.hash}/test.txt"))
+                .andExpect(status().isOk)
+                .andReturn()
 
-        val txtFile = MockMultipartFile(
-                "file", "test.txt", "text/plain",
-                this::class.java.getResourceAsStream("/uploadfiles/test.txt"))
-        //val pngFile = this::class.java.classLoader.getResource("/uploadfiles/test.png")
-        var hash: String? = null
-        // Test upload
+        // Test archive file browsing
+        val paths = this.restTemplate.getForObject(
+                "/api/nodes/partyA/attachments/${attachmentReceipt.hash}/paths",
+                List::class.java)
+        logger.debug("attachment paths: $paths")
+        assertTrue(paths.containsAll(listOf("test.txt", "test.png")))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun `Can save and retrieve single zip and jar files as attachments`() {
+        testArchiveUploadAndDownload("test.zip", "application/zip")
+        testArchiveUploadAndDownload("test.jar", "application/java-archive")
+    }
+
+    private fun uploadAttachmentFiles(vararg  file: MockMultipartFile): AttachmentReceipt {
+        var attachmentReceipt: AttachmentReceipt? = null
+        val multipart = multipart("/api/nodes/partyA/attachments")
+        file.forEach { multipart.file(it) }
         this.mockMvc
-                .perform(multipart("/api/nodes/partyA/attachments").file(txtFile))
+                .perform(multipart)
                 .andExpect(status().isCreated)
                 .andDo { mvcResult ->
                     val json = mvcResult.response.contentAsString
-                    val fileEntry = objectMapper.readValue(json, FileEntry::class.java)
-                    hash = fileEntry.hash
+                    attachmentReceipt = objectMapper.readValue(json, AttachmentReceipt::class.java)
                 }
                 .andReturn()
-        assertNotNull(hash)
-        // Test download
-        mockMvc.perform(
-                get("/api/nodes/partyA/attachments/$hash")
-                        .contentType(MediaType.TEXT_PLAIN))
-                .andExpect(status().isOk).andReturn()
+        return attachmentReceipt!!
     }
+
+    private fun testArchiveUploadAndDownload(fileName: String, mimeType: String) {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.MULTIPART_FORM_DATA
+        // Add the archive to the upload
+        val fileToUpload = createMockMultipartFile(fileName, mimeType)
+        // Test upload
+        var attachmentReceipt: AttachmentReceipt = uploadAttachmentFiles(fileToUpload)
+        // Make sure the attachment has a hash, is marked as original and contains the uploaded archive
+        assertNotNull(attachmentReceipt.hash)
+        assertTrue(attachmentReceipt.savedOriginal)
+        assertTrue(attachmentReceipt.files.contains(fileName))
+        // Test archive download
+        mockMvc.perform(
+                get("/api/nodes/partyA/attachments/${attachmentReceipt.hash}"))
+                .andExpect(status().isOk)
+                .andReturn()
+    }
+
+    fun createMockMultipartFile(fileName: String, mimeType: String) =
+            MockMultipartFile("file", fileName, mimeType,
+                    this::class.java.getResourceAsStream("/uploadfiles/$fileName"))
 }

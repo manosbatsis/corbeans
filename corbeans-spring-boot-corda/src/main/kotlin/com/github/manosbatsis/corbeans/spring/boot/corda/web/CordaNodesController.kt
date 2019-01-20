@@ -19,9 +19,10 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.web
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.file.File
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.file.FileEntry
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.toAttachment
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
+import io.swagger.annotations.ApiOperation
 import net.corda.core.contracts.ContractState
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.crypto.SecureHash
@@ -36,10 +37,11 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
-import java.io.FileNotFoundException
 import java.time.LocalDateTime
 import java.util.*
 import java.util.jar.JarInputStream
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -52,8 +54,8 @@ import javax.servlet.http.HttpServletResponse
  */
 // TODO: allow for autoconfigure only @ConditionalOnClass(value = Tomcat.class)
 @RestController
-@RequestMapping(path = arrayOf("api/node", "api/nodes/{nodeName}"))
-open class CordaNodesController {
+@RequestMapping(path = ["api/node", "api/nodes/{nodeName}"])
+class CordaNodesController {
 
     companion object {
         private val logger = LoggerFactory.getLogger(CordaNodesController::class.java)
@@ -63,127 +65,122 @@ open class CordaNodesController {
     @Autowired
     protected lateinit var networkService: CordaNetworkService
 
-
-    /** Returns the node's name. */
     @GetMapping("me")
-    fun me(@PathVariable nodeName: Optional<String>) = mapOf("me" to networkService.getNodeService(nodeName).myIdentity.name.x500Principal.name.toString())
+    @ApiOperation(value = "Get the node's X500 principal name.")
+    fun me(@PathVariable nodeName: Optional<String>) =
+            mapOf("me" to networkService.getNodeService(nodeName).myIdentity.name.x500Principal.name.toString())
 
-    /** Returns the node info. */
     @GetMapping("whoami")
-    fun whoami(@PathVariable nodeName: Optional<String>) = mapOf("me" to networkService.getNodeService(nodeName).myIdentity.name)
-    //fun me() = mapOf("me" to _myIdentity.name.x500Principal.name.toString())
+    @ApiOperation(value = "Get the node's identity name.")
+    fun whoami(@PathVariable nodeName: Optional<String>) =
+            mapOf("me" to networkService.getNodeService(nodeName).myIdentity.name)
 
-    /** Returns a list of the node's network peers. */
+
     @GetMapping("peers")
+    @ApiOperation(value = "Get a list of the node's network peers.")
     fun peers(@PathVariable nodeName: Optional<String>) = this.networkService.getNodeService(nodeName).peers()
 
-    /** Returns a list of the node's network peer names. */
     @GetMapping("peernames")
+    @ApiOperation(value = "Get a list of the node's network peer names.")
     fun peerNames(@PathVariable nodeName: Optional<String>) = this.networkService.getNodeService(nodeName).peerNames()
 
-    /** Return tbe node time in UTC */
     @GetMapping("serverTime")
+    @ApiOperation(value = "Get tbe node time in UTC.")
     fun serverTime(@PathVariable nodeName: Optional<String>): LocalDateTime {
         return this.networkService.getNodeService(nodeName).serverTime()
     }
 
     @GetMapping("addresses")
+    @ApiOperation(value = "Get tbe node addresses.")
     fun addresses(@PathVariable nodeName: Optional<String>): List<NetworkHostAndPort> {
         return this.networkService.getNodeService(nodeName).addresses()
     }
 
     @GetMapping("identities")
+    @ApiOperation(value = "Get tbe node identities.")
     fun identities(@PathVariable nodeName: Optional<String>): List<Party> {
         return this.networkService.getNodeService(nodeName).identities()
     }
 
     @GetMapping("platformVersion")
+    @ApiOperation(value = "Get tbe node's platform version.")
     fun platformVersion(@PathVariable nodeName: Optional<String>): Int {
         return this.networkService.getNodeService(nodeName).platformVersion()
     }
 
     @GetMapping("flows")
+    @ApiOperation(value = "Get tbe node flows.")
     fun flows(@PathVariable nodeName: Optional<String>): List<String> {
         return this.networkService.getNodeService(nodeName).flows()
     }
 
     @GetMapping("notaries")
+    @ApiOperation(value = "Get tbe node notaries.")
     fun notaries(@PathVariable nodeName: Optional<String>): List<Party> {
         return this.networkService.getNodeService(nodeName).notaries()
     }
 
     @GetMapping("states")
+    @ApiOperation(value = "Get tbe node states.")
     fun states(@PathVariable nodeName: Optional<String>): List<StateAndRef<ContractState>> {
         return this.networkService.getNodeService(nodeName).states()
     }
 
-    /**
-     * Allows the node administrator to either download full attachment zips, or individual files within those zips.
-     *
-     * GET /attachments/123abcdef12121            -> download the zip identified by this hash
-     * GET /attachments/123abcdef12121/foo.txt    -> download that file specifically
-     *
-     * Files are always forced to be downloads, they may not be embedded into web pages for security reasons.
-     *
-     * TODO: Provide an endpoint that exposes attachment file listings, to make attachments browsable.
-     */
+    @GetMapping("attachments/{hash}/paths")
+    @ApiOperation(value = "List the contents of the attachment archive matching the given hash.")
+    fun listAttachmentFiles(@PathVariable nodeName: Optional<String>,
+                       @PathVariable hash: SecureHash): List<String>  {
+        val entries = mutableListOf<String>()
+        this.networkService.getNodeService(nodeName).openAttachment(hash).use { attachmentArchive ->
+            ZipInputStream(attachmentArchive).use {
+                var entry: ZipEntry? = it.nextEntry
+                while (entry != null) {
+                    entries += entry.name
+                    entry = it.nextEntry
+                }
+            }
+        }
+        return entries
+    }
+
     @GetMapping("attachments/{hash}/**")
+    @ApiOperation(
+            value = "Download full attachment archives or individual files within those.",
+            notes = "e.g. \"GET /attachments/123abcdef12121\" will return the archive identified by the given hash, while " +
+                    "\"GET /attachments/123abcdef12121/foo.txt\" will return a specific file from within the attachment archive.")
     fun openAttachment(
             @PathVariable nodeName: Optional<String>,
             @PathVariable hash: SecureHash, req: HttpServletRequest, resp: HttpServletResponse) {
 
-        val reqPath = req.pathInfo?.substring(1)
+        val subPath = if (req.pathInfo == null) ""
+        else req.pathInfo.substringAfter("attachments/$hash/", missingDelimiterValue = "")
+        val attachment = this.networkService.getNodeService(nodeName).openAttachment(hash)
 
-        try {
-            //val hash = SecureHash.parse(reqPath.substringBefore('/'))
-            //val service = this.networkService.getNodeService(nodeName)
-            val attachment = this.networkService.getNodeService(nodeName).openAttachment(hash)
-
-            // Don't allow case sensitive matches inside the jar, it'd just be confusing.
-
-            val subPath = ""// reqPath.substringAfter('/', missingDelimiterValue = "").toLowerCase()
-
-            resp.contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE
+        logger.debug("openAttachment, subPath: $subPath")
+        resp.contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE
+        resp.outputStream.use { _ ->
             if (subPath.isEmpty()) {
                 resp.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"$hash.zip\"")
                attachment.use { it.copyTo(resp.outputStream) }
             } else {
                 val filename = subPath.split('/').last()
+                logger.debug("openAttachment, filename: $filename")
                 resp.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"$filename\"")
                 JarInputStream(attachment).use { it.extractFile(subPath, resp.outputStream) }
             }
-
-            // Closing the output stream commits our response. We cannot change the status code after this.
-            resp.outputStream.close()
-        } catch (e: FileNotFoundException) {
-            logger.warn("404 Not Found whilst trying to handle attachment download request for ${nodeName}, path$reqPath")
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND)
-            return
         }
     }
 
-    /** Persist the given file attachment to the vault  */
-    @PostMapping(value = ["attachments"], consumes = arrayOf(MediaType.MULTIPART_FORM_DATA_VALUE))
+    @PostMapping(value = ["attachments"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    @ApiOperation(value = "Persist the given file(s) as a vault attachment")
     fun saveAttachment(@PathVariable nodeName: Optional<String>,
-                       @RequestParam(required = true) file: MultipartFile): ResponseEntity<FileEntry> {
+                       @RequestParam(name = "file", required = true) files: Array<MultipartFile>
+    ): ResponseEntity<AttachmentReceipt> {
         val fileEntry = this.networkService.getNodeService(nodeName)
-                .saveAttachment(this.toFile(file))
+                .saveAttachment(toAttachment(files))
         val location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
-                .buildAndExpand(fileEntry.hash.toString())
+                .buildAndExpand(fileEntry.hash)
         return ResponseEntity.created(location.toUri()).body(fileEntry)
     }
-
-    /**
-     * Converts a MultipartFile to a File DTO
-     */
-    protected fun toFile(toFile: MultipartFile) = File(
-            name = toFile.name,
-            originalFilename = toFile.originalFilename?:"unknown-filename",
-            inputStream = toFile.inputStream,
-            size = toFile.size,
-            contentType = toFile.contentType)
-
-
-
 }

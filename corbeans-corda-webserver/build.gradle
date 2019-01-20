@@ -30,9 +30,11 @@ dependencies {
 	compile "net.corda:corda-jackson:$corda_release_version"
 	compile "net.corda:corda-rpc:$corda_release_version"
 	// Springfox/Swagger
-	compile "io.springfox:springfox-swagger2:2.9.2"
-	compile "io.springfox:springfox-swagger-ui:2.9.2"
-	compile "io.springfox:springfox-bean-validators:2.9.2"
+	compile "io.springfox:springfox-swagger2:$springfox_version"
+	compile "io.springfox:springfox-swagger-ui:$springfox_version"
+	compile "io.springfox:springfox-bean-validators:$springfox_version"
+	// Add support for RESTful errors
+	compile ("com.github.manosbatsis.scrudbeans:scrudbeans-error:$scrudbeans_version")
 
 	compile "javax.json:javax.json-api:1.1.3"
 
