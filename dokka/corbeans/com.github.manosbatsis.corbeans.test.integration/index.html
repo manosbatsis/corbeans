@@ -1,0 +1,58 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>com.github.manosbatsis.corbeans.test.integration - corbeans</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">corbeans</a>&nbsp;/&nbsp;<a href="./index.html">com.github.manosbatsis.corbeans.test.integration</a><br/>
+<br/>
+<h2>Package com.github.manosbatsis.corbeans.test.integration</h2>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-corbeans-spring-extension/index.html">CorbeansSpringExtension</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">CorbeansSpringExtension</span></code>
+<p>Alternative JUnit extension VS subclassing <a href="-with-implicit-network-i-t/index.html">WithImplicitNetworkIT</a>. To be used instead of <a href="#">SpringExtension</a>
+Automatically creates and maintains a single Corda network throughout test execution,
+using the corbeans' config from <code>application.properties</code>. You may override the latter with an
+additional file in your test classpath, i.e. <code>src/test/resources/application.properties</code>.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-node-driver-helper/index.html">NodeDriverHelper</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">NodeDriverHelper</span></code>
+<p>Uses Corda's node driver to either:</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-with-driver-nodes-i-t/index.html">WithDriverNodesIT</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">class </span><span class="identifier">WithDriverNodesIT</span></code>
+<p>Provides Corda (driver) network per <a href="-with-driver-nodes-i-t/with-driver-nodes.html">withDriverNodes</a> call, using the corbeans'
+config from <code>application.properties</code>. You may override the latter with an
+additional file in your test classpath, i.e. <code>src/test/resources/application.properties</code>.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-with-implicit-network-i-t/index.html">WithImplicitNetworkIT</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">class </span><span class="identifier">WithImplicitNetworkIT</span></code>
+<p>Alternative of extending a base class you VS using <a href="-corbeans-spring-extension/index.html">CorbeansSpringExtension</a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
