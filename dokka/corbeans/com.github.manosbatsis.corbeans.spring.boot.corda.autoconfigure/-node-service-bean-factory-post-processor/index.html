@@ -1,0 +1,77 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>NodeServiceBeanFactoryPostProcessor - corbeans</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">corbeans</a>&nbsp;/&nbsp;<a href="../index.html">com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure</a>&nbsp;/&nbsp;<a href="./index.html">NodeServiceBeanFactoryPostProcessor</a><br/>
+<br/>
+<h1>NodeServiceBeanFactoryPostProcessor</h1>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">NodeServiceBeanFactoryPostProcessor</span></code> <a href="https://....../blob/master/corbeans-spring-boot-autoconfigure/src/main/kotlin/com/github/manosbatsis/corbeans/spring/boot/corda/autoconfigure/NodeServiceBeanFactoryPostProcessor.kt#L50">(source)</a>
+<p>Dynamically creates and registers <a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.rpc/-node-rpc-connection/index.html">NodeRpcConnection</a> and <a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.service/-corda-node-service/index.html">CordaNodeService</a> beans based on
+the node or Spring Boot application configuration, i.e. <code>node.conf</code> and <code>application.properties</code>
+respectively</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">NodeServiceBeanFactoryPostProcessor</span><span class="symbol">(</span><span class="symbol">)</span></code>
+<p>Dynamically creates and registers <a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.rpc/-node-rpc-connection/index.html">NodeRpcConnection</a> and <a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.service/-corda-node-service/index.html">CordaNodeService</a> beans based on
+the node or Spring Boot application configuration, i.e. <code>node.conf</code> and <code>application.properties</code>
+respectively</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="corda-nodes-properties.html">cordaNodesProperties</a></p>
+</td>
+<td>
+<code><span class="keyword">lateinit</span> <span class="keyword">var </span><span class="identifier">cordaNodesProperties</span><span class="symbol">: </span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.config/-corda-nodes-properties/index.html"><span class="identifier">CordaNodesProperties</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="build-corda-nodes-properties.html">buildCordaNodesProperties</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">buildCordaNodesProperties</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure.NodeServiceBeanFactoryPostProcessor$buildCordaNodesProperties()/environment">environment</span><span class="symbol">:</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.config/-corda-nodes-properties/index.html"><span class="identifier">CordaNodesProperties</span></a></code>
+<p>Parse spring-boot config files to a <a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.config/-corda-nodes-properties/index.html">CordaNodesProperties</a> instance,
+as it's too soon for spring to have application properties available</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="post-process-bean-factory.html">postProcessBeanFactory</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">postProcessBeanFactory</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure.NodeServiceBeanFactoryPostProcessor$postProcessBeanFactory()/beanFactory">beanFactory</span><span class="symbol">:</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Create and register a <a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.service/-corda-node-service/index.html">CordaNodeService</a> bean per node according to configuration</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="set-environment.html">setEnvironment</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">setEnvironment</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure.NodeServiceBeanFactoryPostProcessor$setEnvironment()/env">env</span><span class="symbol">:</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Parse spring-boot config manually since it's not available yet</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
