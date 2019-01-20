@@ -1,0 +1,82 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Attachment - corbeans</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">corbeans</a>&nbsp;/&nbsp;<a href="../index.html">com.github.manosbatsis.corbeans.spring.boot.corda.model.upload</a>&nbsp;/&nbsp;<a href="./index.html">Attachment</a><br/>
+<br/>
+<h1>Attachment</h1>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Attachment</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/io/Closeable.html"><span class="identifier">Closeable</span></a></code> <a href="https://....../blob/master/corbeans-spring-boot-corda/src/main/kotlin/com/github/manosbatsis/corbeans/spring/boot/corda/model/upload/Attachment.kt#L27">(source)</a>
+<p>Data transfer object representing an attachment to be persisted in the vault</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">Attachment</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.Attachment$<init>(java.io.File, java.io.InputStream, kotlin.collections.List((kotlin.String)), kotlin.Boolean)/tmpFile">tmpFile</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html"><span class="identifier">File</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.Attachment$<init>(java.io.File, java.io.InputStream, kotlin.collections.List((kotlin.String)), kotlin.Boolean)/inputStream">inputStream</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/io/InputStream.html"><span class="identifier">InputStream</span></a><span class="symbol">, </span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.Attachment$<init>(java.io.File, java.io.InputStream, kotlin.collections.List((kotlin.String)), kotlin.Boolean)/filenames">filenames</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.Attachment$<init>(java.io.File, java.io.InputStream, kotlin.collections.List((kotlin.String)), kotlin.Boolean)/original">original</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a>&nbsp;<span class="symbol">=</span>&nbsp;false<span class="symbol">)</span></code>
+<p>Data transfer object representing an attachment to be persisted in the vault</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="filenames.html">filenames</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">filenames</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code>
+<p>The files contained in the attachment archive</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="input-stream.html">inputStream</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">inputStream</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/io/InputStream.html"><span class="identifier">InputStream</span></a></code>
+<p>The attachment input stream to upload</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="original.html">original</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">original</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p><code>true</code> if an archive as originally uploaded,
+<code>false</code> if automatically created to save in the vault</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="tmp-file.html">tmpFile</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">tmpFile</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html"><span class="identifier">File</span></a><span class="symbol">?</span></code>
+<p>The temporary file backing this attachment, if any</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="close.html">close</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">close</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
