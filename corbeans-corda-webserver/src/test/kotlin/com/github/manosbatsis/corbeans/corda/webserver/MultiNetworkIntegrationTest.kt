@@ -19,12 +19,8 @@
  */
 package com.github.manosbatsis.corbeans.corda.webserver
 
-import com.github.manosbatsis.corbeans.corda.webserver.components.SampleCustomCordaNodeServiceImpl
-import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 import com.github.manosbatsis.corbeans.test.integration.WithDriverNodesIT
-import net.corda.core.identity.Party
-import net.corda.core.utilities.NetworkHostAndPort
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -35,7 +31,6 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(SpringExtension::class)
@@ -46,23 +41,11 @@ class MultiNetworkIntegrationTest : WithDriverNodesIT() {
 
     }
 
-    // autowire a network service, used to access node services
-    @Autowired
-    lateinit var networkService: CordaNetworkService
-
-    // autowire all created node services directly, mapped by name
-    @Autowired
-    lateinit var services: Map<String, CordaNodeService>
-
     // autowire a node service for a specific node
     @Autowired
     @Qualifier("partyANodeService")
     lateinit var service: CordaNodeService
 
-    // autowire a unique custom service
-    @Autowired
-    @Qualifier("partyBNodeService")
-    lateinit var customCervice: SampleCustomCordaNodeServiceImpl
 
     @Autowired
     lateinit var restTemplate: TestRestTemplate
@@ -78,61 +61,11 @@ class MultiNetworkIntegrationTest : WithDriverNodesIT() {
     }
 
     @Test
-    fun `Can inject services`() {
-        withDriverNodes {
-            logger.info("services: {}", services)
-            assertNotNull(this.networkService)
-            assertNotNull(this.services)
-            assertNotNull(this.service)
-            assertTrue(this.services.keys.isNotEmpty())
-        }
-    }
-
-    @Test
-    fun `Can inject custom service`() {
-        withDriverNodes {
-            logger.info("customCervice: {}", customCervice)
-            assertNotNull(this.customCervice)
-            assertTrue(this.customCervice.dummy())
-        }
-    }
-
-    @Test
     fun `Can retrieve node identity`() {
         withDriverNodes {
             assertNotNull(service.myIdentity)
         }
     }
 
-    @Test
-    fun `Can retrieve peer identities`() {
-        withDriverNodes {
-            assertNotNull(service.identities())
-        }
-    }
-
-    @Test
-    fun `Can retrieve notaries`() {
-        withDriverNodes {
-            val notaries: List<Party> = service.notaries()
-            assertNotNull(notaries)
-        }
-    }
-
-    @Test
-    fun `Can retrieve flows`() {
-        withDriverNodes {
-            val flows: List<String> = service.flows()
-            assertNotNull(flows)
-        }
-    }
-
-    @Test
-    fun `Can retrieve addresses`() {
-        withDriverNodes {
-            val addresses: List<NetworkHostAndPort> = service.addresses()
-            assertNotNull(addresses)
-        }
-    }
 
 }
