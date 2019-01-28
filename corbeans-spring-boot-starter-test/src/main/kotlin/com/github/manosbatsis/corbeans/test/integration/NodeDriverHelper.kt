@@ -55,6 +55,8 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
      */
     fun startNetwork() {
         logger.debug("startNetwork called, nodes: {}", cordaNodesProperties.nodes.keys)
+        if (state != State.STOPPED) throw IllegalStateException("Corda network is already running")
+        state = State.STARTING
         // Start the network asynchronously
         @Suppress("DeferredResultUnused")
         startNetworkAsync()
@@ -63,7 +65,7 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
         Runtime.getRuntime().addShutdownHook(shutdownHook)
         // Wait for startup to complete
         var elapsed = 0
-        while (state != State.RUNNING) {
+        while (state == State.STARTING) {
             Thread.sleep(1000)
             elapsed += 1000
             logger.debug("startNetwork waiting, elapsed: {}", elapsed)
@@ -78,7 +80,7 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
     fun stopNetwork() {
         logger.debug("stopNetwork called, nodes: {}", cordaNodesProperties.nodes.keys)
         try {
-            state = State.STOPPING
+            if(state != State.STOPPED) state = State.STOPPING
             // give time for a clean shutdown
             val maxWait = 10000//ms
             var elapsed = 0
@@ -121,7 +123,9 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
     fun withDriverNodes(action: () -> Unit) {
         logger.debug("withDriverNodes called")
         // Ensure single network instance
-        if (state == State.RUNNING) throw IllegalStateException("Corda network is already running");
+        if (state == State.RUNNING) throw IllegalStateException("Corda network is already running")
+        if (state == State.STOPPING) throw IllegalStateException("Corda network is still stopping")
+        state = State.STARTING
         try {
             val startedRpcAddresses = mutableSetOf<String>()
             // start the driver
@@ -196,5 +200,5 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
 }
 
 private enum class State {
-    STOPPED, RUNNING, STOPPING
+    STOPPED, STARTING, RUNNING, STOPPING
 }
