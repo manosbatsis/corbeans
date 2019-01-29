@@ -59,7 +59,6 @@ class CordaNodesController {
 
     companion object {
         private val logger = LoggerFactory.getLogger(CordaNodesController::class.java)
-
     }
 
     @Autowired

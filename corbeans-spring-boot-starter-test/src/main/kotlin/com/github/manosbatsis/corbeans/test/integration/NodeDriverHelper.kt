@@ -19,17 +19,26 @@
  */
 package com.github.manosbatsis.corbeans.test.integration
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
+import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesPropertiesWrapper
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.async
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.utilities.getOrThrow
+import net.corda.testing.core.DUMMY_NOTARY_NAME
+import net.corda.testing.driver.DriverDSL
 import net.corda.testing.driver.DriverParameters
 import net.corda.testing.driver.driver
+import net.corda.testing.node.NotarySpec
 import net.corda.testing.node.User
+import net.corda.testing.node.internal.TestCordappImpl
 import net.corda.testing.node.internal.findCordapp
 import org.slf4j.LoggerFactory
+import java.util.*
+
 
 /**
  * Uses Corda's node driver to either:
@@ -39,11 +48,28 @@ import org.slf4j.LoggerFactory
  *
  * This helper class is not threadsafe as concurrent networks would result in port conflicts.
  */
-class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
+class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProperties()) {
 
     companion object {
         private val logger = LoggerFactory.getLogger(NodeDriverHelper::class.java)
-
+        fun loadProperties(): CordaNodesProperties {
+            logger.debug("No CordaNodesProperties given, loading from classpath")
+            val inputStream = this::class.java.getResourceAsStream("/application.properties")
+            val properties = Properties()
+            properties.load(inputStream)
+            val mapper = JavaPropsMapper()
+            mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            val cordaNodesProperties = mapper
+                    .readPropertiesAs(properties, CordaNodesPropertiesWrapper::class.java).corbeans!!
+            // Fix parsing
+            if (cordaNodesProperties.cordapPackages.size == 1) {
+                cordaNodesProperties.cordapPackages = cordaNodesProperties.cordapPackages.first()
+                        .replace(',', ' ').split(' ')
+            }
+            logger.debug("Loaded CordaNodesProperties: $cordaNodesProperties")
+            return cordaNodesProperties
+        }
     }
 
     private var state = State.STOPPED
@@ -131,48 +157,12 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
             // start the driver
             driver(DriverParameters(
                     startNodesInProcess = true,
-                    cordappsForAllNodes = cordaNodesProperties.cordapPackages.map {
-                        logger.debug("Adding cordapp to all driver nodes: {}", it)
-                        findCordapp(it)
-                    })) {
-
-                val nodeParamsMap = getNodeParams()
-                // Configure nodes per application.properties
-                nodeParamsMap.forEach {
-                    val nodeName = it.key
-                    val nodeParams = it.value
-
-                    // Only start a node per unique address,
-                    // ignoring "default" overrides
-                    if (!startedRpcAddresses.contains(nodeParams.address)
-                            && nodeName != NodeParams.NODENAME_DEFAULT ) {
-                        logger.debug("withDriverNodes: starting node, params: {}", nodeParams)
-                        // note the address as started
-                        startedRpcAddresses.add(nodeParams.address!!)
-
-                        val user = User(nodeParams.username!!, nodeParams.password!!, setOf("ALL"))
-                        @Suppress("UNUSED_VARIABLE")
-                        val handle = startNode(
-                                providedName = CordaX500Name(nodeName, "Athens", "GR"),
-                                rpcUsers = listOf(user),
-                                customOverrides = mapOf(
-                                        "rpcSettings.address" to nodeParams.address,
-                                        "rpcSettings.adminAddress" to nodeParams.adminAddress)).getOrThrow()
-
-                        logger.debug("withDriverNodes: started node, params: {}", nodeParams)
-                    }
-                    else {
-                        logger.debug("withDriverNodes: skipping node: {}", nodeParams)
-                    }
-                }
-
-                // mark as started
-                state = State.RUNNING
-                // execute code in context
-                action()
-                // mark as stopped
-                state = State.STOPPING
-
+                    cordappsForAllNodes = cordappsForAllNodes(),
+                    notarySpecs = notarySpecs())) {
+                startNodes(startedRpcAddresses)// Configure nodes per application.properties
+                state = State.RUNNING // mark as started
+                action() // execute code in context
+                state = State.STOPPING // mark as stopped
             }
             // mark as stopped
             state = State.STOPPED
@@ -184,6 +174,51 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties) {
             throw e
         }
         logger.debug("withDriverNodes: stopping network")
+    }
+
+    private fun DriverDSL.startNodes(startedRpcAddresses: MutableSet<String>) {
+        getNodeParams().forEach {
+            val nodeName = it.key
+            val nodeParams = it.value
+            // Only start a node per unique address,
+            // ignoring "default" overrides
+            if (!startedRpcAddresses.contains(nodeParams.address)
+                    && nodeName != NodeParams.NODENAME_DEFAULT) {
+                logger.debug("withDriverNodes: starting node, params: {}", nodeParams)
+                // note the address as started
+                startedRpcAddresses.add(nodeParams.address!!)
+
+                val user = User(nodeParams.username!!, nodeParams.password!!, setOf("ALL"))
+                @Suppress("UNUSED_VARIABLE")
+                val handle = startNode(
+                        providedName = CordaX500Name(nodeName, "Athens", "GR"),
+                        rpcUsers = listOf(user),
+                        customOverrides = mapOf(
+                                "rpcSettings.address" to nodeParams.address,
+                                "rpcSettings.adminAddress" to nodeParams.adminAddress)).getOrThrow()
+
+                logger.debug("withDriverNodes: started node, params: {}", nodeParams)
+            } else {
+                logger.debug("withDriverNodes: skipping node: {}", nodeParams)
+            }
+        }
+    }
+
+    private fun cordappsForAllNodes(): List<TestCordappImpl> {
+        val cordappsForAllNodes = cordaNodesProperties.cordapPackages
+                .filter { it.isNotBlank() }
+                .map {
+                    logger.debug("Adding cordapp to all driver nodes: {}", it)
+                    findCordapp(it)
+                }
+        return cordappsForAllNodes
+    }
+
+    private fun notarySpecs(): List<NotarySpec> {
+        val notarySpecs = listOf(NotarySpec(
+                name = DUMMY_NOTARY_NAME,
+                validating = !cordaNodesProperties.notarySpec.nonValidating))
+        return notarySpecs
     }
 
     /**

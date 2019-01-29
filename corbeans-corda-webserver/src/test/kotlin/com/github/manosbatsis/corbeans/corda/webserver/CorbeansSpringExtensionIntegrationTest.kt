@@ -26,6 +26,7 @@ import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkSer
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 import com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension
 import com.github.manosbatsis.corbeans.test.integration.WithImplicitNetworkIT
+import net.corda.core.identity.CordaX500Name
 import net.corda.core.identity.Party
 import net.corda.core.utilities.NetworkHostAndPort
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -92,7 +93,7 @@ class CorbeansSpringExtensionIntegrationTest {
     @Autowired
     lateinit var restTemplate: TestRestTemplate
 
-    @Test
+    //@Test
     fun `Can use both default node and multiple node controller endpoints`() {
         val defaultNodeMe = this.restTemplate.getForObject("/api/node/me", Map::class.java)
         assertEquals("me", defaultNodeMe.keys.first())
@@ -101,7 +102,7 @@ class CorbeansSpringExtensionIntegrationTest {
     }
 
 
-    @Test
+    //@Test
     fun `Can inject services`() {
         logger.info("services: {}", services)
         assertNotNull(this.networkService)
@@ -110,42 +111,58 @@ class CorbeansSpringExtensionIntegrationTest {
         assertTrue(this.services.keys.isNotEmpty())
     }
 
-    @Test
+    //@Test
     fun `Can inject custom service`() {
         logger.info("customCervice: {}", customCervice)
         assertNotNull(this.customCervice)
         assertTrue(this.customCervice.dummy())
     }
 
-    @Test
+    //@Test
     fun `Can retrieve node identity`() {
         assertNotNull(service.myIdentity)
     }
 
-    @Test
+    //@Test
     fun `Can retrieve peer identities`() {
         assertNotNull(service.identities())
     }
 
-    @Test
+    //@Test
     fun `Can retrieve notaries`() {
         val notaries: List<Party> = service.notaries()
         assertNotNull(notaries)
     }
 
-    @Test
+    //@Test
     fun `Can retrieve flows`() {
         val flows: List<String> = service.flows()
         assertNotNull(flows)
     }
 
-    @Test
+    //@Test
     fun `Can retrieve addresses`() {
         val addresses: List<NetworkHostAndPort> = service.addresses()
         assertNotNull(addresses)
     }
 
     @Test
+    fun `Can handle object conversions`() {
+        // convert to<>from SecureHash
+        val hash = "6D1687C143DF792A011A1E80670A4E4E0C25D0D87A39514409B1ABFC2043581F"
+        val hashEcho = this.restTemplate.getForEntity("/api/echo/echoSecureHash/${hash.toString()}", Any::class.java)
+        logger.debug("hashEcho body:  ${hashEcho.body}")
+        assertEquals(hash, hashEcho.body)
+        // convert to<>from CordaX500Name
+        val cordaX500Name = CordaX500Name.parse("O=Bank A, L=New York, C=US, OU=Org Unit, CN=Service Name")
+        val cordaX500NameEcho = this.restTemplate
+                .getForEntity("/api/echo/echoCordaX500Name/$cordaX500Name", Any::class.java)
+        logger.debug("cordaX500NameEcho body: ${cordaX500NameEcho.body}")
+        assertEquals(cordaX500Name, CordaX500Name.parse(cordaX500NameEcho.body.toString()))
+    }
+
+
+    //@Test
     @Throws(Exception::class)
     fun `Can save and retrieve regular files as attachments`() {
         val headers = HttpHeaders()
@@ -177,7 +194,7 @@ class CorbeansSpringExtensionIntegrationTest {
         assertTrue(paths.containsAll(listOf("test.txt", "test.png")))
     }
 
-    @Test
+    //@Test
     @Throws(Exception::class)
     fun `Can save and retrieve single zip and jar files as attachments`() {
         testArchiveUploadAndDownload("test.zip", "application/zip")

@@ -58,9 +58,16 @@ import org.springframework.stereotype.Component
  *
  * @see com.github.manosbatsis.corbeans.spring.boot.corda.config.cordform.NodeConfCheckingListener
  */
-@Component
+@Component("cordaNodesProperties")
 @ConfigurationProperties(prefix = "corbeans")
 class CordaNodesProperties {
     var cordapPackages: List<String> = mutableListOf()
     var nodes: Map<String, NodeParams> = mutableMapOf()
+    var objectMapper: ObjectMapperProperties = ObjectMapperProperties()
+    var notarySpec: TestNotaryProperties = TestNotaryProperties()
+    override fun toString(): String {
+        return "CordaNodesProperties(cordapPackages=$cordapPackages, nodes=$nodes, objectMapper=$objectMapper, notarySpec=$notarySpec)"
+    }
+
+
 }

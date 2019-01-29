@@ -6,7 +6,7 @@ buildscript {
 		dokka_version = '0.9.17'
 
 		corda_release_group = 'net.corda'
-		corda_release_version = '4.0-SNAPSHOT'
+		corda_release_version = '4.0-RC03'
 		corda_gradle_plugins_version = '4.0.37'
 
 		hibernate_version = '5.3.6.Final'

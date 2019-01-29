@@ -77,8 +77,9 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
      */
     override fun getNodeService(optionalNodeName: Optional<String>): CordaNodeService {
         val nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName
+        if (nodeName.isBlank()) throw IllegalArgumentException("nodeName cannot be an empty or blank string")
         return this.nodeServices.get("${nodeName}NodeService")
-                ?: throw IllegalArgumentException("Node not found: $nodeName")
+                ?: throw IllegalArgumentException("Node not found: `$nodeName`")
     }
 
     /**

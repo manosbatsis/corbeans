@@ -19,7 +19,6 @@
  */
 package com.github.manosbatsis.corbeans.test.integration
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.slf4j.LoggerFactory
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -68,7 +67,6 @@ class CorbeansSpringExtension: SpringExtension() {
     }
 
     lateinit var nodeDriverHelper: NodeDriverHelper
-    lateinit var cordaNodesProperties: CordaNodesProperties
 
     /**
      * Delegate to [SpringExtension.beforeAll],
@@ -76,15 +74,13 @@ class CorbeansSpringExtension: SpringExtension() {
      */
     @Throws(Exception::class)
     override fun beforeAll(context: ExtensionContext) {
-        // Delegate to super
-        super.beforeAll(context)
-        // Get the nodes config from spring's application context
-        this.cordaNodesProperties = SpringExtension.getApplicationContext(context)
-                .getBean(CordaNodesProperties::class.java)
-        logger.debug("beforeAll for nodes: {}", this.cordaNodesProperties.nodes.keys)
+        logger.debug("Starting network")
         // Start the network
-        this.nodeDriverHelper = NodeDriverHelper(this.cordaNodesProperties)
+        this.nodeDriverHelper = NodeDriverHelper()
         this.nodeDriverHelper.startNetwork()
+        logger.debug("Network is up, starting container")
+        // Nodes are started so we can go on with Spring
+        super.beforeAll(context)
     }
 
     /**
@@ -93,8 +89,11 @@ class CorbeansSpringExtension: SpringExtension() {
      */
     @Throws(Exception::class)
     override fun afterAll(context: ExtensionContext) {
+        // Stop Spring first
+        logger.debug("Stopping container...")
         super.afterAll(context)
-        logger.debug("afterAll for nodes: {}", this.cordaNodesProperties.nodes.keys)
+        // Spring stopped, shutdown the network
+        logger.debug("Stopping network...")
         this.nodeDriverHelper.stopNetwork()
     }
 }
