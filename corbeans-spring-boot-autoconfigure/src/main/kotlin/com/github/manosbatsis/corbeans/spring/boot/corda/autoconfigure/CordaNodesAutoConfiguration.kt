@@ -109,8 +109,8 @@ class CordaNodesAutoConfiguration {
     ): MappingJackson2HttpMessageConverter {
         // Check if a service key has been configured for obtaining the proxy
         var proxyServiceKey = cordaNodesProperties.objectMapper.proxyServiceKey
-        // Choose a random key if '*'
-        if (proxyServiceKey == "*") proxyServiceKey = cordaNodesProperties.nodes.keys.first()
+        // Choose a random key if '*', ignoring default config for all nodes
+        if (proxyServiceKey == "*") proxyServiceKey = cordaNodesProperties.nodes.keys.first { it != "default" }
         // Create a mapper
         val mapper = if (proxyServiceKey == null || proxyServiceKey.isBlank()) {
             logger.debug("Creating non-RPC Corda ObjectMapper")
