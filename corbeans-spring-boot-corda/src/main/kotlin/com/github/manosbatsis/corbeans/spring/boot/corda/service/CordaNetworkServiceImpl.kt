@@ -63,13 +63,10 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
     /**
      * Get information about known nodes
      */
-    override fun getNodesInfo() = this.nodeServices.filterNot { property ->
-        property.value.skipInfo()
-    }.map { property ->
-        val key = property.key.substring(0, property.key.length - serviceNameSuffix.length)
-        key to property.value.getInfo()
-    }.toMap()
-
+    override fun getNodesInfo() = this.nodeServices
+            .filterNot { it.value.skipInfo() } // skip?
+            .map { it.key.substring(0, it.key.length - serviceNameSuffix.length) to it.value.getInfo() }
+            .toMap()
 
     /**
      * Get a Node service by name. Default is either the only node name if single,
