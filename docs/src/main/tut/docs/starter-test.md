@@ -96,6 +96,8 @@ class MyWithDriverNodesIntegrationTest : WithDriverNodesIT() {
 
 ## Implicit Network
 
+> Consider using CorbeansSpringExtension instead (see next section) as it starts nodes and the container in the correct order. 
+
 Extending `WithImplicitNetworkIT` will automatically create and maintain a single Corda network throughout test 
 execution, using the corbeans' config from `application.properties`. You may override the latter with an
 additional file in your test classpath, i.e. `src/test/resources/application.properties`.
