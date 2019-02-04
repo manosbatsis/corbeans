@@ -8,7 +8,10 @@ title: "Project Template"
 
 Creating a complete Spring Boot/Corda project from scratch can be a time consuming task.   
 The [Corbeans Yo! Cordap](https://github.com/manosbatsis/corbeans-yo-cordapp) project templace can help you bootstrap a fully testable 
-application in minutes.
+application in minutes. The project has state/contract, flow and Spring server modules, 
+and even uses [Partiture](https://manosbatsis.github.io/partiture/) for flow composition.
+
+
 
 <!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
