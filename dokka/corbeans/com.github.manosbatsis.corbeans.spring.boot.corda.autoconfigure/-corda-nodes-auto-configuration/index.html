@@ -1,0 +1,116 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>CordaNodesAutoConfiguration - corbeans</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">corbeans</a>&nbsp;/&nbsp;<a href="../index.html">com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure</a>&nbsp;/&nbsp;<a href="./index.html">CordaNodesAutoConfiguration</a><br/>
+<br/>
+<h1>CordaNodesAutoConfiguration</h1>
+<code><span class="keyword">class </span><span class="identifier">CordaNodesAutoConfiguration</span></code> <a href="https://....../blob/master/corbeans-spring-boot-autoconfigure/src/main/kotlin/com/github/manosbatsis/corbeans/spring/boot/corda/autoconfigure/CordaNodesAutoConfiguration.kt#L48">(source)</a>
+<p>Auto-configures a CordaNodeService for each Corda Node</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">CordaNodesAutoConfiguration</span><span class="symbol">(</span><span class="symbol">)</span></code>
+<p>Auto-configures a CordaNodeService for each Corda Node</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="application-context.html">applicationContext</a></p>
+</td>
+<td>
+<code><span class="keyword">lateinit</span> <span class="keyword">var </span><span class="identifier">applicationContext</span><span class="symbol">: </span><span class="identifier">&lt;ERROR CLASS&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="corda-nodes-properties.html">cordaNodesProperties</a></p>
+</td>
+<td>
+<code><span class="keyword">lateinit</span> <span class="keyword">var </span><span class="identifier">cordaNodesProperties</span><span class="symbol">: </span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.config/-corda-nodes-properties/index.html"><span class="identifier">CordaNodesProperties</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="network-service.html">networkService</a></p>
+</td>
+<td>
+<code><span class="keyword">lateinit</span> <span class="keyword">var </span><span class="identifier">networkService</span><span class="symbol">: </span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.service/-corda-network-service/index.html"><span class="identifier">CordaNetworkService</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="corda-info-contributor.html">cordaInfoContributor</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">cordaInfoContributor</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.actuator/-corda-info-contributor/index.html"><span class="identifier">CordaInfoContributor</span></a></code>
+<p>Extend actuator's info endpoint based on known nodes</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="corda-info-endpoint.html">cordaInfoEndpoint</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">cordaInfoEndpoint</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.actuator/-corda-info-endpoint/index.html"><span class="identifier">CordaInfoEndpoint</span></a></code>
+<p>Add custom actuator endpoint based on known nodes</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="corda-x500-name-converter.html">cordaX500NameConverter</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">cordaX500NameConverter</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.bind/-corda-x500-name-converter/index.html"><span class="identifier">CordaX500NameConverter</span></a></code>
+<p>Add transparent <a href="#">net.corda.core.identity.CordaX500Name</a> conversion</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="mapping-jackson2-http-message-converter.html">mappingJackson2HttpMessageConverter</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">mappingJackson2HttpMessageConverter</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure.CordaNodesAutoConfiguration$mappingJackson2HttpMessageConverter()/jsonComponentModule">jsonComponentModule</span><span class="symbol">:</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">&lt;ERROR CLASS&gt;</span></code>
+<p>Force Spring/Jackson to use a Corda ObjectMapper for (de)serialization</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="secure-hash-converter.html">secureHashConverter</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">secureHashConverter</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.bind/-secure-hash-converter/index.html"><span class="identifier">SecureHashConverter</span></a></code>
+<p>Add transparent <a href="#">net.corda.core.crypto.SecureHash</a> conversion</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Companion Object Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="node-service-bean-factory-post-processor.html">nodeServiceBeanFactoryPostProcessor</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">nodeServiceBeanFactoryPostProcessor</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-node-service-bean-factory-post-processor/index.html"><span class="identifier">NodeServiceBeanFactoryPostProcessor</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
