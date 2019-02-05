@@ -90,7 +90,9 @@ abstract class NodeRpcConnection(private val nodeParams: NodeParams) {
             // It's probably a human error if only one of [path, password], better throw an error
             if (trustStoreProps.any { it != null }) throw IllegalArgumentException(
                     "Both or none of [trustStorePassword, trustStorePath] should be configured for node ${nodeParams.address}")
-            logger.warn("Not using RPC over SSL for node ${nodeParams.address}")
+            // Warn if not using SSL for remote RPC connections
+            if (listOf("localhost", "127.0.0.1").none { nodeParams.address!!.startsWith(it) })
+                logger.warn("Not using SSL for RPC to remote node ${nodeParams.address}")
             null
         }
         // Config looks legit, pass it on

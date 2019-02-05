@@ -47,7 +47,7 @@ compileKotlin {
 
 compileTestKotlin {
 	kotlinOptions {
-		languageVersion = "1.1"
+		languageVersion = "1.2"
 		freeCompilerArgs = ["-Xjsr305=strict"]
 		jvmTarget = "1.8"
 		javaParameters = true   // Useful for reflection.

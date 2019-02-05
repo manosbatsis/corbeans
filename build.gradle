@@ -102,7 +102,7 @@ allprojects {
 		maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 	}
 
-	version = "0.20"
+	version = "0.21-SNAPSHOT"
 	group = 'com.github.manosbatsis.corbeans'
 	apply from: "$rootDir/gradle/published.gradle"
 	apply plugin: 'project-report'
@@ -122,6 +122,9 @@ subprojects {
 	apply plugin: 'license'
 	//apply plugin: 'kotlin-kapt' //optional
 	configurations {
+		// Adding a configuration that extends existing configuration:
+		//(testCompile was added by the java plugin)
+		integrationTestCompile.extendsFrom(testCompile)
 		all {
 			// Exclude old Junit since we use jupiter
 			exclude group: 'junit', module: 'junit'
