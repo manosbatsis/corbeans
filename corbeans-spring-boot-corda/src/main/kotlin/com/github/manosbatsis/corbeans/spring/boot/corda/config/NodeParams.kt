@@ -96,7 +96,17 @@ class NodeParams {
     var eager: Boolean? = null
     /** The [CordaNodeService] implementation to use when creating and registering the corresponding bean */
     var primaryServiceType: String? = null
+
+    /** Corresponds to [ClientRpcSslOptions.trustStorePath] */
+    var trustStorePath: String? = null
+    /** Corresponds to [ClientRpcSslOptions.trustStorePassword] */
+    var trustStorePassword: String? = null
+    /** Corresponds to [ClientRpcSslOptions.trustStoreProvider] */
+    var trustStoreProvider: String = "JKS"
+
     // Configuration properties for Corda v4.0+
+    // ====================================
+
     /**
      * The maximum retry interval for re-connections. The client will retry connections if the host is lost with ever
      * increasing spacing until the max is reached. The default is 3 minutes.

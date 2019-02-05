@@ -24,9 +24,13 @@ import net.corda.client.rpc.CordaRPCClient
 import net.corda.client.rpc.CordaRPCClientConfiguration
 import net.corda.client.rpc.CordaRPCClientConfiguration.Companion.DEFAULT
 import net.corda.client.rpc.CordaRPCConnection
+import net.corda.client.rpc.RPCException
+import net.corda.core.messaging.ClientRpcSslOptions
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.utilities.NetworkHostAndPort
+import org.apache.activemq.artemis.api.core.ActiveMQSecurityException
 import org.slf4j.LoggerFactory
+import java.io.File
 import java.util.concurrent.TimeUnit
 import javax.annotation.PreDestroy
 
@@ -43,6 +47,10 @@ abstract class NodeRpcConnection(private val nodeParams: NodeParams) {
     private lateinit var rpcConnection: CordaRPCConnection
     abstract val proxy: CordaRPCOps
 
+    /**
+     * Attempt to obtain a [CordaRPCConnection], retry five times with
+     * a five second delay in case of an [RPCException]error
+     */
     fun createProxy(): CordaRPCOps {
         var created: CordaRPCOps? = null
         var attemptCount = 0
@@ -51,17 +59,16 @@ abstract class NodeRpcConnection(private val nodeParams: NodeParams) {
             logger.debug("Initializing RPC connection for address {}, attempt: {}", nodeParams.address, attemptCount)
             attemptCount++
             try {
-                val rpcClient = CordaRPCClient(buildRpcAddress(), buildRpcClientConfig())
+                val rpcClient = CordaRPCClient(buildRpcAddress(), buildRpcClientConfig(), clientRpcSslOptions())
                 rpcConnection = rpcClient.start(nodeParams.username!!, nodeParams.password!!)
                 created = rpcConnection.proxy
-            } catch (e: Exception) {
-                logger.error("Failed initializing RPC connection to ${nodeParams.address}", e)
-                e.printStackTrace()
-                if (attemptCount < DEFAULT.maxReconnectAttempts)
-                    TimeUnit.MILLISECONDS.sleep(attemptInterval)
-                else {
-                    throw e
-                }
+            } catch (secEx: ActiveMQSecurityException) {
+                // Happens when incorrect credentials provided - no point to retry connecting.
+                throw secEx
+            } catch (e: RPCException) {
+                if (attemptCount >= DEFAULT.maxReconnectAttempts) throw e
+                logger.warn("Failed initializing RPC to ${nodeParams.address}, will retry. Error message: ${e.message}", e)
+                TimeUnit.MILLISECONDS.sleep(attemptInterval)
                 attemptInterval *= DEFAULT.connectionRetryIntervalMultiplier.toLong()
             }
         }
@@ -71,6 +78,30 @@ abstract class NodeRpcConnection(private val nodeParams: NodeParams) {
         return created
     }
 
+    /**
+     * Get the [ClientRpcSslOptions] if properly configured
+     * @throws [IllegalArgumentException] if the configuration is incomplete
+     * @return the options if properly configured, `null` otherwise
+     */
+    private fun clientRpcSslOptions(): ClientRpcSslOptions? {
+        val trustStoreProps = listOf(nodeParams.trustStorePassword, nodeParams.trustStorePath)
+        // Check for incomplete SSL configuration
+        return if (trustStoreProps.any { it == null || it.isBlank() }) {
+            // It's probably a human error if only one of [path, password], better throw an error
+            if (trustStoreProps.any { it != null }) throw IllegalArgumentException(
+                    "Both or none of [trustStorePassword, trustStorePath] should be configured for node ${nodeParams.address}")
+            logger.warn("Not using RPC over SSL for node ${nodeParams.address}")
+            null
+        }
+        // Config looks legit, pass it on
+        else ClientRpcSslOptions(
+                File(nodeParams.trustStorePath).toPath(),
+                nodeParams.trustStorePassword!!,
+                nodeParams.trustStoreProvider)
+
+    }
+
+    /** Build a [NetworkHostAndPort] from the configuration host and port */
     private fun buildRpcAddress(): NetworkHostAndPort {
         val addressParts = nodeParams.address!!.split(":")
         val rpcAddress = NetworkHostAndPort(addressParts[0], addressParts[1].toInt())
@@ -105,5 +136,6 @@ abstract class NodeRpcConnection(private val nodeParams: NodeParams) {
         }
     }
 
+    /** Controls ignoring this node for Actuator */
     fun skipInfo(): Boolean = this.nodeParams.skipInfo ?: false
 }
