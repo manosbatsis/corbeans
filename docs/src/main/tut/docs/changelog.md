@@ -8,6 +8,11 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.20
+
+- Improved exception handling in `NodeRpcConnection` attempts
+- Added support for `ClientRpcSslOptions` configuration per node in `application.properties` 
+
 ## 0.19
 
 - Initial changelog

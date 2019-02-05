@@ -143,6 +143,12 @@ The following properties are optional per node (e.g. partA)
 with defaults taken from `CordaRPCClientConfiguration.DEFAULT`
 
 ```properties
+# RPC SSL 
+#corbeans.nodes.partyA.trustStorePath=
+#corbeans.nodes.partyA.trustStorePassword=
+#corbeans.nodes.partyA.trustStoreProvider=JKS
+
+# Other RPC properties
 #corbeans.nodes.partyA.connectionMaxRetryInterval=
 #corbeans.nodes.partyA.connectionRetryInterval=
 #corbeans.nodes.partyA.connectionRetryIntervalMultiplier=
