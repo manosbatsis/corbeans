@@ -8,7 +8,7 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
-## 0.21
+## 0.22
 
 - Deprecated `WithImplicitNetworkITin` favour of `CorbeansSpringExtension`
 
