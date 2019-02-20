@@ -8,6 +8,10 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.21
+
+- Updated Corda platform and plugins to 4.0-RC07 and 4.0.40 respectively.
+
 ## 0.20
 
 - Improved exception handling in `NodeRpcConnection` attempts

@@ -53,9 +53,9 @@ Add the starter dependency:
 ```groovy
 dependencies {
 	// For Corda 3.x. use Corbeans version 0.18 instead. 
-	compile 'com.github.manosbatsis.corbeans:corbeans-spring-boot-starter:0.20'
+	compile "com.github.manosbatsis.corbeans:corbeans-spring-boot-starter:$corbeans_version"
 	// Same as above for testing as well
-	testCompile 'com.github.manosbatsis.corbeans:corbeans-spring-boot-starter-test:0.20'
+	testCompile "com.github.manosbatsis.corbeans:corbeans-spring-boot-starter-test:$corbeans_version"
 }
 ```
 
@@ -68,13 +68,13 @@ Add the dependency in your Maven POM:
 	<groupId>com.github.manosbatsis.corbeans</groupId>
 	<artifactId>corbeans-spring-boot-starter</artifactId>
 	<!-- For Corda 3.x. use Corbeans version 0.18 instead.-->
-	<version>0.20</version>
+	<version>${corbeans_version}</version>
 </dependency>
 <dependency>
 	<groupId>com.github.manosbatsis.corbeans</groupId>
 	<artifactId>corbeans-spring-boot-starter-test</artifactId>
 	<!-- Same as above for testing as well.-->
-	<version>0.20</version>
+	<version>${corbeans_version}</version>
 	<scope>test</scope>
 </dependency>
 ```

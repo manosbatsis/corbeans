@@ -45,9 +45,9 @@ Add the starter dependency:
 
 ```groovy
 dependencies {
-	implementation 'com.github.manosbatsis.corbeans:corbeans-spring-boot-rpc-datasource-starter:0.18'
+	implementation "com.github.manosbatsis.corbeans:corbeans-spring-boot-rpc-datasource-starter:$corbeans_version"
 	// Or, to use the JPA mapped superclasses only:
-	// implementation 'com.github.manosbatsis.corbeans:corbeans-spring-data-corda-rpc:0.18'
+	// implementation "com.github.manosbatsis.corbeans:corbeans-spring-data-corda-rpc:$corbeans_version"
 }
 ```
 
@@ -63,7 +63,7 @@ Add the dependency in your Maven POM:
 	<!-- Or, to use the JPA mapped superclasses only:
 		<artifactId>corbeans-spring-data-corda-rpc</artifactId>
 	-->
-	<version>0.18</version>
+	<version>${corbeans_version}</version>
 </dependency>
 ```
 
