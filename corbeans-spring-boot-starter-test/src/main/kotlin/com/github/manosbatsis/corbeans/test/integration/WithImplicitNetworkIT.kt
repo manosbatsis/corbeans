@@ -62,7 +62,7 @@ import org.springframework.beans.factory.annotation.Autowired
  * }
  * ```
  */
-
+@Deprecated(message = "Use CorbeansSpringExtension instead")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class WithImplicitNetworkIT {
 

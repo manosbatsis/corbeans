@@ -21,3 +21,5 @@ cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+
+after_failure: cat /home/travis/build/manosbatsis/corbeans/corbeans-corda-webserver/build/reports/tests/test/index.html
