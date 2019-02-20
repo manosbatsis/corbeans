@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ObjectMapperProperties - corbeans</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">corbeans</a>&nbsp;/&nbsp;<a href="../index.html">com.github.manosbatsis.corbeans.spring.boot.corda.config</a>&nbsp;/&nbsp;<a href="./index.html">ObjectMapperProperties</a><br/>
+<br/>
+<h1>ObjectMapperProperties</h1>
+<code><span class="keyword">class </span><span class="identifier">ObjectMapperProperties</span></code> <a href="https://....../blob/master/corbeans-spring-boot-corda/src/main/kotlin/com/github/manosbatsis/corbeans/spring/boot/corda/config/ObjectMapperProperties.kt#L28">(source)</a>
+<p>Configuration of the object mapper/Corda Jackson module</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">ObjectMapperProperties</span><span class="symbol">(</span><span class="symbol">)</span></code>
+<p>Configuration of the object mapper/Corda Jackson module</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="disable.html">disable</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">disable</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>Whether to disable auto-configuration, default is false</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="full-parties.html">fullParties</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">fullParties</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>If true then <a href="#">Party</a> objects will be serialised as JSON objects, with the owning key serialised
+in addition to the name. For <a href="#">PartyAndCertificate</a> objects the cert path will be included.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="fuzzy-identity-match.html">fuzzyIdentityMatch</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">fuzzyIdentityMatch</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>Whether to use fuzzy identity matching</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="proxy-service-key.html">proxyServiceKey</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">proxyServiceKey</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span></code>
+<p>The <a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.service/-corda-node-service/index.html">com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService</a>
+key to use for obtaining an object mapper RPC proxy.
+A value of <code>*</code> results in a random choice between the available node services.
+If <code>null</code>, a non-RPC object mapper will be used</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="to-string.html">toString</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">toString</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
