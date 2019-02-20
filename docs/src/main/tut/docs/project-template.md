@@ -18,6 +18,7 @@ and even uses [Partiture](https://manosbatsis.github.io/partiture/) for flow com
 - [Quick HowTo](#quick-howto)
 - [Project Modules](#project-modules) 
 - [Customisation](#customisation)
+	- [Pre-existing Cordapp](#pre-existing-cordapp)
 	- [Application Properties](#application-properties)
 	- [Custom Package](#custom-package)
 	- [Multiple Webservers](#multiple-webservers)
@@ -78,6 +79,13 @@ http://localhost:10007/swagger-ui.html
 - **server**: Spring Boot app with a number of approaches to [integration testing](starter-test.html).
 
 ## Customisation
+
+### Pre-existing Cordapp
+
+If you need to integrate a pre-existing cordapp you have two options. Either:
+
+- Move your existing contract and workflow modules to the  cordapp-contract and cordapp-workflow modules within the project, or
+- Remove the cordapp-contract and cordapp-workflow modules and update the corresponding dependencies in the server module so that it points to your cordapp. 
 
 ### Application Properties
 

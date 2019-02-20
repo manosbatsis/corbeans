@@ -6,8 +6,8 @@ buildscript {
 		dokka_version = '0.9.17'
 
 		corda_release_group = 'net.corda'
-		corda_release_version = '4.0-RC03'
-		corda_gradle_plugins_version = '4.0.37'
+		corda_release_version = '4.0-RC07'
+		corda_gradle_plugins_version = '4.0.40'
 
 		hibernate_version = '5.3.6.Final'
 		quasar_version = '0.7.10'
@@ -48,6 +48,7 @@ buildscript {
 		maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-dev/' }
 		//Needed only for SNAPSHOT versions
 		maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
+
 	}
 
 	dependencies {
@@ -70,6 +71,7 @@ buildscript {
 		// release to Maven Central through Sonatype OSSRH
 		// without the need to use Nexus GUI
 		classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.12.0"
+		classpath "gradle.plugin.com.dorongold.plugins:task-tree:1.3.1"
 	}
 }
 
@@ -102,10 +104,11 @@ allprojects {
 		maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 	}
 
-	version = "0.21-SNAPSHOT"
+	version = "0.21"
 	group = 'com.github.manosbatsis.corbeans'
 	apply from: "$rootDir/gradle/published.gradle"
 	apply plugin: 'project-report'
+	apply plugin: "com.dorongold.task-tree"
 }
 
 subprojects {
