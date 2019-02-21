@@ -11,6 +11,7 @@ and can be helpful with version upgrades.
 ## 0.22
 
 - Deprecated `WithImplicitNetworkITin` favour of `CorbeansSpringExtension`
+- Updated Corda platform to version 4.0
 
 ## 0.21
 

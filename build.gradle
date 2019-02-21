@@ -6,7 +6,7 @@ buildscript {
 		dokka_version = '0.9.17'
 
 		corda_release_group = 'net.corda'
-		corda_release_version = '4.0-RC07'
+		corda_release_version = '4.0'
 		corda_gradle_plugins_version = '4.0.40'
 
 		hibernate_version = '5.3.6.Final'
@@ -104,7 +104,7 @@ allprojects {
 		maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 	}
 
-	version = "0.22-SNAPSHOT"
+	version = "0.22"
 	group = 'com.github.manosbatsis.corbeans'
 	apply from: "$rootDir/gradle/published.gradle"
 	apply plugin: 'project-report'
