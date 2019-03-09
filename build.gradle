@@ -104,7 +104,7 @@ allprojects {
 		maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 	}
 
-	version = "0.22"
+	version = "0.23-SNAPSHOT"
 	group = 'com.github.manosbatsis.corbeans'
 	apply from: "$rootDir/gradle/published.gradle"
 	apply plugin: 'project-report'

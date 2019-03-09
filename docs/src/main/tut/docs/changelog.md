@@ -8,6 +8,11 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.23
+
+- Added Spring converter for `UniqueIdentifier`
+- Added `corbeans.objectmapper.enableRpc` property 
+
 ## 0.22
 
 - Deprecated `WithImplicitNetworkITin` favour of `CorbeansSpringExtension`
@@ -57,7 +62,7 @@ in favor of using `corbeans.cordapPackages` configuration in __application.prope
 - Added basic Spring boot Actuator components: an __info__ endpoint contributor and a custom 
 __corda__ HTTP/JMX endpoint 
 - Added endpoints for saving attachments and browsing attachment archive contents
-- Added Spring converter for CordaX500Name
+- Added Spring converter for `CordaX500Name`
 - Added ObjectMapper auto-configuration with RPC support
 - CorbeansSpringExtension for JUnit5 now starts nodes and the container in the correct order
 

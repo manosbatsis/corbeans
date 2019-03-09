@@ -24,6 +24,7 @@ import com.github.manosbatsis.corbeans.spring.boot.corda.actuator.CordaInfoContr
 import com.github.manosbatsis.corbeans.spring.boot.corda.actuator.CordaInfoEndpoint
 import com.github.manosbatsis.corbeans.spring.boot.corda.bind.CordaX500NameConverter
 import com.github.manosbatsis.corbeans.spring.boot.corda.bind.SecureHashConverter
+import com.github.manosbatsis.corbeans.spring.boot.corda.bind.UniqueIdentifierConverter
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
 import net.corda.client.jackson.JacksonSupport
@@ -68,16 +69,23 @@ class CordaNodesAutoConfiguration {
 
     /** Add transparent [net.corda.core.crypto.SecureHash] conversion */
     @Bean
-    @ConditionalOnMissingBean(SecureHashConverter::class)
+    @ConditionalOnMissingBean
     fun secureHashConverter(): SecureHashConverter {
         return SecureHashConverter()
     }
 
     /** Add transparent [net.corda.core.identity.CordaX500Name] conversion */
     @Bean
-    @ConditionalOnMissingBean(CordaX500NameConverter::class)
+    @ConditionalOnMissingBean
     fun cordaX500NameConverter(): CordaX500NameConverter {
         return CordaX500NameConverter()
+    }
+
+    /** Add transparent [net.corda.core.contracts.UniqueIdentifier] conversion */
+    @Bean
+    @ConditionalOnMissingBean
+    fun uniqueIdentifierConverter(): UniqueIdentifierConverter {
+        return UniqueIdentifierConverter()
     }
 
     /** Add custom actuator endpoint based on known nodes */
@@ -112,8 +120,14 @@ class CordaNodesAutoConfiguration {
         // Choose a random key if '*', ignoring default config for all nodes
         if (proxyServiceKey == "*") proxyServiceKey = cordaNodesProperties.nodes.keys.first { it != "default" }
         // Create a mapper
-        val mapper = if (proxyServiceKey == null || proxyServiceKey.isBlank()) {
-            logger.debug("Creating non-RPC Corda ObjectMapper")
+        val mapper = if (!cordaNodesProperties.objectMapper.enableRpc
+                || proxyServiceKey == null
+                || proxyServiceKey.isBlank()) {
+            // Warn if possibly missconfigured
+            if (cordaNodesProperties.objectMapper.enableRpc) logger.warn(
+                    "Using an RPC-based ObjectMapper was enabled but no valid proxyServiceKey was given. " +
+                            "Falling back to non-RPC")
+            else logger.debug("Creating non-RPC Corda ObjectMapper")
             JacksonSupport.createNonRpcMapper(fullParties = cordaNodesProperties.objectMapper.fullParties)
         } else {
             logger.debug("Creating RPC Corda ObjectMapper using proxy from: $proxyServiceKey")

@@ -31,6 +31,11 @@ class ObjectMapperProperties {
     var disable: Boolean = false
 
     /**
+     * Whether to use an RPC object mapper if properly configured
+     */
+    var enableRpc: Boolean = false
+
+    /**
      * The [com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService]
      * key to use for obtaining an object mapper RPC proxy.
      * A value of `*` results in a random choice between the available node services.
