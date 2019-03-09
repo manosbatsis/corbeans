@@ -7,7 +7,7 @@ buildscript {
 
 		corda_release_group = 'net.corda'
 		corda_release_version = '4.0'
-		corda_gradle_plugins_version = '4.0.40'
+		corda_gradle_plugins_version = '4.0.42'
 
 		hibernate_version = '5.3.6.Final'
 		quasar_version = '0.7.10'
