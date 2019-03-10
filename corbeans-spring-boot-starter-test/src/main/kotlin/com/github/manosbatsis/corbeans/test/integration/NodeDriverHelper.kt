@@ -28,6 +28,7 @@ import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.async
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.utilities.getOrThrow
+import net.corda.testing.common.internal.testNetworkParameters
 import net.corda.testing.core.DUMMY_NOTARY_NAME
 import net.corda.testing.driver.DriverDSL
 import net.corda.testing.driver.DriverParameters
@@ -158,7 +159,8 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProp
             driver(DriverParameters(
                     startNodesInProcess = true,
                     cordappsForAllNodes = cordappsForAllNodes(),
-                    notarySpecs = notarySpecs())) {
+                    notarySpecs = notarySpecs(),
+                    networkParameters = testNetworkParameters(minimumPlatformVersion = 4))) {
                 startNodes(startedRpcAddresses)// Configure nodes per application.properties
                 state = State.RUNNING // mark as started
                 action() // execute code in context
