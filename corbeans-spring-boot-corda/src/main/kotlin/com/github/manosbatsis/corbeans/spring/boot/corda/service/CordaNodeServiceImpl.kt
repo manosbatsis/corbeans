@@ -60,10 +60,6 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
 
     }
 
-    val defaultPageSpecification = PageSpecification(pageSize = DEFAULT_PAGE_SIZE, pageNumber = -1)
-    var sortByUid = Sort.SortColumn(SortAttribute.Standard(Sort.LinearStateAttribute.UUID), Sort.Direction.DESC)
-    var defaultSort = Sort(listOf(sortByUid))
-
 
     /** Returns a [CordaRPCOps] proxy for this node. */
     override fun proxy(): CordaRPCOps = this.nodeRpcConnection.proxy
@@ -110,7 +106,7 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
 
     /** Get a state service targeting the given `ContractState` type */
     override fun <T : ContractState> createStateService(contractStateType: Class<T>): StateService<T>{
-        return StateService(contractStateType, this.proxy())
+        return StateService(contractStateType, this)
     }
 
     /** Retrieve the attachment matching the given hash string from the vault  */

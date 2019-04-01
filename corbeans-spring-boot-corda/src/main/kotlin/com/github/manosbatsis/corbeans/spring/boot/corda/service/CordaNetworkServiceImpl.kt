@@ -47,7 +47,9 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
     @PostConstruct
     fun postConstruct() {
         // if single node config, use the only node name as default, else reserve explicitly for cordform
-        defaultNodeName = if (nodeServices.keys.size == 1) nodeServices.keys.first()
+        defaultNodeName = if (nodeServices.keys.size == 1
+                || !nodeServices.keys.contains(NodeParams.NODENAME_CORDFORM))
+            nodeServices.keys.first().replace("NodeService", "")
         else NodeParams.NODENAME_CORDFORM
         logger.debug("Auto-configured RESTful services for Corda nodes:: {}, default node: {}",
                 nodeServices.keys, defaultNodeName)
