@@ -26,12 +26,15 @@ import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProper
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.async
+import net.corda.core.flows.FlowLogic
+import net.corda.core.flows.IllegalFlowLogicException
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.utilities.getOrThrow
 import net.corda.testing.common.internal.testNetworkParameters
 import net.corda.testing.core.DUMMY_NOTARY_NAME
 import net.corda.testing.driver.DriverDSL
 import net.corda.testing.driver.DriverParameters
+import net.corda.testing.driver.NodeParameters
 import net.corda.testing.driver.driver
 import net.corda.testing.node.NotarySpec
 import net.corda.testing.node.User
@@ -81,7 +84,6 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProp
      * Starts the Corda network
      */
     fun startNetwork() {
-        logger.debug("startNetwork called, nodes: {}", cordaNodesProperties.nodes.keys)
         if (state != State.STOPPED) throw IllegalStateException("Corda network is already running")
         state = State.STARTING
         // Start the network asynchronously
@@ -148,7 +150,8 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProp
      * Launch a network, execute the action code, and shut the network down
      */
     fun withDriverNodes(action: () -> Unit) {
-        logger.debug("withDriverNodes called")
+        System.out.println("withDriverNodes called, config: " + cordaNodesProperties)
+        logger.debug("withDriverNodes called, config: {}", cordaNodesProperties)
         // Ensure single network instance
         if (state == State.RUNNING) throw IllegalStateException("Corda network is already running")
         if (state == State.STOPPING) throw IllegalStateException("Corda network is still stopping")
@@ -186,6 +189,8 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProp
             // ignoring "default" overrides
             if (!startedRpcAddresses.contains(nodeParams.address)
                     && nodeName != NodeParams.NODENAME_DEFAULT) {
+
+                logger.debug("withDriverNodes: starting node, cordaNodesProperties: {}", cordaNodesProperties)
                 logger.debug("withDriverNodes: starting node, params: {}", nodeParams)
                 // note the address as started
                 startedRpcAddresses.add(nodeParams.address!!)
@@ -193,6 +198,7 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProp
                 val user = User(nodeParams.username!!, nodeParams.password!!, setOf("ALL"))
                 @Suppress("UNUSED_VARIABLE")
                 val handle = startNode(
+                        defaultParameters = NodeParameters(flowOverrides = getFlowOverrides()),
                         providedName = CordaX500Name(nodeName, "Athens", "GR"),
                         rpcUsers = listOf(user),
                         customOverrides = mapOf(
@@ -207,11 +213,18 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProp
     }
 
     private fun cordappsForAllNodes(): List<TestCordappImpl> {
+        val scanPackages = mutableSetOf<String>()
         val cordappsForAllNodes = cordaNodesProperties.cordapPackages
                 .filter { it.isNotBlank() }
-                .map {
+                .mapNotNull {
                     logger.debug("Adding cordapp to all driver nodes: {}", it)
-                    findCordapp(it)
+                    val cordapp = findCordapp(it)
+                    // skip if dupe
+                    if (scanPackages.contains(cordapp.scanPackage)) null
+                    else {
+                        scanPackages.add(cordapp.scanPackage)
+                        cordapp
+                    }
                 }
         return cordappsForAllNodes
     }
@@ -233,6 +246,27 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProp
         } else {
             throw RuntimeException("Could not find node configurations in application properties")
         }
+    }
+
+    fun getFlowOverrides(): Map<out Class<out FlowLogic<*>>, out Class<out FlowLogic<*>>> {
+        return this.cordaNodesProperties.flowOverrides.flatMap {
+            it.replace(',', ' ').split(' ')
+                    .filter { it.isNotBlank() }
+        }
+                .map { validatedFlowClassFromName(it.trim()) }
+                .chunked(2)
+                .associate { (a, b) -> a to b }
+    }
+
+    private fun validatedFlowClassFromName(flowClassName: String): Class<out FlowLogic<*>> {
+        logger.debug("validatedFlowClassFromName: '${flowClassName}'")
+        val forName = try {
+            Class.forName(flowClassName, true, NodeDriverHelper::class.java.classLoader)
+        } catch (e: ClassNotFoundException) {
+            throw IllegalFlowLogicException(flowClassName, "Flow not found: $flowClassName")
+        }
+        return forName.asSubclass(FlowLogic::class.java)
+                ?: throw IllegalFlowLogicException(flowClassName, "The class $flowClassName is not a subclass of FlowLogic.")
     }
 }
 

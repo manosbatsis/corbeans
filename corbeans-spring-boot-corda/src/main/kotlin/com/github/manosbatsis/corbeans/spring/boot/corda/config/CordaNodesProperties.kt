@@ -65,8 +65,10 @@ class CordaNodesProperties {
     var nodes: Map<String, NodeParams> = mutableMapOf()
     var objectMapper: ObjectMapperProperties = ObjectMapperProperties()
     var notarySpec: TestNotaryProperties = TestNotaryProperties()
+    var flowOverrides: List<String> = mutableListOf()
+
     override fun toString(): String {
-        return "CordaNodesProperties(cordapPackages=$cordapPackages, nodes=$nodes, objectMapper=$objectMapper, notarySpec=$notarySpec)"
+        return "CordaNodesProperties(cordapPackages=$cordapPackages, nodes=$nodes, objectMapper=$objectMapper, notarySpec=$notarySpec, flowOverrides=${flowOverrides})"
     }
 
 
