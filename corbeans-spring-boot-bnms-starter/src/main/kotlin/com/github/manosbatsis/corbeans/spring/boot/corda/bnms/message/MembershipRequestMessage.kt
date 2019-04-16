@@ -22,10 +22,11 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import net.corda.core.serialization.CordaSerializable
+import javax.json.JsonObject
 
 @CordaSerializable
 @ApiModel(description = "A message with the information necessary to create or ammend a membership request.")
 open class MembershipRequestMessage(
         @ApiModelProperty(value = "The BNO party name") var party: String,
-        @ApiModelProperty(value = "The membership metadata") var membershipMetadata: Map<String, Any?>
+        @ApiModelProperty(value = "The membership metadata") var membershipMetadata: JsonObject
 )
