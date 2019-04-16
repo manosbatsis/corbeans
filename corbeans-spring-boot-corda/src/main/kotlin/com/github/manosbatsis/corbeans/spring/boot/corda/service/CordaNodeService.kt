@@ -19,6 +19,7 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.NameModel
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.info.NodeInfo
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.Attachment
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentFile
@@ -53,8 +54,11 @@ interface CordaNodeService {
 
     /** Returns a [CordaRPCOps] proxy for this node. */
     fun proxy(): CordaRPCOps
+
+    /** Get a list of nodes in the network. */
+    fun nodes(): List<NameModel>
     /** Returns the node's network peers. */
-    fun peers(): List<String>
+    fun peers(): List<NameModel>
 
     /** Returns the (organization) name list of the node's network peers. */
     fun peerNames(): List<String>
@@ -88,4 +92,7 @@ interface CordaNodeService {
     fun <T : ContractState> createStateService(contractStateType: Class<T>): StateService<T>
     /** Whether this service should be skipped from actuator */
     fun skipInfo(): Boolean
+
+    fun findPartyFromName(query: String): Party?
+    fun getPartyFromName(query: String): Party
 }

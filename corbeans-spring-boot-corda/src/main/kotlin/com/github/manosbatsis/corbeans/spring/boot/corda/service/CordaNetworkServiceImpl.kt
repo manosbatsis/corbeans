@@ -75,8 +75,11 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
      * or `cordform` based on node.conf otherwise
      */
     override fun getNodeService(optionalNodeName: Optional<String>): CordaNodeService {
-        val nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName
+        var nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName
         if (nodeName.isBlank()) throw IllegalArgumentException("nodeName cannot be an empty or blank string")
+        val c = nodeName.toCharArray()
+        c[0] = Character.toLowerCase(c[0])
+        nodeName = String(c)
         return this.nodeServices.get("${nodeName}NodeService")
                 ?: throw IllegalArgumentException("Node not found: `$nodeName`")
     }

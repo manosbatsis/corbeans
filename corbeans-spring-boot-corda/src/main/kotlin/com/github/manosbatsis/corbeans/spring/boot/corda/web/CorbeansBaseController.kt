@@ -68,6 +68,9 @@ abstract class CorbeansBaseController {
             mapOf("me" to getNodeService(nodeName).myIdentity.name)
 
 
+    /** Get a list of nodes in the network.*/
+    open fun nodes(nodeName: Optional<String>) = getNodeService(nodeName).nodes()
+
     /** Get a list of the node's network peers.*/
     open fun peers(nodeName: Optional<String>) = getNodeService(nodeName).peers()
 

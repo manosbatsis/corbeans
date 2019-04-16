@@ -17,21 +17,21 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure
+package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.autoconfigure
 
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 
 /**
- * Auto-configures an RPC auth datasource and related components
+ * Auto-configures a Corda BNMS servicew
  */
 @Configuration
-@ComponentScan(basePackages = arrayOf("com.github.manosbatsis.corbeans"))
-class CordaRpcDsAutoConfiguration {
+@ComponentScan(basePackages = arrayOf("com.github.manosbatsis.corbeans.spring.boot.corda.bnms"))
+class CordaBnmsAutoConfiguration {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(CordaRpcDsAutoConfiguration::class.java)
+        private val logger = LoggerFactory.getLogger(CordaBnmsAutoConfiguration::class.java)
     }
 
     // TODO: make repo's conditional

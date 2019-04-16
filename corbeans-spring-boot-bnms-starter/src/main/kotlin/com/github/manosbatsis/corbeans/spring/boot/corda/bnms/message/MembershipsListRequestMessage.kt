@@ -17,22 +17,19 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure
+package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message
 
-import org.slf4j.LoggerFactory
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.Configuration
+import io.swagger.annotations.ApiModel
+import io.swagger.annotations.ApiModelProperty
+import net.corda.core.serialization.CordaSerializable
 
-/**
- * Auto-configures an RPC auth datasource and related components
- */
-@Configuration
-@ComponentScan(basePackages = arrayOf("com.github.manosbatsis.corbeans"))
-class CordaRpcDsAutoConfiguration {
-
-    companion object {
-        private val logger = LoggerFactory.getLogger(CordaRpcDsAutoConfiguration::class.java)
-    }
-
-    // TODO: make repo's conditional
-}
+@CordaSerializable
+@ApiModel(description = "A message with the information necessary to obtain the members list.")
+open class MembershipsListRequestMessage(
+        @ApiModelProperty(value = "The BNO party name")
+        var party: String,
+        @ApiModelProperty(value = "Wether to force a refresh.")
+        var forceRefresh: Boolean = false,
+        @ApiModelProperty(value = "Wether to filter out anyone missing from the Network Map.")
+        var filterOutMissingFromNetworkMap: Boolean = true
+)

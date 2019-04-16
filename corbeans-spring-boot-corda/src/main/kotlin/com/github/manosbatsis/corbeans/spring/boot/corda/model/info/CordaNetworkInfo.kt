@@ -19,13 +19,14 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.model.info
 
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.NameModel
 import net.corda.core.identity.Party
 import net.corda.core.utilities.NetworkHostAndPort
 
 data class NodeInfo(
         val platformVersion: Int,
         val peerNames: List<String>,
-        val peers: List<String>,
+        val peers: List<NameModel>,
 
         val identity: Party,
         val identities: List<Party>,

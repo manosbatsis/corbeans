@@ -17,22 +17,27 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure
+package com.github.manosbatsis.corbeans.spring.boot.corda.model
 
-import org.slf4j.LoggerFactory
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.Configuration
+import net.corda.core.identity.CordaX500Name
 
-/**
- * Auto-configures an RPC auth datasource and related components
- */
-@Configuration
-@ComponentScan(basePackages = arrayOf("com.github.manosbatsis.corbeans"))
-class CordaRpcDsAutoConfiguration {
-
+data class NameModel(val commonName: String?,
+                     val organisationUnit: String?,
+                     val organisation: String,
+                     val locality: String,
+                     val state: String?,
+                     val country: String) {
     companion object {
-        private val logger = LoggerFactory.getLogger(CordaRpcDsAutoConfiguration::class.java)
+        @JvmStatic
+        fun fromCordaX500Name(name: CordaX500Name): NameModel {
+            return NameModel(
+                    commonName = name.commonName,
+                    organisationUnit = name.organisationUnit,
+                    organisation = name.organisation,
+                    locality = name.locality,
+                    state = name.state,
+                    country = name.country
+            )
+        }
     }
-
-    // TODO: make repo's conditional
 }

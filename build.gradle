@@ -102,6 +102,8 @@ allprojects {
 		maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-dev/' }
 		//Needed only for SNAPSHOT versions
 		maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
+		// Corda BNMS
+		maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-solutions-releases'}
 	}
 
 	version = "0.23-SNAPSHOT"

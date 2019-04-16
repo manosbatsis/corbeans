@@ -20,6 +20,7 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
 //import org.springframework.messaging.simp.SimpMessagingTemplate
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.NameModel
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.Attachment
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentFile
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
@@ -31,7 +32,7 @@ import net.corda.core.identity.CordaX500Name
 import net.corda.core.identity.Party
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.vaultQueryBy
-import net.corda.core.node.services.vault.*
+import net.corda.core.node.services.vault.QueryCriteria
 import org.slf4j.LoggerFactory
 import java.io.InputStream
 import java.time.LocalDateTime
@@ -65,17 +66,44 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
     override fun proxy(): CordaRPCOps = this.nodeRpcConnection.proxy
 
     /** Returns the (organization) name list of the node's network peers. */
-    override fun peerNames(): List<String> = nodeRpcConnection.proxy.networkMapSnapshot()
-            .filter { nodeInfo -> nodeInfo.legalIdentities.first() != myIdentity }
-            .map { it.legalIdentities.first().name.organisation }
+    override fun peerNames(): List<String> =
+            this.nodes()
+                    .filter { it.organisation !== myIdentity.name.organisation }
+                    .map { it.toString() }
+
+    /** Get a list of nodes in the network */
+    override fun nodes(): List<NameModel> {
+        val nodes = nodeRpcConnection.proxy.networkMapSnapshot()
+        return nodes.map { it.legalIdentities.first().name }
+                .map { NameModel.fromCordaX500Name(it) }
+
+    }
 
     /** Returns the node's network peers. */
-    override fun peers(): List<String> {
-        val nodes = nodeRpcConnection.proxy.networkMapSnapshot()
-        val nodeNames = nodes.map { it.legalIdentities.first().name }
-        val filteredNodeNames = nodeNames.filter { it.organisation !== myIdentity.name.organisation }
-        return filteredNodeNames.map { it.toString() }
+    override fun peers(): List<NameModel> {
+        return this.nodes()
+                .filter { it.organisation !== myIdentity.name.organisation }
     }
+
+
+    /**
+     * Returns a [Party] match for the given name string, trying exact and if needed fuzzy matching.
+     * @param name The name to convert to a party
+     */
+    override fun findPartyFromName(query: String): Party? =
+            this.partiesFromName(query, true).firstOrNull()
+                    ?: this.partiesFromName(query, true).firstOrNull()
+
+
+    /**
+     * Returns a [Party] match for the given name string, trying exact and if needed fuzzy matching.
+     * If not exactly one match is found an error will be thrown.
+     * @param name The name to convert to a party
+     */
+    override fun getPartyFromName(query: String): Party =
+            this.partiesFromName(query, true).firstOrNull()
+                    ?: this.partiesFromName(query, true).single()
+
 
     /**
      * Returns a list of candidate matches for a given string, with optional fuzzy(ish) matching. Fuzzy matching may

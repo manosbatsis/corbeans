@@ -61,6 +61,10 @@ class CordaNodesController : CorbeansBaseController() {
     @ApiOperation(value = "Get the node's identity name.")
     override fun whoami(@PathVariable nodeName: Optional<String>) = super.whoami(nodeName)
 
+    @GetMapping("nodes")
+    @ApiOperation(value = "Get a list of nodes in the network.")
+    override fun nodes(@PathVariable nodeName: Optional<String>) = super.nodes(nodeName)
+
 
     @GetMapping("peers")
     @ApiOperation(value = "Get a list of the node's network peers.")

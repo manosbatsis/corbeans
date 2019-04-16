@@ -42,7 +42,7 @@ import org.springframework.http.converter.json.SpringHandlerInstantiator
 
 
 /**
- * Auto-configures a CordaNodeService for each Corda Node
+ * Auto-configures Corbeans
  */
 @Configuration
 @ComponentScan(basePackages = arrayOf("com.github.manosbatsis.corbeans"))
@@ -146,4 +146,5 @@ class CordaNodesAutoConfiguration {
         converter.objectMapper = mapper
         return converter
     }
+
 }
