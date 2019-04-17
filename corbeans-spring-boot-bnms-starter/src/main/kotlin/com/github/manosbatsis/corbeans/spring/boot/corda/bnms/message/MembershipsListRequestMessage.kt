@@ -27,7 +27,7 @@ import net.corda.core.serialization.CordaSerializable
 @ApiModel(description = "A message with the information necessary to obtain the members list.")
 open class MembershipsListRequestMessage(
         @ApiModelProperty(value = "The BNO party name")
-        var party: String,
+        var bno: String,
         @ApiModelProperty(value = "Wether to force a refresh.")
         var forceRefresh: Boolean = false,
         @ApiModelProperty(value = "Wether to filter out anyone missing from the Network Map.")

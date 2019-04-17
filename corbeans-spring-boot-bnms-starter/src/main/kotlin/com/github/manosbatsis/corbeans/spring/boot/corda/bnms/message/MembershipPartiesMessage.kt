@@ -27,5 +27,5 @@ import net.corda.core.serialization.CordaSerializable
 @ApiModel(description = "A message with the information necessary to identify a membership state.")
 open class MembershipPartiesMessage(
         @ApiModelProperty(value = "The member party name") var member: String,
-        @ApiModelProperty(value = "The bno party name", required = false) var bno: String?
+        @ApiModelProperty(value = "The bno party name", required = false) var bno: String? = null
 )

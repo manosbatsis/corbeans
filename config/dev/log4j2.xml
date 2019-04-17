@@ -55,6 +55,14 @@
 			<AppenderRef ref="Console-Appender"/>
 			<AppenderRef ref="RollingFile-Appender"/>
 		</Logger>
+		<Logger name="com.github.manosbatsis.corbeans" level="debug" additivity="false">
+			<AppenderRef ref="Console-Appender"/>
+			<AppenderRef ref="RollingFile-Appender"/>
+		</Logger>
+		<Logger name="com.github.manosbatsis.corbeans" level="debug" additivity="false">
+			<AppenderRef ref="Console-Appender"/>
+			<AppenderRef ref="RollingFile-Appender"/>
+		</Logger>
 	</Loggers>
 
 </Configuration>

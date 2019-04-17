@@ -16,5 +16,8 @@
 		<Logger name="net.corda" level="warn" additivity="false">
 			<AppenderRef ref="Console-Appender"/>
 		</Logger>
+		<Logger name="com.github.manosbatsis.corbeans" level="debug">
+			<AppenderRef ref="Console-Appender"/>
+		</Logger>
 	</Loggers>
 </Configuration>

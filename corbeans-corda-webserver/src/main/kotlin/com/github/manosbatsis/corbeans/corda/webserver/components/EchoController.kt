@@ -21,7 +21,7 @@ package com.github.manosbatsis.corbeans.corda.webserver.components
 
 import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.CordaX500Name
-import org.slf4j.LoggerFactory
+import org.apache.logging.log4j.LogManager
 import org.springframework.web.bind.annotation.*
 import springfox.documentation.annotations.ApiIgnore
 
@@ -39,7 +39,7 @@ class EchoController {
     }
 
     companion object {
-        private val logger = LoggerFactory.getLogger(EchoController::class.java)
+        private val logger = LogManager.getLogger(EchoController::class.java)
     }
 
     @GetMapping("echoSecureHash/{value}")

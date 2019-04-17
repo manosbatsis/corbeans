@@ -20,6 +20,8 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.autoconfigure
 
 import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 
@@ -27,12 +29,19 @@ import org.springframework.context.annotation.Configuration
  * Auto-configures a Corda BNMS servicew
  */
 @Configuration
-@ComponentScan(basePackages = arrayOf("com.github.manosbatsis.corbeans.spring.boot.corda.bnms"))
+@ComponentScan(basePackages = arrayOf("com.github.manosbatsis.corbeans"))
 class CordaBnmsAutoConfiguration {
 
     companion object {
         private val logger = LoggerFactory.getLogger(CordaBnmsAutoConfiguration::class.java)
+
+        @Bean
+        @ConditionalOnMissingBean(BnmsServiceBeanFactoryPostProcessor::class)
+        @JvmStatic
+        fun bnmsServiceBeanFactoryPostProcessor(): BnmsServiceBeanFactoryPostProcessor {
+            logger.debug("Creating a BnmsServiceBeanFactoryPostProcessor")
+            return BnmsServiceBeanFactoryPostProcessor()
+        }
     }
 
-    // TODO: make repo's conditional
 }

@@ -102,7 +102,7 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
      */
     override fun getPartyFromName(query: String): Party =
             this.partiesFromName(query, true).firstOrNull()
-                    ?: this.partiesFromName(query, true).single()
+                    ?: this.partiesFromName(query, false).single()
 
 
     /**

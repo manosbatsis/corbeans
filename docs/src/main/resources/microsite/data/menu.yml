@@ -23,6 +23,9 @@ options:
   - title: Data RPC
     url: docs/data-rpc.html
 
+  - title: BNMS Starter
+    url: docs/starter-bnms.html
+
   - title: Sample Webserver
     url: docs/webserver.html
 

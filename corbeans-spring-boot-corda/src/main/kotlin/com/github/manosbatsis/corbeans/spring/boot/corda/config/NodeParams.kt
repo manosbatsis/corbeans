@@ -41,6 +41,7 @@ class NodeParams {
         init {
             DEFAULT.eager = false
             DEFAULT.primaryServiceType = CordaNodeServiceImpl::class.java.canonicalName
+            DEFAULT.bnmsServiceType = null
             DEFAULT.connectionMaxRetryInterval = CordaRPCClientConfiguration.DEFAULT.connectionMaxRetryInterval
             DEFAULT.connectionRetryInterval = CordaRPCClientConfiguration.DEFAULT.connectionRetryInterval
             DEFAULT.connectionRetryIntervalMultiplier = CordaRPCClientConfiguration.DEFAULT.connectionRetryIntervalMultiplier
@@ -64,6 +65,8 @@ class NodeParams {
             nodeParams.adminAddress = partialParams.adminAddress ?: throw IllegalArgumentException("Node configuration is missing an adminAddress property")
             nodeParams.eager = partialParams.eager ?: defaultParams.eager ?: DEFAULT.eager!!
             nodeParams.primaryServiceType = partialParams.primaryServiceType ?: defaultParams.primaryServiceType ?: DEFAULT.primaryServiceType!!
+            nodeParams.bnmsServiceType = partialParams.bnmsServiceType ?: defaultParams.bnmsServiceType
+                    ?: DEFAULT.bnmsServiceType
             nodeParams.connectionMaxRetryInterval = partialParams.connectionMaxRetryInterval ?: defaultParams.connectionMaxRetryInterval ?: DEFAULT.connectionMaxRetryInterval!!
             nodeParams.connectionRetryInterval = partialParams.connectionRetryInterval ?: defaultParams.connectionRetryInterval ?: DEFAULT.connectionRetryInterval!!
             nodeParams.connectionRetryIntervalMultiplier = partialParams.connectionRetryIntervalMultiplier ?: defaultParams.connectionRetryIntervalMultiplier ?: DEFAULT.connectionRetryIntervalMultiplier!!
@@ -96,7 +99,8 @@ class NodeParams {
     var eager: Boolean? = null
     /** The [CordaNodeService] implementation to use when creating and registering the corresponding bean */
     var primaryServiceType: String? = null
-
+    /** The [CordaBnmsService] implementation to use when creating and registering the corresponding bean */
+    var bnmsServiceType: String? = null
     /** Corresponds to [ClientRpcSslOptions.trustStorePath] */
     var trustStorePath: String? = null
     /** Corresponds to [ClientRpcSslOptions.trustStorePassword] */

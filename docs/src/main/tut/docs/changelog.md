@@ -10,6 +10,7 @@ and can be helpful with version upgrades.
 
 ## 0.23
 
+- Added BNMS starter module
 - Added Spring converter for `UniqueIdentifier`
 - Added `corbeans.objectmapper.enableRpc` property 
 

@@ -20,6 +20,7 @@ bootJar {
 dependencies {
 
 	compile project(":corbeans-spring-boot-starter")
+	//compile project(":corbeans-spring-boot-bnms-starter")
 
 	compile("org.springframework.boot:spring-boot-starter:$spring_boot_version")
 	compile("org.springframework.boot:spring-boot-starter-web:$spring_boot_version")

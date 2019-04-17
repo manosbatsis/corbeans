@@ -19,7 +19,7 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
+import com.github.manosbatsis.corbeans.spring.boot.corda.config.AbstractBeanFactoryPostProcessor
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
 import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.EagerNodeRpcConnection
 import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.LazyNodeRpcConnection
@@ -33,12 +33,7 @@ import org.springframework.beans.factory.config.BeanFactoryPostProcessor
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
 import org.springframework.beans.factory.support.BeanDefinitionBuilder
 import org.springframework.beans.factory.support.BeanDefinitionRegistry
-import org.springframework.boot.context.properties.bind.Binder
-import org.springframework.boot.context.properties.source.ConfigurationPropertySources
-import org.springframework.context.EnvironmentAware
 import org.springframework.core.annotation.Order
-import org.springframework.core.env.ConfigurableEnvironment
-import org.springframework.core.env.Environment
 
 
 /**
@@ -47,20 +42,10 @@ import org.springframework.core.env.Environment
  * respectively
  */
 @Order
-open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, EnvironmentAware {
+open class NodeServiceBeanFactoryPostProcessor : AbstractBeanFactoryPostProcessor(), BeanFactoryPostProcessor {
 
     companion object {
         private val logger = LoggerFactory.getLogger(NodeServiceBeanFactoryPostProcessor::class.java)
-    }
-
-    protected lateinit var cordaNodesProperties: CordaNodesProperties
-
-    /**
-     * Parse spring-boot config manually since it's not available yet
-     */
-    override fun setEnvironment(env: Environment) {
-        this.cordaNodesProperties = this.buildCordaNodesProperties(env as ConfigurableEnvironment)
-        logger.info("Loaded config for Corda nodes: {}", cordaNodesProperties.nodes.keys)
     }
 
     /**
@@ -133,16 +118,6 @@ open class NodeServiceBeanFactoryPostProcessor : BeanFactoryPostProcessor, Envir
         beanDefinitionRegistry.registerBeanDefinition(rpcConnectionBeanName, rpcConnectionBean)
         logger.debug("Registered RPC connection bean {} for Party {}", rpcConnectionBeanName, nodeName)
         return rpcConnectionBeanName
-    }
-
-    /**
-     * Parse spring-boot config files to a [CordaNodesProperties] instance,
-     * as it's too soon for spring to have application properties available
-     */
-    fun buildCordaNodesProperties(environment: ConfigurableEnvironment): CordaNodesProperties {
-        val sources = ConfigurationPropertySources.from(environment.propertySources)
-        val binder = Binder(sources)
-        return binder.bind("corbeans", CordaNodesProperties::class.java).orElseCreate(CordaNodesProperties::class.java)
     }
 
 }

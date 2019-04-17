@@ -14,6 +14,7 @@ dependencies {
 	compile group: 'org.springframework.boot', name: 'spring-boot-actuator', version:spring_boot_version
 	
 	compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
+	compile "javax.json:javax.json-api:1.1.4"
 	
 	compile "$corda_release_group:corda-jackson:$corda_release_version"
 	compile "$corda_release_group:corda-rpc:$corda_release_version"
