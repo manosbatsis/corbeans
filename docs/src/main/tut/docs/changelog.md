@@ -12,6 +12,7 @@ and can be helpful with version upgrades.
 
 - Added BNMS starter module
 - Added Spring converter for `UniqueIdentifier`
+- Cleaned up nodes/peers endpoints, they now return `List<PartyNameModel>`
 - Added `corbeans.objectmapper.enableRpc` property 
 
 ## 0.22

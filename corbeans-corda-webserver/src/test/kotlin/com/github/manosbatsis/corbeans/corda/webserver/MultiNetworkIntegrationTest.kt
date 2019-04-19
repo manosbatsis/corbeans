@@ -19,9 +19,9 @@
  */
 package com.github.manosbatsis.corbeans.corda.webserver
 
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.PartyNameModel
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 import com.github.manosbatsis.corbeans.test.integration.WithDriverNodesIT
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -53,10 +53,10 @@ class MultiNetworkIntegrationTest : WithDriverNodesIT() {
     @Test
     fun `Can use both default node and multiple node controller endpoints`() {
         withDriverNodes {
-            val defaultNodeMe = this.restTemplate.getForObject("/api/node/me", Map::class.java)
-            Assertions.assertEquals("me", defaultNodeMe.keys.first())
-            val partyANodeMe = this.restTemplate.getForObject("/api/nodes/partyA/me", Map::class.java)
-            Assertions.assertEquals("me", partyANodeMe.keys.first())
+            val defaultNodeMe = this.restTemplate.getForObject("/api/node/whoami", PartyNameModel::class.java)
+            assertNotNull(defaultNodeMe.organisation)
+            val partyANodeMe = this.restTemplate.getForObject("/api/nodes/partyA/whoami", PartyNameModel::class.java)
+            assertNotNull(partyANodeMe.organisation)
         }
     }
 

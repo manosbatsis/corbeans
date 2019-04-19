@@ -19,13 +19,11 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.web
 
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.PartyNameModel
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import net.corda.core.contracts.ContractState
-import net.corda.core.contracts.StateAndRef
 import net.corda.core.crypto.SecureHash
-import net.corda.core.identity.Party
 import net.corda.core.utilities.NetworkHostAndPort
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
@@ -53,26 +51,17 @@ class CordaNodesController : CorbeansBaseController() {
         private val logger = LoggerFactory.getLogger(CordaNodesController::class.java)
     }
 
-    @GetMapping("me")
-    @ApiOperation(value = "Get the node's X500 principal name.")
-    override fun me(@PathVariable nodeName: Optional<String>) = super.me(nodeName)
-
     @GetMapping("whoami")
-    @ApiOperation(value = "Get the node's identity name.")
+    @ApiOperation(value = "Get the node's identity.")
     override fun whoami(@PathVariable nodeName: Optional<String>) = super.whoami(nodeName)
 
     @GetMapping("nodes")
-    @ApiOperation(value = "Get a list of nodes in the network.")
+    @ApiOperation(value = "Get a list of nodes in the network, including self and notaries.")
     override fun nodes(@PathVariable nodeName: Optional<String>) = super.nodes(nodeName)
 
-
     @GetMapping("peers")
-    @ApiOperation(value = "Get a list of the node's network peers.")
+    @ApiOperation(value = "Get a list of the node's network peers, excluding self and notaries.")
     override fun peers(@PathVariable nodeName: Optional<String>) = super.peers(nodeName)
-
-    @GetMapping("peernames")
-    @ApiOperation(value = "Get a list of the node's network peer names.")
-    override fun peerNames(@PathVariable nodeName: Optional<String>) = super.peerNames(nodeName)
 
     @GetMapping("serverTime")
     @ApiOperation(value = "Get tbe node time in UTC.")
@@ -84,7 +73,7 @@ class CordaNodesController : CorbeansBaseController() {
 
     @GetMapping("identities")
     @ApiOperation(value = "Get tbe node identities.")
-    override fun identities(@PathVariable nodeName: Optional<String>): List<Party> = super.identities(nodeName)
+    override fun identities(@PathVariable nodeName: Optional<String>): List<PartyNameModel> = super.identities(nodeName)
 
     @GetMapping("platformVersion")
     @ApiOperation(value = "Get tbe node's platform version.")
@@ -96,11 +85,7 @@ class CordaNodesController : CorbeansBaseController() {
 
     @GetMapping("notaries")
     @ApiOperation(value = "Get tbe node notaries.")
-    override fun notaries(@PathVariable nodeName: Optional<String>): List<Party> = super.notaries(nodeName)
-
-    @GetMapping("states")
-    @ApiOperation(value = "Get tbe node states.")
-    override fun states(@PathVariable nodeName: Optional<String>): List<StateAndRef<ContractState>> = super.states(nodeName)
+    override fun notaries(@PathVariable nodeName: Optional<String>): List<PartyNameModel> = super.notaries(nodeName)
 
     @GetMapping("attachments/{hash}/paths")
     @ApiOperation(value = "List the contents of the attachment archive matching the given hash.")

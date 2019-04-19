@@ -21,6 +21,7 @@ package com.github.manosbatsis.corbeans.corda.webserver
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.manosbatsis.corbeans.corda.webserver.components.SampleCustomCordaNodeServiceImpl
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.PartyNameModel
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
@@ -97,10 +98,10 @@ class CorbeansSpringExtensionIntegrationTest {
 
     @Test
     fun `Can use both default node and multiple node controller endpoints`() {
-        val defaultNodeMe = this.restTemplate.getForObject("/api/node/me", Map::class.java)
-        assertEquals("me", defaultNodeMe.keys.first())
-        val partyANodeMe = this.restTemplate.getForObject("/api/nodes/partyA/me", Map::class.java)
-        assertEquals("me", partyANodeMe.keys.first())
+        val defaultNodeMe = this.restTemplate.getForObject("/api/node/whoami", PartyNameModel::class.java)
+        assertNotNull(defaultNodeMe.organisation)
+        val partyANodeMe = this.restTemplate.getForObject("/api/nodes/partyA/whoami", PartyNameModel::class.java)
+        assertNotNull(partyANodeMe.organisation)
     }
 
 

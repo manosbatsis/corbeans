@@ -21,16 +21,16 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.model
 
 import net.corda.core.identity.CordaX500Name
 
-data class NameModel(val commonName: String?,
-                     val organisationUnit: String?,
-                     val organisation: String,
-                     val locality: String,
-                     val state: String?,
-                     val country: String) {
+data class PartyNameModel(val commonName: String?,
+                          val organisationUnit: String?,
+                          val organisation: String,
+                          val locality: String,
+                          val state: String?,
+                          val country: String) {
     companion object {
         @JvmStatic
-        fun fromCordaX500Name(name: CordaX500Name): NameModel {
-            return NameModel(
+        fun fromCordaX500Name(name: CordaX500Name): PartyNameModel {
+            return PartyNameModel(
                     commonName = name.commonName,
                     organisationUnit = name.organisationUnit,
                     organisation = name.organisation,

@@ -20,7 +20,6 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
 //import org.springframework.messaging.simp.SimpMessagingTemplate
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.NameModel
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.Attachment
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentFile
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
@@ -31,7 +30,6 @@ import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.identity.Party
 import net.corda.core.messaging.CordaRPCOps
-import net.corda.core.messaging.vaultQueryBy
 import net.corda.core.node.services.vault.QueryCriteria
 import org.slf4j.LoggerFactory
 import java.io.InputStream
@@ -65,24 +63,25 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
     /** Returns a [CordaRPCOps] proxy for this node. */
     override fun proxy(): CordaRPCOps = this.nodeRpcConnection.proxy
 
-    /** Returns the (organization) name list of the node's network peers. */
-    override fun peerNames(): List<String> =
-            this.nodes()
-                    .filter { it.organisation !== myIdentity.name.organisation }
-                    .map { it.toString() }
 
-    /** Get a list of nodes in the network */
-    override fun nodes(): List<NameModel> {
+    /** Get a list of nodes in the network, including self and notaries */
+    override fun nodes(): List<Party> {
         val nodes = nodeRpcConnection.proxy.networkMapSnapshot()
-        return nodes.map { it.legalIdentities.first().name }
-                .map { NameModel.fromCordaX500Name(it) }
+        return nodes.map { it.legalIdentities.first() }
 
     }
 
-    /** Returns the node's network peers. */
-    override fun peers(): List<NameModel> {
-        return this.nodes()
-                .filter { it.organisation !== myIdentity.name.organisation }
+    /** Get a list of network peers, i.e. nodes excluding self and notaries  */
+    override fun peers(): List<Party> {
+        val notaries = this.notaries()
+        val nodes = nodeRpcConnection.proxy.networkMapSnapshot()
+        return nodes.filter { nodeInfo ->
+            // Filter out self and notaries
+            nodeInfo.legalIdentities.find {
+                it == myIdentity || notaries.contains(it)
+            } == null
+        }
+                .map { it.legalIdentities.first() }
     }
 
 
@@ -129,8 +128,6 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
     override fun notaries() = nodeRpcConnection.proxy.notaryIdentities()
 
     override fun flows() = nodeRpcConnection.proxy.registeredFlows()
-
-    override fun states() = nodeRpcConnection.proxy.vaultQueryBy<ContractState>().states
 
     /** Get a state service targeting the given `ContractState` type */
     override fun <T : ContractState> createStateService(contractStateType: Class<T>): StateService<T>{

@@ -19,13 +19,11 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.web
 
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.PartyNameModel
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.toAttachment
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
-import net.corda.core.contracts.ContractState
-import net.corda.core.contracts.StateAndRef
 import net.corda.core.crypto.SecureHash
-import net.corda.core.identity.Party
 import net.corda.core.internal.extractFile
 import net.corda.core.utilities.NetworkHostAndPort
 import org.slf4j.LoggerFactory
@@ -59,23 +57,17 @@ abstract class CorbeansBaseController {
     @Autowired
     protected lateinit var networkService: CordaNetworkService
 
-    /** Get the node's X500 principal name. */
-    open fun me(nodeName: Optional<String>) =
-            mapOf("me" to getNodeService(nodeName).myIdentity.name.x500Principal.name.toString())
-
     /** Get the node's identity name. */
     open fun whoami(nodeName: Optional<String>) =
-            mapOf("me" to getNodeService(nodeName).myIdentity.name)
+            PartyNameModel.fromCordaX500Name(getNodeService(nodeName).myIdentity.name)
 
+    /** Get a list of nodes in the network, including self and notaries.*/
+    open fun nodes(nodeName: Optional<String>) =
+            getNodeService(nodeName).nodes().map { PartyNameModel.fromCordaX500Name(it.name) }
 
-    /** Get a list of nodes in the network.*/
-    open fun nodes(nodeName: Optional<String>) = getNodeService(nodeName).nodes()
-
-    /** Get a list of the node's network peers.*/
-    open fun peers(nodeName: Optional<String>) = getNodeService(nodeName).peers()
-
-    /** Get a list of the node's network peer names. */
-    open fun peerNames(nodeName: Optional<String>) = getNodeService(nodeName).peerNames()
+    /** Get a list of the node's network peers, excluding self and notaries.*/
+    open fun peers(nodeName: Optional<String>) =
+            getNodeService(nodeName).peers().map { PartyNameModel.fromCordaX500Name(it.name) }
 
     /** Get tbe node time in UTC */
     open fun serverTime(nodeName: Optional<String>): LocalDateTime {
@@ -88,8 +80,8 @@ abstract class CorbeansBaseController {
     }
 
     /** Get tbe node identities */
-    open fun identities(nodeName: Optional<String>): List<Party> {
-        return getNodeService(nodeName).identities()
+    open fun identities(nodeName: Optional<String>): List<PartyNameModel> {
+        return getNodeService(nodeName).identities().map { PartyNameModel.fromCordaX500Name(it.name) }
     }
 
     /** Get tbe node's platform version */
@@ -103,13 +95,8 @@ abstract class CorbeansBaseController {
     }
 
     /** Get tbe node notaries */
-    open fun notaries(nodeName: Optional<String>): List<Party> {
-        return getNodeService(nodeName).notaries()
-    }
-
-    /** Get tbe node states */
-    open fun states(nodeName: Optional<String>): List<StateAndRef<ContractState>> {
-        return getNodeService(nodeName).states()
+    open fun notaries(nodeName: Optional<String>): List<PartyNameModel> {
+        return getNodeService(nodeName).notaries().map { PartyNameModel.fromCordaX500Name(it.name) }
     }
 
     /** List the contents of the attachment archive matching the given hash */

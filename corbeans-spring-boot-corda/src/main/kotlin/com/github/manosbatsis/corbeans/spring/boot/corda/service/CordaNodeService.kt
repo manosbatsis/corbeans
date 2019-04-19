@@ -19,13 +19,11 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.NameModel
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.info.NodeInfo
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.Attachment
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentFile
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
 import net.corda.core.contracts.ContractState
-import net.corda.core.contracts.StateAndRef
 import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.Party
 import net.corda.core.messaging.CordaRPCOps
@@ -42,8 +40,6 @@ interface CordaNodeService {
             identity = myIdentity,
             identities = identities(),
             platformVersion = platformVersion(),
-            peers = peers(),
-            peerNames = peerNames(),
             notaries = notaries(),
             flows = flows(),
             addresses = addresses()
@@ -55,13 +51,12 @@ interface CordaNodeService {
     /** Returns a [CordaRPCOps] proxy for this node. */
     fun proxy(): CordaRPCOps
 
-    /** Get a list of nodes in the network. */
-    fun nodes(): List<NameModel>
-    /** Returns the node's network peers. */
-    fun peers(): List<NameModel>
+    /** Get a list of nodes in the network, including self and notaries. */
+    fun nodes(): List<Party>
 
-    /** Returns the (organization) name list of the node's network peers. */
-    fun peerNames(): List<String>
+    /** Returns the node's network peers, excluding self and notaries. */
+    fun peers(): List<Party>
+
     /**
      * Returns a list of candidate matches for a given string, with optional fuzzy(ish) matching. Fuzzy matching may
      * get smarter with time e.g. to correct spelling errors, so you should not hard-code indexes into the results
@@ -72,7 +67,6 @@ interface CordaNodeService {
      */
     fun partiesFromName(query: String, exactMatch: Boolean = false): Set<Party>
     fun serverTime(): LocalDateTime
-    fun states(): List<StateAndRef<ContractState>>
     fun flows(): List<String>
     fun notaries(): List<Party>
     fun platformVersion(): Int
