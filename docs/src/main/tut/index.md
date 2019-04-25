@@ -41,7 +41,7 @@ technologies:
 		  <div class="panel-heading text-center"><h2>BNMS Starter</h2></div>
 		  <div class="panel-body">
 			<p>Autoconfigured BNMS components for Corda's 
-			BNMS services for Corda's <a href="https://github.com/manosbatsis/corda-solutions/tree/master/bn-apps/memberships-management">memberships-management</a> 
+			<a href="https://github.com/manosbatsis/corda-solutions/tree/master/bn-apps/memberships-management">memberships-management</a> 
 			cordapp.</p>
 		  </div>
 		  <div class="panel-footer text-right"><a href="docs/starter-bnms.html">More details</a></div>
