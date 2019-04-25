@@ -8,6 +8,9 @@ title: "BNMS Starter"
 <!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
 - [Installation](#installation)
+	- [Corda BNMS Repository](#corda-bnms-repository)
+	- [Cordapp Dependencies](#cordapp-dependencies)
+	- [Spring Boot Application Dependencies](#spring-boot-application-dependencies)
 - [Configuration](#configuration)
 	- [Custom Metadata Class](#custom-metadata-class)
 	- [BNMS Service Implementation](#bnms-service-implementation)
@@ -17,8 +20,8 @@ title: "BNMS Starter"
 <!-- /TOC -->
 
 The `corbeans-spring-boot-bnms-starter` provides autoconfigured, RESTful
-BNMS services for members and BNOs. The services API provides operations for both
-members and BNOs, e.g.:
+BNMS services for Corda's [memberships-management](https://github.com/manosbatsis/corda-solutions/tree/master/bn-apps/memberships-management)
+cordapp. The services expose operations for both members and BNOs, e.g.:
 
 - List business network members
 - Request a membership or amend own membership's metadata
@@ -29,21 +32,35 @@ services for your Spring Boot app.
 
 ## Installation
 
-Corbeans is available in Maven central. To install the test starter, add the dependency to your build:
+### Corda BNMS Repository
+
+Make sure to add the corda-solutions-releases repository to your build modules.
 
 ```groovy
-repositories {
-	mavenCentral()
-	// OR, if changes have not yet been reflected to central:
-	// maven { url "http://oss.sonatype.org/content/repositories/releases/" }
+	// Corda BNMS repo
+	maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-solutions-releases'}
+```
 
-	// Optional: control the BNMS dependency versions
-	compile "com.r3.businessnetworks:membership-service:$corda_solutions_version"
-        compile "com.r3.businessnetworks:membership-service-contracts-and-states:$corda_solutions_version"
+### Cordapp Dependencies
+
+Add the Corda BNMS dependencies to your cordapp:
+
+```groovy
+
+dependencies {
+	// Corda memberships-management deps
+    compile "com.r3.businessnetworks:membership-service:$corda_solutions_version"
+    compile "com.r3.businessnetworks:membership-service-contracts-and-states:$corda_solutions_version"
+    //...
 }
 ```
 
-Add the BNMS starter dependency:
+### Spring Boot Application Dependencies
+
+
+Corbeans is available in Maven central. To install the main and BNMS starters, add the
+following dependencies to your build.
+
 
 ```groovy
 dependencies {
@@ -51,6 +68,9 @@ dependencies {
     compile ("com.github.manosbatsis.corbeans:corbeans-spring-boot-starter:$corbeans_version")
     // Corbeans BNMS starter
     compile ("com.github.manosbatsis.corbeans:corbeans-spring-boot-bnms-starter:$corbeans_version")
+    // Optional: control the BNMS dependency versions
+    	compile "com.r3.businessnetworks:membership-service:$corda_solutions_version"
+    	compile "com.r3.businessnetworks:membership-service-contracts-and-states:$corda_solutions_version"
 }
 
 ```

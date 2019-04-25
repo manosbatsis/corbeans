@@ -32,6 +32,10 @@ Current modules:
     <h4 class="list-group-item-heading">Data RPC</h4>
     <p class="list-group-item-text">Provides basic JPA Entities for direct access to your RPC security datasource.</p>
   </a>
+  <a href="starter-bnms.html" class="list-group-item">
+    <h4 class="list-group-item-heading"> BNMS Starter</h4>
+    <p class="list-group-item-text">Autoconfigured, RESTful BNMS services for Corda's [memberships-management](https://github.com/manosbatsis/corda-solutions/tree/master/bn-apps/memberships-management) cordapp..</p>
+  </a>
   <a href="webserver.html" class="list-group-item">
     <h4 class="list-group-item-heading">Sample Webserver</h4>
     <p class="list-group-item-text">Project example, provides a Spring Boot alternative to Corda’s standard webserver with support for multiple nodes. 

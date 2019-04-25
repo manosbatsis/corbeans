@@ -7,7 +7,8 @@ technologies:
 ---
 
 <div class="row">
-	<div class="col-md-3">
+	<div class="col-md-1"></div>
+	<div class="col-md-2">
 		<div class="panel panel-info">
 		  <div class="panel-heading text-center"><h2>Boot Starter</h2></div>
 		  <div class="panel-body">
@@ -16,7 +17,7 @@ technologies:
 		  <div class="panel-footer text-right"><a href="docs/getting-started.html">More details</a></div>
 		</div>
 	</div>
-	<div class="col-md-3">
+	<div class="col-md-2">
 		<div class="panel panel-info">
 		  <div class="panel-heading text-center"><h2>Starter Test</h2></div>
 		  <div class="panel-body">
@@ -25,7 +26,7 @@ technologies:
 		  <div class="panel-footer text-right"><a href="docs/starter-test.html">More details</a></div>
 		</div>
 	</div>
-	<div class="col-md-3">
+	<div class="col-md-2">
 		<div class="panel panel-info">
 		  <div class="panel-heading text-center"><h2>Data RPC</h2></div>
 		  <div class="panel-body">
@@ -34,7 +35,18 @@ technologies:
 		  <div class="panel-footer text-right"><a href="docs/data-rpc.html">More details</a></div>
 		</div>
 	</div>
-	<div class="col-md-3">
+	<div class="col-md-2">
+		<div class="panel panel-info">
+		  <div class="panel-heading text-center"><h2>BNMS Starter</h2></div>
+		  <div class="panel-body">
+			<p>Autoconfigured, RESTful BNMS services for Corda's 
+			[memberships-management](https://github.com/manosbatsis/corda-solutions/tree/master/bn-apps/memberships-management)
+			cordapp..</p>
+		  </div>
+		  <div class="panel-footer text-right"><a href="docs/starter-bnms.html">More details</a></div>
+		</div>
+	</div>
+	<div class="col-md-2">
 		<div class="panel panel-info">
 		  <div class="panel-heading text-center"><h2>Webserver</h2></div>
 		  <div class="panel-body">
@@ -43,4 +55,5 @@ technologies:
 		  <div class="panel-footer text-right"><a href="docs/webserver.html">More details</a></div>
 		</div>
 	</div>
+	<div class="col-md-1"></div>
 </div>
