@@ -1,0 +1,17 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>NodeParams.reapInterval - corbeans</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">corbeans</a>&nbsp;/&nbsp;<a href="../index.html">com.github.manosbatsis.corbeans.spring.boot.corda.config</a>&nbsp;/&nbsp;<a href="index.html">NodeParams</a>&nbsp;/&nbsp;<a href="./reap-interval.html">reapInterval</a><br/>
+<br/>
+<h1>reapInterval</h1>
+<a name="com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams$reapInterval"></a>
+<code><span class="keyword">var </span><span class="identifier">reapInterval</span><span class="symbol">: </span><span class="identifier">Duration</span><span class="symbol">?</span></code> <a href="https://....../blob/master/corbeans-spring-boot-corda/src/main/kotlin/com/github/manosbatsis/corbeans/spring/boot/corda/config/NodeParams.kt#L146">(source)</a>
+<p>The interval of unused observable reaping. Leaked Observables (unused ones) are detected using weak references and
+are cleaned up in batches in this interval. If set too large it will waste server side resources for this duration.
+If set too low it wastes client side cycles. The default is to check once per second.</p>
+</BODY>
+</HTML>
