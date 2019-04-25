@@ -1,0 +1,166 @@
+<html><head><title>corbeans: Installation</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Manos Batsis" /><meta name="description" content="Corda integration for Spring Boot" /><meta name="og:image" content="/corbeans/img/poster.png" /><meta name="image" property="og:image" content="/corbeans/img/poster.png" /><meta name="og:title" content="corbeans: Installation" /><meta name="title" property="og:title" content="corbeans: Installation" /><meta name="og:site_name" content="corbeans" /><meta name="og:url" content="https://manosbatsis.github.io/corbeans/" /><meta name="og:type" content="website" /><meta name="og:description" content="Corda integration for Spring Boot" /><link rel="icon" type="image/png" href="/corbeans/img/favicon.png" /><meta name="twitter:title" content="corbeans: Installation" /><meta name="twitter:image" content="https://manosbatsis.github.io/corbeans/img/poster.png" /><meta name="twitter:description" content="Corda integration for Spring Boot" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="16x16" href="/corbeans/img/favicon16x16.png" /><link rel="icon" type="image/png" sizes="24x24" href="/corbeans/img/favicon24x24.png" /><link rel="icon" type="image/png" sizes="32x32" href="/corbeans/img/favicon32x32.png" /><link rel="icon" type="image/png" sizes="48x48" href="/corbeans/img/favicon48x48.png" /><link rel="icon" type="image/png" sizes="57x57" href="/corbeans/img/favicon57x57.png" /><link rel="icon" type="image/png" sizes="60x60" href="/corbeans/img/favicon60x60.png" /><link rel="icon" type="image/png" sizes="64x64" href="/corbeans/img/favicon64x64.png" /><link rel="icon" type="image/png" sizes="70x70" href="/corbeans/img/favicon70x70.png" /><link rel="icon" type="image/png" sizes="72x72" href="/corbeans/img/favicon72x72.png" /><link rel="icon" type="image/png" sizes="76x76" href="/corbeans/img/favicon76x76.png" /><link rel="icon" type="image/png" sizes="96x96" href="/corbeans/img/favicon96x96.png" /><link rel="icon" type="image/png" sizes="114x114" href="/corbeans/img/favicon114x114.png" /><link rel="icon" type="image/png" sizes="120x120" href="/corbeans/img/favicon120x120.png" /><link rel="icon" type="image/png" sizes="128x128" href="/corbeans/img/favicon128x128.png" /><link rel="icon" type="image/png" sizes="144x144" href="/corbeans/img/favicon144x144.png" /><link rel="icon" type="image/png" sizes="150x150" href="/corbeans/img/favicon150x150.png" /><link rel="icon" type="image/png" sizes="152x152" href="/corbeans/img/favicon152x152.png" /><link rel="icon" type="image/png" sizes="196x196" href="/corbeans/img/favicon196x196.png" /><link rel="icon" type="image/png" sizes="310x310" href="/corbeans/img/favicon310x310.png" /><link rel="icon" type="image/png" sizes="310x150" href="/corbeans/img/favicon310x150.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/corbeans/highlight/styles/github.css" /><link rel="stylesheet" href="/corbeans/css/style.css" /><link rel="stylesheet" href="/corbeans/css/palette.css" /><link rel="stylesheet" href="/corbeans/css/codemirror.css" /><link rel="stylesheet" href="/corbeans/css/override.css" /><script async="async">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-131279953-1' , 'auto');
+ga('send', 'pageview');
+      </script></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><ul id="sidebar" class="sidebar-nav"><li class="sidebar-brand"><a href="/corbeans/" class="brand"><div class="brand-wrapper"><span>corbeans</span></div></a></li> <li><a href="/corbeans/docs/index.html" class="">Introduction</a></li> <li><a href="/corbeans/docs/getting-started.html" class="">Getting Started</a></li> <li><a href="/corbeans/docs/project-template.html" class="">Project Template</a></li> <li><a href="/corbeans/docs/web-api.html" class="">Web API</a></li> <li><a href="/corbeans/docs/component-api.html" class="">Components API</a></li> <li><a href="/corbeans/docs/actuator-api.html" class="">Actuator API</a></li> <li><a href="/corbeans/docs/starter-test.html" class="">Testing</a></li> <li><a href="/corbeans/docs/data-rpc.html" class="">Data RPC</a></li> <li><a href="/corbeans/docs/starter-bnms.html" class="">BNMS Starter</a></li> <li><a href="/corbeans/docs/webserver.html" class="">Sample Webserver</a></li> <li><a href="/corbeans/docs/build-howto.html" class="">Build Howto</a></li> <li><a href="/corbeans/dokka/corbeans/" class="">KDoc API Reference</a></li> <li><a href="/corbeans/docs/changelog.html" class="">Changelog</a></li> <li><a href="/corbeans/docs/acknowledgements.html" class="">Acknowledgements</a></li></ul></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li id="gh-eyes-item" class="hidden-xs"><a href="https://github.com/manosbatsis/corbeans"><i class="fa fa-eye"></i><span>WATCH<span id="eyes" class="label label-default">--</span></span></a></li><li id="gh-stars-item" class="hidden-xs"><a href="https://github.com/manosbatsis/corbeans"><i class="fa fa-star-o"></i><span>STARS<span id="stars" class="label label-default">--</span></span></a></li></ul></div></div></div></div><div id="content" data-github-owner="manosbatsis" data-github-repo="corbeans"><div class="content-wrapper"><section><h1 id="getting-started">Getting Started</h1>
+
+<!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+
+<ul>
+  <li><a href="#installation">Installation</a>
+    <ul>
+      <li><a href="#for-gradle-users">For Gradle Users</a></li>
+      <li><a href="#for-maven-users">For Maven Users</a></li>
+    </ul>
+  </li>
+  <li><a href="#configuration">Configuration</a>
+    <ul>
+      <li><a href="#registered-beans">Registered Beans</a></li>
+      <li><a href="#advanced-configuration">Advanced Configuration</a></li>
+    </ul>
+  </li>
+  <li><a href="#autowiring-services">Autowiring Services</a></li>
+</ul>
+
+<!-- /TOC -->
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; This guide is for manual installation. You can have a complete testable project in minutes using the [project template](project-template.html)  
+</code></pre></div></div>
+
+<p>The<code class="highlighter-rouge">corbeans-spring-boot-starter</code> module makes it easy for Spring Boot applications to interact with Corda networks. 
+The starter reads the <code class="highlighter-rouge">application.properties</code> of your Spring Boot project and auto-configures Spring beans that 
+expose Corda nodes via <a href="https://docs.corda.net/clientrpc.html">RPC</a>.</p>
+
+<p>Those beans include a REST Controller, Service components and simple
+RPC connection wrappers used to obtain a <code class="highlighter-rouge">CordaRPCOps</code> proxy for each Corda node.</p>
+
+<p>The following sections how to quickly get started with corbeans in your project.</p>
+
+<h2 id="installation">Installation</h2>
+
+<p>To install the starter, add the dependency to your build  using either the Gradle or Maven example bellow.</p>
+
+<blockquote>
+  <p><strong>Note:</strong> to bundle a custom starter-based or the sample webserver with your node for use via CordForm and <code class="highlighter-rouge">runNodes</code><br />
+see the Sample Webserver documentation section:
+<a href="http://127.0.0.1:4000/corbeans/docs/webserver.html#configure-for-runnodes">Configure for runNodes</a>.</p>
+</blockquote>
+
+<h3 id="for-gradle-users">For Gradle Users</h3>
+
+<p>Corbeans is available in Maven central.</p>
+
+<div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">repositories</span> <span class="o">{</span>
+	<span class="n">mavenCentral</span><span class="o">()</span>
+	<span class="c1">// OR, if changes have not yet been reflected to central:</span>
+	<span class="c1">// maven { url "http://oss.sonatype.org/content/repositories/releases/" }</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Add the starter dependency:</p>
+
+<div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dependencies</span> <span class="o">{</span>
+	<span class="c1">// For Corda 3.x. use Corbeans version 0.18 instead. </span>
+	<span class="n">compile</span> <span class="s2">"com.github.manosbatsis.corbeans:corbeans-spring-boot-starter:$corbeans_version"</span>
+	<span class="c1">// Same as above for testing as well</span>
+	<span class="n">testCompile</span> <span class="s2">"com.github.manosbatsis.corbeans:corbeans-spring-boot-starter-test:$corbeans_version"</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="for-maven-users">For Maven Users</h3>
+
+<p>Add the dependency in your Maven POM:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+	<span class="nt">&lt;groupId&gt;</span>com.github.manosbatsis.corbeans<span class="nt">&lt;/groupId&gt;</span>
+	<span class="nt">&lt;artifactId&gt;</span>corbeans-spring-boot-starter<span class="nt">&lt;/artifactId&gt;</span>
+	<span class="c">&lt;!-- For Corda 3.x. use Corbeans version 0.18 instead.--&gt;</span>
+	<span class="nt">&lt;version&gt;</span>${corbeans_version}<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+	<span class="nt">&lt;groupId&gt;</span>com.github.manosbatsis.corbeans<span class="nt">&lt;/groupId&gt;</span>
+	<span class="nt">&lt;artifactId&gt;</span>corbeans-spring-boot-starter-test<span class="nt">&lt;/artifactId&gt;</span>
+	<span class="c">&lt;!-- Same as above for testing as well.--&gt;</span>
+	<span class="nt">&lt;version&gt;</span>${corbeans_version}<span class="nt">&lt;/version&gt;</span>
+	<span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>No configuration is required When using corbeans app as a drop-in replacement to corda-webserver within a node
+folder.</p>
+
+<p>For a node independent app, add nodes in your <code class="highlighter-rouge">application.properties</code> following the example bellow.
+Use the party name for each node you want to the starter to register components for.
+In this example we can see the minimal configuration required to create components nodes (parties) A and B:</p>
+
+<div class="language-properties highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># node for PartyA
+</span><span class="py">corbeans.nodes.partyA.username</span><span class="p">=</span><span class="s">user1</span>
+<span class="py">corbeans.nodes.partyA.password</span><span class="p">=</span><span class="s">test</span>
+<span class="py">corbeans.nodes.partyA.address</span><span class="p">=</span><span class="s">localhost:10006</span>
+
+<span class="c"># node for PartyB
+</span><span class="py">corbeans.nodes.partyB.username</span><span class="p">=</span><span class="s">user1</span>
+<span class="py">corbeans.nodes.partyB.password</span><span class="p">=</span><span class="s">test</span>
+<span class="py">corbeans.nodes.partyB.address</span><span class="p">=</span><span class="s">localhost:10009</span>
+</code></pre></div></div>
+
+<h3 id="registered-beans">Registered Beans</h3>
+
+<p>The auto-configuration will generate and register the following beans <strong>per Corda Node</strong> 
+based on the above <code class="highlighter-rouge">application.properties</code>:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Bean Type</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>NodeRpcConnection</td>
+      <td>{nodeName}RpcConnection</td>
+      <td>Node RPC connection and operations proxy</td>
+    </tr>
+    <tr>
+      <td>CordaNodeService</td>
+      <td>{nodeName}NodeService</td>
+      <td>A node-specific service component</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>It will also register the following network-level beans</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Bean Type</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CordaNodesController</td>
+      <td>cordaNodesController</td>
+      <td>Provides REST endpoints for configured nodes</td>
+    </tr>
+    <tr>
+      <td>CordaNetworkService</td>
+      <td>{nodeName}NetworkService</td>
+      <td>Optionally used but convenient entry point to the cordbeans API</td>
+    </tr>
+  </tbody>
+</table>
+</section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/corbeans/highlight/highlight.pack.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/kotlin.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/gradle.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/xml.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/properties.min.js"></script><script>hljs.configure({languages:['kotlin','java','gradle','xml','bash','properties']});
+hljs.initHighlighting();
+              </script><script>((window.gitter = {}).chat = {}).options = {
+room: 'manosbatsis/corbeans'};</script><script src="https://sidecar.gitter.im/dist/sidecar.v1.js"></script><script src="/corbeans/js/main.js"></script></body></html>
