@@ -38,19 +38,26 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
         private val serviceNameSuffix = "NodeService"
     }
 
-    protected lateinit var defaultNodeName: String
+    override val defaultNodeName: String by lazy {
+        if (nodeServices.keys.size == 1
+                || !nodeServices.keys.contains(NodeParams.NODENAME_CORDFORM))
+            nodeServices.keys.first().replace(serviceNameSuffix, "")
+        else NodeParams.NODENAME_CORDFORM
+    }
+
+    override val nodeNamesByOrgName by lazy {
+        nodeServices.keys.map {
+            nodeServices.getValue(it).myIdentity.name.organisation to it.replace(serviceNameSuffix, "")
+        }.toMap()
+    }
 
     /** Node services by configured name */
     @Autowired
     override lateinit var nodeServices: Map<String, CordaNodeService>
 
+
     @PostConstruct
     fun postConstruct() {
-        // if single node config, use the only node name as default, else reserve explicitly for cordform
-        defaultNodeName = if (nodeServices.keys.size == 1
-                || !nodeServices.keys.contains(NodeParams.NODENAME_CORDFORM))
-            nodeServices.keys.first().replace("NodeService", "")
-        else NodeParams.NODENAME_CORDFORM
         logger.debug("Auto-configured RESTful services for Corda nodes:: {}, default node: {}",
                 nodeServices.keys, defaultNodeName)
     }
@@ -75,13 +82,9 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
      * or `cordform` based on node.conf otherwise
      */
     override fun getNodeService(optionalNodeName: Optional<String>): CordaNodeService {
-        var nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName
-        if (nodeName.isBlank()) throw IllegalArgumentException("nodeName cannot be an empty or blank string")
-        val c = nodeName.toCharArray()
-        c[0] = Character.toLowerCase(c[0])
-        nodeName = String(c)
+        val nodeName = resolveNodeName(optionalNodeName)
         return this.nodeServices.get("${nodeName}NodeService")
-                ?: throw IllegalArgumentException("Node not found: `$nodeName`")
+                ?: throw IllegalArgumentException("Node not found for name: ${optionalNodeName.orElse(null)}, resolved: $nodeName")
     }
 
     /**
@@ -90,5 +93,19 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
      */
     override fun getNodeService(nodeName: String?): CordaNodeService {
         return this.getNodeService(Optional.ofNullable(nodeName))
+    }
+
+    protected fun resolveNodeName(optionalNodeName: Optional<String>): String {
+        var nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName
+        if (nodeName.isBlank()) throw IllegalArgumentException("nodeName cannot be an empty or blank string")
+        // If organization name match
+        return if (nodeNamesByOrgName.containsKey(nodeName)) nodeNamesByOrgName.getValue(nodeName)
+        else lowcaseFirst(nodeName)
+    }
+
+    private fun lowcaseFirst(s: String): String {
+        val c = s.toCharArray()
+        c[0] = Character.toLowerCase(c[0])
+        return String(c)
     }
 }

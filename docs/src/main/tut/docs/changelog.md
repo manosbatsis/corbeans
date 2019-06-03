@@ -8,6 +8,10 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.24-SNAPSHOT
+
+- The organization of a Node (`Party`) can now be used as the `nodeName` path fragment
+
 ## 0.23
 
 - Added BNMS starter module

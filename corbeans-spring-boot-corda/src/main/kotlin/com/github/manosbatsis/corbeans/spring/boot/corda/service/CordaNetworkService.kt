@@ -28,12 +28,16 @@ import java.util.*
  */
 interface CordaNetworkService {
 
+    /* The default Node name */
+    val defaultNodeName: String
+
+    /** Organization to node names */
+    val nodeNamesByOrgName: Map<String, String>
+
     /** Node services by configured name */
     var nodeServices: Map<String, CordaNodeService>
 
-    /**
-     * Get information about known node network(s) and configuration
-     */
+    /** Get information about known node network(s) and configuration */
     fun getInfo(): NetworkInfo
 
     /**
