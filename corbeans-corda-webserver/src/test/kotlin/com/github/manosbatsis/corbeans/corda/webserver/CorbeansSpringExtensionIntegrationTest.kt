@@ -30,7 +30,6 @@ import com.github.manosbatsis.corbeans.test.integration.WithImplicitNetworkIT
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.identity.Party
 import net.corda.core.utilities.NetworkHostAndPort
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -42,7 +41,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.web.servlet.MockMvc
@@ -203,54 +201,6 @@ class CorbeansSpringExtensionIntegrationTest {
         testArchiveUploadAndDownload("test.zip", "application/zip")
         testArchiveUploadAndDownload("test.jar", "application/java-archive")
     }
-
-    @Test
-    fun `Can access swagger UI`() {
-        // Check swagger endpoint
-        this.mockMvc.perform(get("/api-docs"))
-                .andExpect(status().isOk())
-        // Check Swagger UI
-        this.mockMvc.perform(get("/swagger-ui.html"))
-                .andExpect(status().isOk())
-    }
-
-    @Test
-    fun `Can see Corda details within Actuator info endpoint response`() {
-        logger.info("testInfoContributor, called")
-        val entity = this.restTemplate
-                .getForEntity("/actuator/info", Map::class.java)
-        // Ensure a 200 OK
-        Assertions.assertEquals(HttpStatus.OK, entity.statusCode)
-
-        val body = entity.body
-        Assertions.assertNotNull(body, "Actuator info must not be null")
-        val corda = body!!["corda"] as Map<*, *>?
-        // Validate corda information
-        validateCordaInfo(corda)
-    }
-
-    @Test
-    fun `Can access Corda custom Actuator endpoint`() {
-        logger.info("testCordaEndpoint, called")
-        val serviceKeys = this.networkService.nodeServices.keys
-        logger.info("testCordaEndpoint, serviceKeys: {}", serviceKeys)
-        val entity = this.restTemplate
-                .getForEntity("/actuator/corda", Map::class.java)
-        // Ensure a 200 OK
-        Assertions.assertEquals(HttpStatus.OK, entity.statusCode)
-        val corda = entity.body
-        // Validate corda information
-        validateCordaInfo(corda)
-    }
-
-
-    private fun validateCordaInfo(corda: Map<*, *>?) {
-        Assertions.assertNotNull(corda, "Actuator corda info must not be null")
-        val cordaNodes = corda!!["nodes"] as Map<String, Any>
-        Assertions.assertNotNull(cordaNodes["partyA"])
-        Assertions.assertNotNull(cordaNodes["partyB"])
-    }
-
 
     private fun uploadAttachmentFiles(vararg  file: MockMultipartFile): AttachmentReceipt {
         var attachmentReceipt: AttachmentReceipt? = null

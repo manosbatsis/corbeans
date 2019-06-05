@@ -77,6 +77,8 @@ task integrationTest(type: Test) {
 	}
 	useJUnitPlatform {
 		include '**/*IntegrationTest.class'
-
+		if (project.hasProperty('excludeTests')) {
+			exclude project.property('excludeTests')
+		}
 	}
 }
