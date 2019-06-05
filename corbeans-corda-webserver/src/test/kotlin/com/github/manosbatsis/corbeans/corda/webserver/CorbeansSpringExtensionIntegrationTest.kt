@@ -154,13 +154,13 @@ class CorbeansSpringExtensionIntegrationTest {
         // convert to<>from SecureHash
         val hash = "6D1687C143DF792A011A1E80670A4E4E0C25D0D87A39514409B1ABFC2043581F"
         val hashEcho = this.restTemplate.getForEntity("/api/echo/echoSecureHash/${hash.toString()}", Any::class.java)
-        logger.debug("hashEcho body:  ${hashEcho.body}")
+        logger.info("hashEcho body:  ${hashEcho.body}")
         assertEquals(hash, hashEcho.body)
         // convert to<>from CordaX500Name
         val cordaX500Name = CordaX500Name.parse("O=Bank A, L=New York, C=US, OU=Org Unit, CN=Service Name")
         val cordaX500NameEcho = this.restTemplate
                 .getForEntity("/api/echo/echoCordaX500Name/$cordaX500Name", Any::class.java)
-        logger.debug("cordaX500NameEcho body: ${cordaX500NameEcho.body}")
+        logger.info("cordaX500NameEcho body: ${cordaX500NameEcho.body}")
         assertEquals(cordaX500Name, CordaX500Name.parse(cordaX500NameEcho.body.toString()))
     }
 
@@ -193,7 +193,7 @@ class CorbeansSpringExtensionIntegrationTest {
         val paths = this.restTemplate.getForObject(
                 "/api/nodes/partyA/attachments/${attachmentReceipt.hash}/paths",
                 List::class.java)
-        logger.debug("attachment paths: $paths")
+        logger.info("attachment paths: $paths")
         assertTrue(paths.containsAll(listOf("test.txt", "test.png")))
     }
 
@@ -216,7 +216,7 @@ class CorbeansSpringExtensionIntegrationTest {
 
     @Test
     fun `Can see Corda details within Actuator info endpoint response`() {
-        logger.debug("testInfoContributor, called")
+        logger.info("testInfoContributor, called")
         val entity = this.restTemplate
                 .getForEntity("/actuator/info", Map::class.java)
         // Ensure a 200 OK
@@ -231,9 +231,9 @@ class CorbeansSpringExtensionIntegrationTest {
 
     @Test
     fun `Can access Corda custom Actuator endpoint`() {
-        logger.debug("testCordaEndpoint, called")
+        logger.info("testCordaEndpoint, called")
         val serviceKeys = this.networkService.nodeServices.keys
-        logger.debug("testCordaEndpoint, serviceKeys: {}", serviceKeys)
+        logger.info("testCordaEndpoint, serviceKeys: {}", serviceKeys)
         val entity = this.restTemplate
                 .getForEntity("/actuator/corda", Map::class.java)
         // Ensure a 200 OK
