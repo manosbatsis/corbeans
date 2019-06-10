@@ -51,6 +51,10 @@ class CordaNodesController : CorbeansBaseController() {
         private val logger = LoggerFactory.getLogger(CordaNodesController::class.java)
     }
 
+    @GetMapping("nodeNamesByOrgName")
+    @ApiOperation(value = "Get the configured node names by org name.")
+    fun nodeNamesByOrgName() = networkService.nodeNamesByOrgName
+
     @GetMapping("whoami")
     @ApiOperation(value = "Get the node's identity.")
     override fun whoami(@PathVariable nodeName: Optional<String>) = super.whoami(nodeName)

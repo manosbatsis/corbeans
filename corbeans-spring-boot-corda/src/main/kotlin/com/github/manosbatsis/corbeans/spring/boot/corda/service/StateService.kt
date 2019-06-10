@@ -25,7 +25,10 @@ import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.DataFeed
 import net.corda.core.node.services.Vault
-import net.corda.core.node.services.vault.*
+import net.corda.core.node.services.vault.DEFAULT_PAGE_SIZE
+import net.corda.core.node.services.vault.PageSpecification
+import net.corda.core.node.services.vault.QueryCriteria
+import net.corda.core.node.services.vault.Sort
 
 /**
  * Short-lived helper, used for vault operations
@@ -38,12 +41,13 @@ class StateService<T : ContractState>(
     ) {
 
     companion object {
-        private val DEFAULT_CRITERIA = QueryCriteria.VaultQueryCriteria()
-        private val DEFAULT_PAGESIZE = 10
-        private val DEFAULT_PAGING = PageSpecification(pageSize = DEFAULT_PAGE_SIZE, pageNumber = -1)
-        private val DEFAULT_SORT = Sort(emptySet())
+        private val DEFAULT_CRITERIA = QueryCriteria.VaultQueryCriteria(Vault.StateStatus.UNCONSUMED)
+        val DEFAULT_PAGESIZE = 10
+        val DEFAULT_PAGING = PageSpecification(pageSize = DEFAULT_PAGE_SIZE, pageNumber = -1)
+        val DEFAULT_SORT = Sort(emptySet())
     }
 
+    val defaultCriteria: QueryCriteria = DEFAULT_CRITERIA.withContractStateTypes(setOf(contractStateType))
 
     fun findByLinearId(linearId: UniqueIdentifier): StateAndRef<T>? {
         val criteria = QueryCriteria.LinearStateQueryCriteria(
@@ -62,7 +66,7 @@ class StateService<T : ContractState>(
      * @see CordaRPCOps.vaultQueryBy
      */
     fun queryBy(
-            criteria: QueryCriteria = DEFAULT_CRITERIA,
+            criteria: QueryCriteria = defaultCriteria,
             pageNumber: Int = 1,
             pageSize: Int = DEFAULT_PAGESIZE,
             sort: Sort = DEFAULT_SORT
@@ -76,7 +80,7 @@ class StateService<T : ContractState>(
      * @see CordaRPCOps.vaultQueryBy
      */
     fun queryBy(
-            criteria: QueryCriteria = DEFAULT_CRITERIA,
+            criteria: QueryCriteria = defaultCriteria,
             paging: PageSpecification = DEFAULT_PAGING,
             sort: Sort = DEFAULT_SORT
     ): Vault.Page<T> {
@@ -84,13 +88,6 @@ class StateService<T : ContractState>(
         return nodeService.proxy().vaultQueryBy(criteria, paging, sort, contractStateType)
     }
 
-    /**
-     * Query the vault for states of type `T`
-     * @see CordaRPCOps.vaultQuery
-     */
-    fun query(): Vault.Page<T> {
-        return nodeService.proxy().vaultQuery(contractStateType)
-    }
 
     /**
      * Track the vault for events of `T` states matching the given criteria,
@@ -98,7 +95,7 @@ class StateService<T : ContractState>(
      * @see CordaRPCOps.vaultTrackBy
      */
     fun trackBy(
-            criteria: QueryCriteria = DEFAULT_CRITERIA,
+            criteria: QueryCriteria = defaultCriteria,
             pageNumber: Int = 1,
             pageSize: Int = DEFAULT_PAGESIZE,
             sort: Sort = DEFAULT_SORT
@@ -112,7 +109,7 @@ class StateService<T : ContractState>(
      * @see CordaRPCOps.vaultTrackBy
      */
     fun trackBy(
-            criteria: QueryCriteria = DEFAULT_CRITERIA,
+            criteria: QueryCriteria = defaultCriteria,
             paging: PageSpecification = DEFAULT_PAGING,
             sort: Sort = DEFAULT_SORT
     ): DataFeed<Vault.Page<T>, Vault.Update<T>> {
