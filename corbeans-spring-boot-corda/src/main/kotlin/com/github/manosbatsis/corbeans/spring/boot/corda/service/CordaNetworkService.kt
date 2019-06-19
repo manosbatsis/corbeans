@@ -31,8 +31,11 @@ interface CordaNetworkService {
     /* The default Node name */
     val defaultNodeName: String
 
-    /** Organization to node names */
+    /** Organization name to node names */
     val nodeNamesByOrgName: Map<String, String>
+
+    /** X500 name to node names */
+    val nodeNamesByX500Name: Map<String, String>
 
     /** Node services by configured name */
     var nodeServices: Map<String, CordaNodeService>

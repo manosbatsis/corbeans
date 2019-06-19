@@ -10,7 +10,8 @@ and can be helpful with version upgrades.
 
 ## 0.24-SNAPSHOT
 
-- The organization of a Node (`Party`) can now be used as the `nodeName` path fragment
+- `corbeans.nodes.xxx.testPartyName` can be used to set the Node identity for integration tests
+- Both X500 and organization names of a Node Party (`Party`) can now be used as the `nodeName` path fragment
 
 ## 0.23
 

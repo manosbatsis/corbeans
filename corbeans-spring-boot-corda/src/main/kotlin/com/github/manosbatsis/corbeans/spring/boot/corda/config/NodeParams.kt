@@ -59,6 +59,7 @@ class NodeParams {
         @JvmStatic
         fun mergeParams(partialParams: NodeParams, defaultParams: NodeParams): NodeParams {
             val nodeParams = NodeParams()
+            nodeParams.testPartyName = partialParams.testPartyName ?: null
             nodeParams.username = partialParams.username ?: throw IllegalArgumentException("Node configuration is missing a username property")
             nodeParams.password = partialParams.password ?: throw IllegalArgumentException("Node configuration is missing a password property")
             nodeParams.address = partialParams.address ?: throw IllegalArgumentException("Node configuration is missing an address property")
@@ -83,6 +84,8 @@ class NodeParams {
             return nodeParams
         }
     }
+    /** The x500 name to use for the node when testing */
+    var testPartyName: String? = null
     /** RPC user */
     var username: String? = null
     /** RPC user password */

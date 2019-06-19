@@ -185,6 +185,10 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProp
         getNodeParams().forEach {
             val nodeName = it.key
             val nodeParams = it.value
+            val testPartyName = nodeParams.testPartyName
+            val x500Name = if(testPartyName != null) CordaX500Name.parse(testPartyName)
+                else CordaX500Name(nodeName, "Athens", "GR")
+
             // Only start a node per unique address,
             // ignoring "default" overrides
             if (!startedRpcAddresses.contains(nodeParams.address)
@@ -199,7 +203,7 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProp
                 @Suppress("UNUSED_VARIABLE")
                 val handle = startNode(
                         defaultParameters = NodeParameters(flowOverrides = getFlowOverrides()),
-                        providedName = CordaX500Name(nodeName, "Athens", "GR"),
+                        providedName = x500Name,
                         rpcUsers = listOf(user),
                         customOverrides = mapOf(
                                 "rpcSettings.address" to nodeParams.address,

@@ -35,19 +35,25 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
 
     companion object {
         private val logger = LoggerFactory.getLogger(CordaNetworkServiceImpl::class.java)
-        private val serviceNameSuffix = "NodeService"
+        private val SERVICE_NAME_SUFFIX = "NodeService"
     }
 
     override val defaultNodeName: String by lazy {
         if (nodeServices.keys.size == 1
                 || !nodeServices.keys.contains(NodeParams.NODENAME_CORDFORM))
-            nodeServices.keys.first().replace(serviceNameSuffix, "")
+            nodeServices.keys.first().replace(SERVICE_NAME_SUFFIX, "")
         else NodeParams.NODENAME_CORDFORM
     }
 
     override val nodeNamesByOrgName by lazy {
-        nodeServices.keys.map {
-            nodeServices.getValue(it).myIdentity.name.organisation to it.replace(serviceNameSuffix, "")
+        nodeServices.map {
+            it.value.myIdentity.name.organisation to it.key.replace(SERVICE_NAME_SUFFIX, "")
+        }.toMap()
+    }
+
+    override val nodeNamesByX500Name by lazy {
+        nodeServices.map {
+            it.value.myIdentity.name.toString() to it.key.replace(SERVICE_NAME_SUFFIX, "")
         }.toMap()
     }
 
@@ -74,7 +80,7 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
      */
     override fun getNodesInfo() = this.nodeServices
             .filterNot { it.value.skipInfo() } // skip?
-            .map { it.key.substring(0, it.key.length - serviceNameSuffix.length) to it.value.getInfo() }
+            .map { it.key.substring(0, it.key.length - SERVICE_NAME_SUFFIX.length) to it.value.getInfo() }
             .toMap()
 
     /**
@@ -83,6 +89,7 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
      */
     override fun getNodeService(optionalNodeName: Optional<String>): CordaNodeService {
         val nodeName = resolveNodeName(optionalNodeName)
+        logger.debug("autoAcceptDepositRequests nodeName: ${nodeName}, node names: ${this.nodeServices.keys}, org names: ${this.nodeNamesByOrgName.keys}")
         return this.nodeServices.get("${nodeName}NodeService")
                 ?: throw IllegalArgumentException("Node not found for name: ${optionalNodeName.orElse(null)}, resolved: $nodeName")
     }
@@ -99,8 +106,11 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
         var nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName
         if (nodeName.isBlank()) throw IllegalArgumentException("nodeName cannot be an empty or blank string")
         // If organization name match
-        return if (nodeNamesByOrgName.containsKey(nodeName)) nodeNamesByOrgName.getValue(nodeName)
-        else lowcaseFirst(nodeName)
+        return if (nodeServices.containsKey("${nodeName}${SERVICE_NAME_SUFFIX}")) nodeName
+        else if (nodeNamesByOrgName.containsKey(nodeName)) nodeNamesByOrgName.getValue(nodeName)
+        else if (nodeNamesByX500Name.containsKey(nodeName)) nodeNamesByX500Name.getValue(nodeName)
+        else if (nodeServices.containsKey("${lowcaseFirst(nodeName)}${SERVICE_NAME_SUFFIX}")) lowcaseFirst(nodeName)
+        else throw IllegalArgumentException("Failed resolving node name: ${nodeName}, available node names: ${this.nodeServices.keys}, available org names: ${this.nodeNamesByOrgName.keys}, available X500 names: ${this.nodeNamesByX500Name.keys}")
     }
 
     private fun lowcaseFirst(s: String): String {
