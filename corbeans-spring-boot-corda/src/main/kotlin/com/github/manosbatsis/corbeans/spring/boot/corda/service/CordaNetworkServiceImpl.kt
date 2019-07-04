@@ -89,7 +89,7 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
      */
     override fun getNodeService(optionalNodeName: Optional<String>): CordaNodeService {
         val nodeName = resolveNodeName(optionalNodeName)
-        logger.debug("autoAcceptDepositRequests nodeName: ${nodeName}, node names: ${this.nodeServices.keys}, org names: ${this.nodeNamesByOrgName.keys}")
+        logger.debug("getNodeService nodeName: ${nodeName}, node names: ${this.nodeServices.keys}, org names: ${this.nodeNamesByOrgName.keys}")
         return this.nodeServices.get("${nodeName}NodeService")
                 ?: throw IllegalArgumentException("Node not found for name: ${optionalNodeName.orElse(null)}, resolved: $nodeName")
     }

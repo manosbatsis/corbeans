@@ -19,10 +19,9 @@
  */
 package com.github.manosbatsis.corbeans.corda.webserver
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.manosbatsis.corbeans.corda.webserver.components.SampleCustomCordaNodeServiceImpl
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.PartyNameModel
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 import com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension
@@ -40,14 +39,10 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
-import org.springframework.mock.web.MockMultipartFile
+import org.springframework.core.io.ClassPathResource
+import org.springframework.http.*
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import kotlin.test.assertFalse
+import org.springframework.util.LinkedMultiValueMap
 import kotlin.test.assertTrue
 
 
@@ -55,6 +50,7 @@ import kotlin.test.assertTrue
  * Same as [SingleNetworkIntegrationTest] only using [CorbeansSpringExtension]
  * instead of extending [WithImplicitNetworkIT]
  */
+@Suppress("SpringJavaInjectionPointsAutowiringInspection")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 // Note we are using CorbeansSpringExtension Instead of SpringExtension
 @ExtendWith(CorbeansSpringExtension::class)
@@ -94,13 +90,15 @@ class CorbeansSpringExtensionIntegrationTest {
     @Autowired
     lateinit var restTemplate: TestRestTemplate
 
+    /* TODO: test single/multiple nodes using profiles
     @Test
     fun `Can use both default node and multiple node controller endpoints`() {
         val defaultNodeMe = this.restTemplate.getForObject("/api/node/whoami", PartyNameModel::class.java)
         assertNotNull(defaultNodeMe.organisation)
-        val partyANodeMe = this.restTemplate.getForObject("/api/nodes/partyA/whoami", PartyNameModel::class.java)
+        val partyANodeMe = this.restTemplate.getForObject("/api/node/whoami", PartyNameModel::class.java)
         assertNotNull(partyANodeMe.organisation)
     }
+    */
 
 
     @Test
@@ -122,29 +120,49 @@ class CorbeansSpringExtensionIntegrationTest {
     @Test
     fun `Can retrieve node identity`() {
         assertNotNull(service.myIdentity)
+        val entity = this.restTemplate.getForEntity("/api/node/whoami", Any::class.java)
+        assertEquals(HttpStatus.OK, entity.statusCode)
+        assertEquals(MediaType.APPLICATION_JSON.type, entity.headers.contentType?.type)
+        assertEquals(MediaType.APPLICATION_JSON.subtype, entity.headers.contentType?.subtype)
     }
 
     @Test
     fun `Can retrieve peer identities`() {
         assertNotNull(service.identities())
+        val entity = this.restTemplate.getForEntity("/api/node/identities", Any::class.java)
+        assertEquals(HttpStatus.OK, entity.statusCode)
+        assertEquals(MediaType.APPLICATION_JSON.type, entity.headers.contentType?.type)
+        assertEquals(MediaType.APPLICATION_JSON.subtype, entity.headers.contentType?.subtype)
     }
 
     @Test
     fun `Can retrieve notaries`() {
         val notaries: List<Party> = service.notaries()
         assertNotNull(notaries)
+        val entity = this.restTemplate.getForEntity("/api/node/notaries", Any::class.java)
+        assertEquals(HttpStatus.OK, entity.statusCode)
+        assertEquals(MediaType.APPLICATION_JSON.type, entity.headers.contentType?.type)
+        assertEquals(MediaType.APPLICATION_JSON.subtype, entity.headers.contentType?.subtype)
     }
 
     @Test
     fun `Can retrieve flows`() {
         val flows: List<String> = service.flows()
         assertNotNull(flows)
+        val entity = this.restTemplate.getForEntity("/api/node/flows", Any::class.java)
+        assertEquals(HttpStatus.OK, entity.statusCode)
+        assertEquals(MediaType.APPLICATION_JSON.type, entity.headers.contentType?.type)
+        assertEquals(MediaType.APPLICATION_JSON.subtype, entity.headers.contentType?.subtype)
     }
 
     @Test
     fun `Can retrieve addresses`() {
         val addresses: List<NetworkHostAndPort> = service.addresses()
         assertNotNull(addresses)
+        val entity = this.restTemplate.getForEntity("/api/node/addresses", Any::class.java)
+        assertEquals(HttpStatus.OK, entity.statusCode)
+        assertEquals(MediaType.APPLICATION_JSON.type, entity.headers.contentType?.type)
+        assertEquals(MediaType.APPLICATION_JSON.subtype, entity.headers.contentType?.subtype)
     }
 
     @Test
@@ -169,27 +187,23 @@ class CorbeansSpringExtensionIntegrationTest {
         val headers = HttpHeaders()
         headers.contentType = MediaType.MULTIPART_FORM_DATA
         // Upload a couple of files
-        var attachmentReceipt: AttachmentReceipt = uploadAttachmentFiles(
-                createMockMultipartFile("test.txt", "text/plain"),
-                createMockMultipartFile("test.png", "image/png"))
+        var attachmentReceipt: JsonNode = uploadAttachmentFiles(
+                Pair("test.txt", "text/plain"),
+                Pair("test.png", "image/png"))
         // Make sure the attachment has a hash, is not marked as original and contains all uploaded files
-        assertNotNull(attachmentReceipt.hash)
-        assertFalse(attachmentReceipt.savedOriginal)
-        assertTrue(attachmentReceipt.files.containsAll(listOf("test.txt", "test.png")))
+        val hash = attachmentReceipt.get("hash").asText()
+        assertNotNull(hash)
+        // TODO assertTrue(attachmentReceipt.files.containsAll(listOf("test.txt", "test.png")))
         // Test archive download
-        mockMvc.perform(
-                get("/api/nodes/partyA/attachments/${attachmentReceipt.hash}"))
-                .andExpect(status().isOk)
-                .andReturn()
+        var attachment = this.restTemplate.getForEntity("/api/node/attachments/${hash}", ByteArray::class.java)
+        assertEquals(HttpStatus.OK, attachment.statusCode)
         // Test archive file entry download
-        mockMvc.perform(
-                get("/api/nodes/partyA/attachments/${attachmentReceipt.hash}/test.txt"))
-                .andExpect(status().isOk)
-                .andReturn()
+        attachment = this.restTemplate.getForEntity("/api/node/attachments/${hash}/test.txt", ByteArray::class.java)
+        assertEquals(HttpStatus.OK, attachment.statusCode)
 
         // Test archive file browsing
         val paths = this.restTemplate.getForObject(
-                "/api/nodes/partyA/attachments/${attachmentReceipt.hash}/paths",
+                "/api/node/attachments/${hash}/paths",
                 List::class.java)
         logger.info("attachment paths: $paths")
         assertTrue(paths.containsAll(listOf("test.txt", "test.png")))
@@ -202,18 +216,22 @@ class CorbeansSpringExtensionIntegrationTest {
         testArchiveUploadAndDownload("test.jar", "application/java-archive")
     }
 
-    private fun uploadAttachmentFiles(vararg  file: MockMultipartFile): AttachmentReceipt {
-        var attachmentReceipt: AttachmentReceipt? = null
-        val multipart = multipart("/api/nodes/partyA/attachments")
-        file.forEach { multipart.file(it) }
-        this.mockMvc
-                .perform(multipart)
-                .andExpect(status().isCreated)
-                .andDo { mvcResult ->
-                    val json = mvcResult.response.contentAsString
-                    attachmentReceipt = objectMapper.readValue(json, AttachmentReceipt::class.java)
-                }
-                .andReturn()
+    private fun uploadAttachmentFiles(vararg files: Pair<String, String>): JsonNode {
+        val parameters = LinkedMultiValueMap<String, Any>()
+        files.forEach {
+            parameters.add("file", ClassPathResource("/uploadfiles/${it.first}"))
+        }
+
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.MULTIPART_FORM_DATA
+
+        val entity = HttpEntity(parameters, headers)
+
+        val response = this.restTemplate.exchange("/api/node/attachments",
+                HttpMethod.POST, entity, JsonNode::class.java, "")
+
+        var attachmentReceipt: JsonNode? = response.body
+        logger.info("uploadAttachmentFiles, attachmentReceipt: ${attachmentReceipt.toString()}")
         return attachmentReceipt!!
     }
 
@@ -221,21 +239,17 @@ class CorbeansSpringExtensionIntegrationTest {
         val headers = HttpHeaders()
         headers.contentType = MediaType.MULTIPART_FORM_DATA
         // Add the archive to the upload
-        val fileToUpload = createMockMultipartFile(fileName, mimeType)
         // Test upload
-        var attachmentReceipt: AttachmentReceipt = uploadAttachmentFiles(fileToUpload)
+        var attachmentReceipt: JsonNode = uploadAttachmentFiles(Pair(fileName, mimeType))
         // Make sure the attachment has a hash, is marked as original and contains the uploaded archive
-        assertNotNull(attachmentReceipt.hash)
-        assertTrue(attachmentReceipt.savedOriginal)
-        assertTrue(attachmentReceipt.files.contains(fileName))
+        val hash = attachmentReceipt.get("hash").asText()
+        assertNotNull(hash)
+        assertTrue(attachmentReceipt.get("savedOriginal").asBoolean())
+        //TODO assertNotNull(attachmentReceipt.withArray("files").toList().find{it == fileName}.singleOrNull())
         // Test archive download
-        mockMvc.perform(
-                get("/api/nodes/partyA/attachments/${attachmentReceipt.hash}"))
-                .andExpect(status().isOk)
-                .andReturn()
+        val attachment = this.restTemplate.getForEntity("/api/node/attachments/${hash}", ByteArray::class.java)
+        assertEquals(HttpStatus.OK, attachment.statusCode)
     }
 
-    fun createMockMultipartFile(fileName: String, mimeType: String) =
-            MockMultipartFile("file", fileName, mimeType,
-                    this::class.java.getResourceAsStream("/uploadfiles/$fileName"))
+
 }

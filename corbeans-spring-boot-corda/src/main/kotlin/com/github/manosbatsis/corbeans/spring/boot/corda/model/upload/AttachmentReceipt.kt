@@ -31,7 +31,7 @@ import java.time.LocalDateTime
 data class AttachmentReceipt(
         /** The datetime of attachment persistence to the vault */
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy, HH:mm:ss", timezone = "UTC")
-        val date: LocalDateTime,
+        val date: LocalDateTime? = null,
         /** The attachment [net.corda.core.crypto.SecureHash] string */
         val hash: String,
         /** The attached files */

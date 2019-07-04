@@ -10,6 +10,7 @@ and can be helpful with version upgrades.
 
 ## 0.24-SNAPSHOT
 
+- From now on a Corbeans "Node" controller will have to be explicitly added if desired.
 - `corbeans.nodes.xxx.testPartyName` can be used to set the Node identity for integration tests
 - Both X500 and organization names of a Node Party (`Party`) can now be used as the `nodeName` path fragment
 

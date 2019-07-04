@@ -38,6 +38,7 @@ import java.util.*
 import java.util.jar.JarInputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
+import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -54,8 +55,14 @@ abstract class CorbeansBaseController {
         private val logger = LoggerFactory.getLogger(CorbeansBaseController::class.java)
     }
 
+    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     protected lateinit var networkService: CordaNetworkService
+
+    @PostConstruct
+    fun postConstructLog(){
+        logger.info("${this.javaClass.name} Corda controller initialized")
+    }
 
     /** Get the node's identity name. */
     open fun whoami(nodeName: Optional<String>) =

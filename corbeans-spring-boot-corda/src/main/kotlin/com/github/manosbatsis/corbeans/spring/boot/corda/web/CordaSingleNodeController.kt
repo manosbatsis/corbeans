@@ -26,7 +26,6 @@ import io.swagger.annotations.ApiOperation
 import net.corda.core.crypto.SecureHash
 import net.corda.core.utilities.NetworkHostAndPort
 import org.slf4j.LoggerFactory
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -37,87 +36,83 @@ import javax.servlet.http.HttpServletResponse
 
 
 /**
- *  Exposes [CorbeansBaseController] methods as endpoints with support for multiple nodes.
- *  Supports multiple Corda nodes via a <code>nodeName</code> path variable.
- *  The `nodeName` is used to obtain  an autoconfigured  `CordaNodeService`
- *  for the node configuration matching `nodeName` in application properties.
+ *  Exposes [CorbeansBaseController] methods as endpoints for a single node.
  *
  *  To use the controller simply extend it and add a `@RestController` annotation:
  *
  *  ```
  *  @RestController
- *  class MyCordaSingleNodeController: CordaNodesController()
+ *  class MyCordaSingleNodeController: CordaSingleNodeController()
  *  ```
  *
- *  @see CordaSingleNodeController
+ *  @see CordaNodesController
  */
-@RequestMapping(path = ["api/nodes/{nodeName}"])
-@Api(tags = arrayOf("Corda Node Services"), description = "Operations for multiple Corda nodes")
-open class CordaNodesController : CorbeansBaseController() {
+@RequestMapping(path = ["api/node"])
+@Api(tags = arrayOf("Corda Single Node Services"), description = "Generic Corda (single) node operations")
+open class CordaSingleNodeController : CorbeansBaseController() {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(CordaNodesController::class.java)
+        private val logger = LoggerFactory.getLogger(CordaSingleNodeController::class.java)
     }
 
+    /** Override to control how the the node name is resolved based on the request by e.g. parsing headers */
+    open fun getRequestNodeName(): Optional<String> = Optional.empty()
+    
     @GetMapping("nodeNamesByOrgName")
     @ApiOperation(value = "Get the configured node names by org name.")
     fun nodeNamesByOrgName() = networkService.nodeNamesByOrgName
 
     @GetMapping("whoami")
     @ApiOperation(value = "Get the node's identity.")
-    override fun whoami(@PathVariable nodeName: Optional<String>) = super.whoami(nodeName)
+    fun whoami() = super.whoami(getRequestNodeName())
 
     @GetMapping("nodes")
     @ApiOperation(value = "Get a list of nodes in the network, including self and notaries.")
-    override fun nodes(@PathVariable nodeName: Optional<String>) = super.nodes(nodeName)
+    fun nodes() = super.nodes(getRequestNodeName())
 
     @GetMapping("peers")
     @ApiOperation(value = "Get a list of the node's network peers, excluding self and notaries.")
-    override fun peers(@PathVariable nodeName: Optional<String>) = super.peers(nodeName)
+    fun peers() = super.peers(getRequestNodeName())
 
     @GetMapping("serverTime")
     @ApiOperation(value = "Get tbe node time in UTC.")
-    override fun serverTime(@PathVariable nodeName: Optional<String>): LocalDateTime = super.serverTime(nodeName)
+    fun serverTime(): LocalDateTime = super.serverTime(getRequestNodeName())
 
     @GetMapping("addresses")
     @ApiOperation(value = "Get tbe node addresses.")
-    override fun addresses(@PathVariable nodeName: Optional<String>): List<NetworkHostAndPort> = super.addresses(nodeName)
+    fun addresses(): List<NetworkHostAndPort> = super.addresses(getRequestNodeName())
 
     @GetMapping("identities")
     @ApiOperation(value = "Get tbe node identities.")
-    override fun identities(@PathVariable nodeName: Optional<String>): List<PartyNameModel> = super.identities(nodeName)
+    fun identities(): List<PartyNameModel> = super.identities(getRequestNodeName())
 
     @GetMapping("platformVersion")
     @ApiOperation(value = "Get tbe node's platform version.")
-    override fun platformVersion(@PathVariable nodeName: Optional<String>): Int = super.platformVersion(nodeName)
+    fun platformVersion(): Int = super.platformVersion(getRequestNodeName())
 
     @GetMapping("flows")
     @ApiOperation(value = "Get tbe node flows.")
-    override fun flows(@PathVariable nodeName: Optional<String>): List<String> = super.flows(nodeName)
+    fun flows(): List<String> = super.flows(getRequestNodeName())
 
     @GetMapping("notaries")
     @ApiOperation(value = "Get tbe node notaries.")
-    override fun notaries(@PathVariable nodeName: Optional<String>): List<PartyNameModel> = super.notaries(nodeName)
+    fun notaries(): List<PartyNameModel> = super.notaries(getRequestNodeName())
 
     @GetMapping("attachments/{hash}/paths")
     @ApiOperation(value = "List the contents of the attachment archive matching the given hash.")
-    override fun listAttachmentFiles(@PathVariable nodeName: Optional<String>,
-                                     @PathVariable hash: SecureHash): List<String> = super.listAttachmentFiles(nodeName, hash)
+    fun listAttachmentFiles(@PathVariable hash: SecureHash): List<String> = super.listAttachmentFiles(getRequestNodeName(), hash)
 
     @GetMapping("attachments/{hash}/**")
     @ApiOperation(
             value = "Download full attachment archives or individual files within those.",
             notes = "e.g. \"GET /attachments/123abcdef12121\" will return the archive identified by the given hash, while " +
                     "\"GET /attachments/123abcdef12121/foo.txt\" will return a specific file from within the attachment archive.")
-    override fun openAttachment(
-            @PathVariable nodeName: Optional<String>,
-            @PathVariable hash: SecureHash, req: HttpServletRequest, resp: HttpServletResponse) =
-            super.openAttachment(nodeName, hash, req, resp)
+    fun openAttachment(@PathVariable hash: SecureHash, req: HttpServletRequest, resp: HttpServletResponse) =
+            super.openAttachment(getRequestNodeName(), hash, req, resp)
 
-    @PostMapping(value = ["attachments"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    @PostMapping(value = ["attachments"])
     @ApiOperation(value = "Persist the given file(s) as a vault attachment. " +
             "A single JAR or ZIP file will be persisted as-is, otherwise a new archive will be created.")
-    override fun saveAttachment(@PathVariable nodeName: Optional<String>,
-                                @RequestParam(name = "file", required = true) files: Array<MultipartFile>
-    ): ResponseEntity<AttachmentReceipt> = super.saveAttachment(nodeName, files)
+    fun saveAttachment(@RequestParam(name = "file", required = true) files: Array<MultipartFile>
+    ): ResponseEntity<AttachmentReceipt> = super.saveAttachment(getRequestNodeName(), files)
 }

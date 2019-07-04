@@ -115,5 +115,6 @@ It will also register the following network-level beans
 
 Bean Type            | Name                     | Description
 ------------------   | ------------------------ | -------------------
-CordaNodesController | cordaNodesController     | Provides REST endpoints for configured nodes
 CordaNetworkService  | {nodeName}NetworkService | Optionally used but convenient entry point to the cordbeans API 
+
+> Starting with version 0.24, you can also explicitly add a default or custom controller, see [web-api](web-api.html) for details. 

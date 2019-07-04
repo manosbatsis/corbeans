@@ -64,11 +64,17 @@ class CordaNodesProperties {
     var cordapPackages: List<String> = mutableListOf()
     var nodes: Map<String, NodeParams> = mutableMapOf()
     var objectMapper: ObjectMapperProperties = ObjectMapperProperties()
+    var primaryControllerType: String? = "com.github.manosbatsis.corbeans.spring.boot.corda.web.CordaSingleNodeController"
     var notarySpec: TestNotaryProperties = TestNotaryProperties()
     var flowOverrides: List<String> = mutableListOf()
 
     override fun toString(): String {
-        return "CordaNodesProperties(cordapPackages=$cordapPackages, nodes=$nodes, objectMapper=$objectMapper, notarySpec=$notarySpec, flowOverrides=${flowOverrides})"
+        return "CordaNodesProperties(cordapPackages=$cordapPackages, " +
+                "nodes=$nodes, " +
+                "notarySpec=$notarySpec, " +
+                "flowOverrides=${flowOverrides}), " +
+                "primaryControllerType=${primaryControllerType}, " +
+                "objectMapper=${objectMapper}"
     }
 
 

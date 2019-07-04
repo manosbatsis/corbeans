@@ -159,11 +159,11 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
         }
         // Return receipt
         return AttachmentReceipt(
-                LocalDateTime.now(),
-                hash,
-                attachment.filenames,
-                this.myIdentity.name.organisation,
-                attachment.original
+                date = LocalDateTime.now(),
+                hash = hash,
+                files = attachment.filenames,
+                author = this.myIdentity.name.organisation,
+                savedOriginal = attachment.original
         )
     }
 

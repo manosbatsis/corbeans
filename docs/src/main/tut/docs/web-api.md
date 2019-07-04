@@ -5,15 +5,46 @@ title: "Web API"
 
 ## Web API
 
-Corbeans registers default controller endpoints, see bellow. 
+Corbeans provides a baseline node API implementation. Bellow are some ways to easily 
+expose that as RESTful services.
 
-If you are using the template, you can browse the API documentation in 
-Swagger UI
+### Single Node Controller
 
-### Endpoints
+Implement a minimal controller subclass of `CordaSingleNodeController` like 
 
-The `CordaNodesController` already mentioned in ["Getting Started"](getting-started.html)  
-adds a set of default service endpoints:
+```kotlin
+@RestController
+class NodeController : CordaSingleNodeController()
+``` 
+
+This will expose the folowing endpoints:
+
+Method | Path                                    | Description
+------ | --------------------------------------- | -------------------
+GET    | /node/serverTime            | Return tbe node time in UTC
+GET    | /node/whoami                | Returns the Node identity's name
+GET    | /node/me                    | Returns the Node identity's x500Principal name
+GET    | /node/peers                 | Returns a list of the node's network peers
+GET    | /node/peersnames            | Returns a list of the node's network peer names
+POST   | /node/attachment            | Saves the given file(s) as a vault attachment and returns a receipt
+GET    | /node/attachment/{id}       | Returns the attachment matching the given ID
+GET    | /node/attachment/{id}/{path}| Returns a file from within the attachment matching the given ID
+GET    | /node/addresses             | Returns a list of node addresses
+GET    | /node/notaries              | Returns a list of notaries in node's network
+GET    | /node/states                | Returns a list of states
+GET    | /node/flows                 | Returns a list of flow classnames
+
+
+### Multi-node Controller
+
+Implement a minimal controller subclass of `CordaNodesController` like 
+
+```kotlin
+@RestController
+class NodesController : CordaNodesController()
+``` 
+
+This will expose the folowing endpoints:
 
 Method | Path                                    | Description
 ------ | --------------------------------------- | -------------------
@@ -30,6 +61,11 @@ GET    | /nodes/{nodeName}/notaries              | Returns a list of notaries in
 GET    | /nodes/{nodeName}/states                | Returns a list of states
 GET    | /nodes/{nodeName}/flows                 | Returns a list of flow classnames
 
-> **Note:** When corbeans parses node.conf as the configuration (i.e. when using `CordForm` and/or `runnodes`),
-the corresponding base path for the default node endpoints is simply `node` instead of `nodes/{nodeName}`. Internally, 
-`cordform` is the actual value of `nodeName` for "default" endpoints, node services, etc.
+Where `nodeName` is either the node name (e.g. `partyA` for configuration properties that read `corbeans.nodes.partyA.*`) 
+or the node identity organization name.
+
+
+### Custom Controller
+
+Implement a controller by subclassing `CordaSingleNodeController` (possiobly by overriding `getNodeName()`), 
+`CordaNodesController` or `CorbeansBaseController` depending on your requirements.  

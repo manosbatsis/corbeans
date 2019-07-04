@@ -45,7 +45,7 @@ import org.springframework.http.converter.json.SpringHandlerInstantiator
  * Auto-configures Corbeans
  */
 @Configuration
-@ComponentScan(basePackages = arrayOf("com.github.manosbatsis.corbeans"))
+@ComponentScan(basePackages = ["com.github.manosbatsis.corbeans"])
 class CordaNodesAutoConfiguration {
 
     companion object {
@@ -59,6 +59,7 @@ class CordaNodesAutoConfiguration {
             return NodeServiceBeanFactoryPostProcessor()
         }
     }
+
 
     @Autowired
     protected lateinit var applicationContext: ApplicationContext
