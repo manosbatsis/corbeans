@@ -3,8 +3,8 @@
 dependencies {
 
 	compile project(':corbeans-spring-boot-corda')
-	compile "com.r3.businessnetworks:membership-service:2.0"
-	compile "com.r3.businessnetworks:membership-service-contracts-and-states:2.0"
+	compile "com.r3.businessnetworks:membership-service:$corda_solutions_version"
+	compile "com.r3.businessnetworks:membership-service-contracts-and-states:$corda_solutions_version"
 	compile("org.springframework.boot:spring-boot-autoconfigure:$spring_boot_version")
 
 	compile group: 'org.springframework', name: 'spring-context', version:spring_version

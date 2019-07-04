@@ -3,7 +3,7 @@ apply plugin: 'kotlin-jpa'
 
 dependencies {
     compile project(':corbeans-spring-data-corda-rpc')
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile "org.springframework.boot:spring-boot-starter-data-jpa:$spring_boot_version"
 
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     // Database Drivers
