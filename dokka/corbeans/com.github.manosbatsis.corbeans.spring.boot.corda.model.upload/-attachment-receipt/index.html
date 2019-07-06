@@ -1,0 +1,80 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>AttachmentReceipt - corbeans</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">corbeans</a>&nbsp;/&nbsp;<a href="../index.html">com.github.manosbatsis.corbeans.spring.boot.corda.model.upload</a>&nbsp;/&nbsp;<a href="./index.html">AttachmentReceipt</a><br/>
+<br/>
+<h1>AttachmentReceipt</h1>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">AttachmentReceipt</span></code> <a href="https://....../blob/master/corbeans-spring-boot-corda/src/main/kotlin/com/github/manosbatsis/corbeans/spring/boot/corda/model/upload/AttachmentReceipt.kt#L31">(source)</a>
+<p>Receipt of an attachment saved to the vault.
+Annotated with <a href="#">CordaSerializable</a> and thus <a href="#">ContractState</a>-embeddable.</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">AttachmentReceipt</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt$<init>(java.time.LocalDateTime, kotlin.String, kotlin.collections.List((kotlin.String)), kotlin.String, kotlin.Boolean)/date">date</span><span class="symbol">:</span>&nbsp;<span class="identifier">LocalDateTime</span><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt$<init>(java.time.LocalDateTime, kotlin.String, kotlin.collections.List((kotlin.String)), kotlin.String, kotlin.Boolean)/hash">hash</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt$<init>(java.time.LocalDateTime, kotlin.String, kotlin.collections.List((kotlin.String)), kotlin.String, kotlin.Boolean)/files">files</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt$<init>(java.time.LocalDateTime, kotlin.String, kotlin.collections.List((kotlin.String)), kotlin.String, kotlin.Boolean)/author">author</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt$<init>(java.time.LocalDateTime, kotlin.String, kotlin.collections.List((kotlin.String)), kotlin.String, kotlin.Boolean)/savedOriginal">savedOriginal</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a>&nbsp;<span class="symbol">=</span>&nbsp;false<span class="symbol">)</span></code>
+<p>Receipt of an attachment saved to the vault.
+Annotated with <a href="#">CordaSerializable</a> and thus <a href="#">ContractState</a>-embeddable.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="author.html">author</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">author</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>The attachment authoring organization</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="date.html">date</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">date</span><span class="symbol">: </span><span class="identifier">LocalDateTime</span><span class="symbol">?</span></code>
+<p>The datetime of attachment persistence to the vault</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="files.html">files</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">files</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code>
+<p>The attached files</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="hash.html">hash</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">hash</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>The attachment <a href="#">net.corda.core.crypto.SecureHash</a> string</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="saved-original.html">savedOriginal</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">savedOriginal</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>Whether an original archive was persisted in the vault, <code>false</code> if automatically created</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
