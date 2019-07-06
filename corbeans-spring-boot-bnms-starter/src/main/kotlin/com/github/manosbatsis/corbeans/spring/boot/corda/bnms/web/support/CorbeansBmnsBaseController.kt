@@ -17,7 +17,7 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web
+package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.service.CordaBnmsService
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
@@ -61,13 +61,9 @@ open class CorbeansBmnsBaseController : CorbeansBaseController() {
      * or `cordform` based on node.conf otherwise
      */
     protected fun getBmnsService(optionalNodeName: Optional<String>): CordaBnmsService<*> {
-        var nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName
-        if (nodeName.isBlank()) throw IllegalArgumentException("nodeName cannot be an empty or blank string")
-        val c = nodeName.toCharArray()
-        c[0] = Character.toLowerCase(c[0])
-        nodeName = String(c)
+        val nodeName = networkService.resolveNodeName(optionalNodeName)
         return this.bmnsServices["${nodeName}BmnsService"]
-                ?: throw IllegalArgumentException("Node not found: `$nodeName`")
+                ?: throw IllegalArgumentException("Node not found: `$optionalNodeName`")
     }
 
 }

@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletResponse
 
 
 /**
- *  Exposes [CorbeansBaseController] methods as endpoints with support for multiple nodes.
+ *  Exposes [CorbeansBaseController] methods as endpoints.
  *  Supports multiple Corda nodes via a <code>nodeName</code> path variable.
  *  The `nodeName` is used to obtain  an autoconfigured  `CordaNodeService`
  *  for the node configuration matching `nodeName` in application properties.
@@ -46,17 +46,17 @@ import javax.servlet.http.HttpServletResponse
  *
  *  ```
  *  @RestController
- *  class MyCordaSingleNodeController: CordaNodesController()
+ *  class MyNodeController: CordaPathFragmentNodeController()
  *  ```
  *
- *  @see CordaSingleNodeController
+ *  @see CordaNodeController
  */
 @RequestMapping(path = ["api/nodes/{nodeName}"])
 @Api(tags = arrayOf("Corda Node Services"), description = "Operations for multiple Corda nodes")
-open class CordaNodesController : CorbeansBaseController() {
+open class CordaPathFragmentNodeController : CorbeansBaseController() {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(CordaNodesController::class.java)
+        private val logger = LoggerFactory.getLogger(CordaPathFragmentNodeController::class.java)
     }
 
     @GetMapping("nodeNamesByOrgName")

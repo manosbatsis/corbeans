@@ -144,8 +144,72 @@ corbeans.nodes.partyA.bnmsServiceType=mypackage.MyCustomBnmsService
 
 Corbeans will create and register the appropriate BNMS service beans.
 
-## Endpoints
+### Endpoints
 
- To view the BNMS endpoints created by corbeans, browse your Swagger e.g. http://localhost/swagger-ui.html
 
- <img src="/corbeans/img/bnms-swagger.png" alt="BNMS Endpoints in Swagger UI" />
+Starting with version 0.25, you need to explicitly add controllers 
+to expose BNMS operations for BNO and members via RESTful services.
+
+#### Simple Node Controllers
+
+Implement minimal controller subclasses of `CorbeansBmnsBnoController` 
+and/or `CorbeansBmnsMemberController` like bellow:
+
+```kotlin
+@RestController
+class MyBmnsBnoController: CorbeansBmnsBnoController()
+
+
+@RestController
+class MyBmnsMemberController: CorbeansBmnsMemberController()
+``` 
+
+This will expose the folowing endpoints:
+
+Method | Path                                    | Description
+------ | --------------------------------------- | -------------------
+PUT    | /api/bnms/bno/memberships               | Activate a pending membership
+DELETE | /api/bnms/bno/memberships               | Suspend an active membership
+GET    | /api/bnms/member/memberships            | Get a memberships list from a BNO. URL params: `bno` (string) the BNO party name, `filterOutMissingFromNetworkMap` (boolean) whether to filter out anyone missing from the Network Map, default is true, `forceRefresh` (boolean) whether to force a refresh, default value is false
+POST   | /api/bnms/member/memberships            | Request the BNO to kick-off the on-boarding procedure
+PUT    | /api/bnms/member/memberships            | Propose a change to the membership metadata.
+
+
+This is suitable for a single node per Spring Boot app. To support multiple nodes on the same endpoints 
+e.g. by inspecting headers, cookies or whatnot, you can override `getNodeName()`. Alternatively, 
+see path fragment based controllers bellow.
+
+#### Path Fragment Based Controllers
+
+Implement minimal controller subclasses of `CorbeansBmnsBnoPathFragmentController` 
+and/or `CorbeansBmnsMemberPathFragmentController` like bellow:
+
+```kotlin
+@RestController
+class MyBmnsBnoController: CorbeansBmnsBnoPathFragmentController()
+
+
+@RestController
+class MyBmnsMemberController: CorbeansBmnsMemberPathFragmentController()
+``` 
+
+This will expose the folowing endpoints:
+
+Method | Path                                     | Description
+------ | ---------------------------------------- | -------------------
+PUT    | /api/bnms/bnos/{nodeName}/memberships    | Activate a pending membership
+DELETE | /api/bnms/bnos/{nodeName}/memberships    | Suspend an active membership
+GET    | /api/bnms/members/{nodeName}/memberships | Get a memberships list from a BNO. URL params: `bno` (string) the BNO party name, `filterOutMissingFromNetworkMap` (boolean) whether to filter out anyone missing from the Network Map, default is true, `forceRefresh` (boolean) whether to force a refresh, default value is false
+POST   | /api/bnms/members/{nodeName}/memberships | Request the BNO to kick-off the on-boarding procedure
+PUT    | /api/bnms/members/{nodeName}/memberships | Propose a change to the membership metadata.
+
+Where `nodeName` path fragment is one of: 
+
+- the node name (e.g. `partyA` for configuration properties that read `corbeans.nodes.partyA.*`) 
+- the node identity organization name
+- the node identity X500 name
+
+### Custom Controllers
+
+Implement a controller by subclassing `CorbeansBmnsBnoBaseController` or `CorbeansBmnsMemberBaseController` 
+depending on your requirements.  

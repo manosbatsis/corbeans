@@ -36,23 +36,24 @@ import javax.servlet.http.HttpServletResponse
 
 
 /**
- *  Exposes [CorbeansBaseController] methods as endpoints for a single node.
+ *  Exposes [CorbeansBaseController] methods as endpoints for a single node or,
+ *  by overriding `getRequestNodeName()`, multiple nodes.
  *
  *  To use the controller simply extend it and add a `@RestController` annotation:
  *
  *  ```
  *  @RestController
- *  class MyCordaSingleNodeController: CordaSingleNodeController()
+ *  class MyNodeController: CordaNodeController()
  *  ```
  *
- *  @see CordaNodesController
+ *  @see CordaPathFragmentNodeController
  */
 @RequestMapping(path = ["api/node"])
 @Api(tags = arrayOf("Corda Single Node Services"), description = "Generic Corda (single) node operations")
-open class CordaSingleNodeController : CorbeansBaseController() {
+open class CordaNodeController : CorbeansBaseController() {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(CordaSingleNodeController::class.java)
+        private val logger = LoggerFactory.getLogger(CordaNodeController::class.java)
     }
 
     /** Override to control how the the node name is resolved based on the request by e.g. parsing headers */

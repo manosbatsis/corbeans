@@ -40,6 +40,13 @@ interface CordaNetworkService {
     /** Node services by configured name */
     var nodeServices: Map<String, CordaNodeService>
 
+    /**
+     * Resolve the given node name
+     * @param optionalNodeName an optional config node name (e.g. "foo" when configured as `corbeans.nodes.foo`)
+     * an organization name or a X500 name
+     */
+    fun resolveNodeName(optionalNodeName: Optional<String>): String
+
     /** Get information about known node network(s) and configuration */
     fun getInfo(): NetworkInfo
 

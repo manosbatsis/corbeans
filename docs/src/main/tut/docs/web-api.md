@@ -5,67 +5,74 @@ title: "Web API"
 
 ## Web API
 
-Corbeans provides a baseline node API implementation. Bellow are some ways to easily 
-expose that as RESTful services.
+Starting with version 0.24, you need to explicitly add a controller 
+to expose node operations via RESTful services.
 
-### Single Node Controller
+### Simple Node Controller
 
-Implement a minimal controller subclass of `CordaSingleNodeController` like 
+Implement a minimal controller subclass of `CordaNodeController` like 
 
 ```kotlin
 @RestController
-class NodeController : CordaSingleNodeController()
+class NodeController : CordaNodeController()
 ``` 
 
 This will expose the folowing endpoints:
 
 Method | Path                                    | Description
 ------ | --------------------------------------- | -------------------
-GET    | /node/serverTime            | Return tbe node time in UTC
-GET    | /node/whoami                | Returns the Node identity's name
-GET    | /node/me                    | Returns the Node identity's x500Principal name
-GET    | /node/peers                 | Returns a list of the node's network peers
-GET    | /node/peersnames            | Returns a list of the node's network peer names
-POST   | /node/attachment            | Saves the given file(s) as a vault attachment and returns a receipt
-GET    | /node/attachment/{id}       | Returns the attachment matching the given ID
-GET    | /node/attachment/{id}/{path}| Returns a file from within the attachment matching the given ID
-GET    | /node/addresses             | Returns a list of node addresses
-GET    | /node/notaries              | Returns a list of notaries in node's network
-GET    | /node/states                | Returns a list of states
-GET    | /node/flows                 | Returns a list of flow classnames
+GET    | /api/node/serverTime            | Return tbe node time in UTC
+GET    | /api/node/whoami                | Returns the Node identity's name
+GET    | /api/node/me                    | Returns the Node identity's x500Principal name
+GET    | /api/node/peers                 | Returns a list of the node's network peers
+GET    | /api/node/peersnames            | Returns a list of the node's network peer names
+POST   | /api/node/attachment            | Saves the given file(s) as a vault attachment and returns a receipt
+GET    | /api/node/attachment/{id}       | Returns the attachment matching the given ID
+GET    | /api/node/attachment/{id}/{path}| Returns a file from within the attachment matching the given ID
+GET    | /api/node/addresses             | Returns a list of node addresses
+GET    | /api/node/notaries              | Returns a list of notaries in node's network
+GET    | /api/node/states                | Returns a list of states
+GET    | /api/node/flows                 | Returns a list of flow classnames
 
 
-### Multi-node Controller
+This is suitable for a single node setup. To support multiple nodes on the same endpoints 
+e.g. by inspecting headers, cookies or whatnot, you can override `getNodeName()`. Alternatively, 
+see `CordaPathFragmentNodeController` bellow.
 
-Implement a minimal controller subclass of `CordaNodesController` like 
+### Path Fragment Based Controller
+
+Implement a minimal controller subclass of `CordaPathFragmentNodeController` like 
 
 ```kotlin
 @RestController
-class NodesController : CordaNodesController()
+class MyCordaNodeController: CordaPathFragmentNodeController()
 ``` 
 
 This will expose the folowing endpoints:
 
 Method | Path                                    | Description
 ------ | --------------------------------------- | -------------------
-GET    | /nodes/{nodeName}/serverTime            | Return tbe node time in UTC
-GET    | /nodes/{nodeName}/whoami                | Returns the Node identity's name
-GET    | /nodes/{nodeName}/me                    | Returns the Node identity's x500Principal name
-GET    | /nodes/{nodeName}/peers                 | Returns a list of the node's network peers
-GET    | /nodes/{nodeName}/peersnames            | Returns a list of the node's network peer names
-POST   | /nodes/{nodeName}/attachment            | Saves the given file(s) as a vault attachment and returns a receipt
-GET    | /nodes/{nodeName}/attachment/{id}       | Returns the attachment matching the given ID
-GET    | /nodes/{nodeName}/attachment/{id}/{path}| Returns a file from within the attachment matching the given ID
-GET    | /nodes/{nodeName}/addresses             | Returns a list of node addresses
-GET    | /nodes/{nodeName}/notaries              | Returns a list of notaries in node's network
-GET    | /nodes/{nodeName}/states                | Returns a list of states
-GET    | /nodes/{nodeName}/flows                 | Returns a list of flow classnames
+GET    | /api/nodes/{nodeName}/serverTime            | Return tbe node time in UTC
+GET    | /api/nodes/{nodeName}/whoami                | Returns the Node identity's name
+GET    | /api/nodes/{nodeName}/me                    | Returns the Node identity's x500Principal name
+GET    | /api/nodes/{nodeName}/peers                 | Returns a list of the node's network peers
+GET    | /api/nodes/{nodeName}/peersnames            | Returns a list of the node's network peer names
+POST   | /api/nodes/{nodeName}/attachment            | Saves the given file(s) as a vault attachment and returns a receipt
+GET    | /api/nodes/{nodeName}/attachment/{id}       | Returns the attachment matching the given ID
+GET    | /api/nodes/{nodeName}/attachment/{id}/{path}| Returns a file from within the attachment matching the given ID
+GET    | /api/nodes/{nodeName}/addresses             | Returns a list of node addresses
+GET    | /api/nodes/{nodeName}/notaries              | Returns a list of notaries in node's network
+GET    | /api/nodes/{nodeName}/states                | Returns a list of states
+GET    | /api/nodes/{nodeName}/flows                 | Returns a list of flow classnames
 
-Where `nodeName` is either the node name (e.g. `partyA` for configuration properties that read `corbeans.nodes.partyA.*`) 
-or the node identity organization name.
+Where `nodeName` path fragment is one of: 
+
+- the node name (e.g. `partyA` for configuration properties that read `corbeans.nodes.partyA.*`) 
+- the node identity organization name
+- the node identity X500 name
 
 
 ### Custom Controller
 
-Implement a controller by subclassing `CordaSingleNodeController` (possiobly by overriding `getNodeName()`), 
-`CordaNodesController` or `CorbeansBaseController` depending on your requirements.  
+Implement a controller by subclassing `CordaNodeController`, 
+`CordaPathFragmentNodeController` or `CorbeansBaseController` depending on your requirements.  

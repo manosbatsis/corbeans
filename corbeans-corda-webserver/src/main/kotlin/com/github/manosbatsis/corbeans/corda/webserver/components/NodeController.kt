@@ -19,8 +19,8 @@
  */
 package com.github.manosbatsis.corbeans.corda.webserver.components
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.web.CordaSingleNodeController
+import com.github.manosbatsis.corbeans.spring.boot.corda.web.CordaNodeController
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class NodeController : CordaSingleNodeController()
+class NodeController : CordaNodeController()

@@ -8,9 +8,13 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.25
+
+- From now on Corbeans BNMS controllers will have to be explicitly added if desired, see [BNMS Starter](starter-bnms.html).
+
 ## 0.24
 
-- From now on a Corbeans "Node" controller will have to be explicitly added if desired.
+- From now on a Corbeans "Node" controller will have to be explicitly added if desired, see [Web API](web-api.html)
 - `corbeans.nodes.xxx.testPartyName` can be used to set the Node identity for integration tests
 - Both X500 and organization names of a Node Party (`Party`) can now be used as the `nodeName` path fragment
 - Updated Spring, Spring Boot dependencies (5.1.8.RELEASE, 2.1.6.RELEASE)
@@ -24,7 +28,7 @@ and can be helpful with version upgrades.
 
 ## 0.22
 
-- Deprecated `WithImplicitNetworkITin` favour of `CorbeansSpringExtension`
+- Deprecated `WithImplicitNetworkIT` in favour of `CorbeansSpringExtension`
 - Updated Corda platform to version 4.0
 
 ## 0.21

@@ -68,25 +68,15 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
                 nodeServices.keys, defaultNodeName)
     }
 
-    /**
-     * Get information about known node network(s) and configuration
-     */
     override fun getInfo(): NetworkInfo {
         return NetworkInfo(getNodesInfo())
     }
 
-    /**
-     * Get information about known nodes
-     */
     override fun getNodesInfo() = this.nodeServices
             .filterNot { it.value.skipInfo() } // skip?
             .map { it.key.substring(0, it.key.length - SERVICE_NAME_SUFFIX.length) to it.value.getInfo() }
             .toMap()
 
-    /**
-     * Get a Node service by name. Default is either the only node name if single,
-     * or `cordform` based on node.conf otherwise
-     */
     override fun getNodeService(optionalNodeName: Optional<String>): CordaNodeService {
         val nodeName = resolveNodeName(optionalNodeName)
         logger.debug("getNodeService nodeName: ${nodeName}, node names: ${this.nodeServices.keys}, org names: ${this.nodeNamesByOrgName.keys}")
@@ -94,15 +84,11 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
                 ?: throw IllegalArgumentException("Node not found for name: ${optionalNodeName.orElse(null)}, resolved: $nodeName")
     }
 
-    /**
-     * Get a Node service by name. Default is either the only node name if single,
-     * or `cordform` based on node.conf otherwise
-     */
     override fun getNodeService(nodeName: String?): CordaNodeService {
         return this.getNodeService(Optional.ofNullable(nodeName))
     }
 
-    protected fun resolveNodeName(optionalNodeName: Optional<String>): String {
+    override fun resolveNodeName(optionalNodeName: Optional<String>): String {
         var nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName
         if (nodeName.isBlank()) throw IllegalArgumentException("nodeName cannot be an empty or blank string")
         // If organization name match

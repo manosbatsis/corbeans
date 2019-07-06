@@ -23,39 +23,39 @@ import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.Membership
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support.CorbeansBmnsBnoBaseController
 import com.r3.businessnetworks.membership.states.MembershipState
 import io.swagger.annotations.ApiOperation
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 /**
- *  Exposes BNMS Operator (BNO) methods as endpoints for a single node or,
- *  if by overriding `getRequestNodeName()`, multiple nodes.
+ *  Exposes BNMS Operator (BNO) methods as endpoints.
+ *  Supports multiple Corda nodes via a <code>nodeName</code> path variable.
+ *  The `nodeName` is used to obtain  an autoconfigured  `CordaNodeService`
+ *  for the node configuration matching `nodeName` in application properties.
  *
  *  To use the controller simply extend it and add a `@RestController` annotation:
  *
  *  ```
  *  @RestController
- *  class MyBmnsBnoController: CorbeansBmnsBnoController()
+ *  class MyBmnsBnoController: CorbeansBmnsBnoPathFragmentController()
  *  ```
  *
  *  @see CorbeansBmnsBnoPathFragmentController
  */
-@RequestMapping(path = arrayOf("api/bnms/bno"))
-open class CorbeansBmnsBnoController : CorbeansBmnsBnoBaseController() {
-
-    /** Override to control how the the node name is resolved based on the request by e.g. parsing headers */
-    open fun getRequestNodeName(): Optional<String> = Optional.empty()
+@RequestMapping(path = arrayOf("api/bnms/bnos/{nodeName}"))
+open class CorbeansBmnsBnoPathFragmentController : CorbeansBmnsBnoBaseController() {
 
     @PutMapping("memberships")
     @ApiOperation(value = "Activate a pending membership.")
-    fun activateMembership(@RequestBody input: MembershipPartiesMessage): MembershipState<*> =
-            super.activateMembership(getRequestNodeName(), input)
+    override fun activateMembership(
+            @PathVariable nodeName: Optional<String>,
+            @RequestBody input: MembershipPartiesMessage): MembershipState<*> =
+            super.activateMembership(nodeName, input)
 
     @DeleteMapping("memberships")
     @ApiOperation(value = "Suspend an active membership.")
-    fun suspendMembership(@RequestBody input: MembershipPartiesMessage): MembershipState<*> =
-            super.suspendMembership(getRequestNodeName(), input)
+    override fun suspendMembership(
+            @PathVariable nodeName: Optional<String>,
+            @RequestBody input: MembershipPartiesMessage): MembershipState<*> =
+            super.suspendMembership(nodeName, input)
 
 }

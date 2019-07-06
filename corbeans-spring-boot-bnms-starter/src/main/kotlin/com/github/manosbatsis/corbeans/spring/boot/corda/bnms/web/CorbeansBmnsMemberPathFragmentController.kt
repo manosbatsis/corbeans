@@ -29,39 +29,41 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 /**
- *  Exposes BNMS member methods as endpoints for a single node or,
- *  by overriding `getRequestNodeName()`, multiple nodes.
+ *  Exposes BNMS Member methods as endpoints.
+ *  Supports multiple Corda nodes via a <code>nodeName</code> path variable.
+ *  The `nodeName` is used to obtain  an autoconfigured  `CordaNodeService`
+ *  for the node configuration matching `nodeName` in application properties.
  *
  *  To use the controller simply extend it and add a `@RestController` annotation:
  *
  *  ```
  *  @RestController
- *  class MyBmnsMemberController: CorbeansBmnsMemberController()
+ *  class MyBmnsMemberController: CorbeansBmnsMemberPathFragmentController()
  *  ```
  *
- *  @see CorbeansBmnsMemberPathFragmentController
+ *  @see CorbeansBmnsMemberController
  */
-@RequestMapping(path = arrayOf("api/bnms/member"))
-open class CorbeansBmnsMemberController : CorbeansBmnsMemberBaseController() {
+@RequestMapping(path = arrayOf("api/bnms/members/{nodeName}"))
+open class CorbeansBmnsMemberPathFragmentController : CorbeansBmnsMemberBaseController() {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(CorbeansBmnsMemberController::class.java)
+        private val logger = LoggerFactory.getLogger(CorbeansBmnsMemberPathFragmentController::class.java)
     }
-
-    /** Override to control how the the node name is resolved based on the request by e.g. parsing headers */
-    open fun getRequestNodeName(): Optional<String> = Optional.empty()
-
 
     @PostMapping("memberships")
     @ApiOperation(value = "Request the BNO to kick-off the on-boarding procedure.")
-    fun createMembershipRequest(@RequestBody input: MembershipRequestMessage): MembershipState<*> =
-            super.createMembershipRequest(getRequestNodeName(), input)
+    override fun createMembershipRequest(
+            @PathVariable nodeName: Optional<String>,
+            @RequestBody input: MembershipRequestMessage): MembershipState<*> =
+            super.createMembershipRequest(nodeName, input)
 
 
     @PutMapping("memberships")
     @ApiOperation(value = "Propose a change to the membership metadata.")
-    fun ammendMembershipRequest(@RequestBody input: MembershipRequestMessage): MembershipState<*> =
-            super.ammendMembershipRequest(getRequestNodeName(), input)
+    override fun ammendMembershipRequest(
+            @PathVariable nodeName: Optional<String>,
+            @RequestBody input: MembershipRequestMessage): MembershipState<*> =
+            super.ammendMembershipRequest(nodeName, input)
 
 
     @GetMapping("memberships")
@@ -70,7 +72,9 @@ open class CorbeansBmnsMemberController : CorbeansBmnsMemberBaseController() {
                     "All subsequent updates are delivered via push notifications from the BNO. " +
                     "Memberships cache can be force-refreshed by setting forceRefresh of GetMembershipsFlow to true. " +
                     "Members that are missing from the Network Map are filtered out from the result list.")
-    fun listMemberships(
+    override fun listMemberships(
+            @PathVariable
+            nodeName: Optional<String>,
             @ApiParam(value = "The BNO party name")
             @RequestParam(required = true)
             bno: String,
@@ -81,7 +85,7 @@ open class CorbeansBmnsMemberController : CorbeansBmnsMemberBaseController() {
             @RequestParam(required = false, defaultValue = "true")
             filterOutMissingFromNetworkMap: Boolean
     ): List<MembershipState<*>> =
-            super.listMemberships(getRequestNodeName(), bno, forceRefresh, filterOutMissingFromNetworkMap)
+            super.listMemberships(nodeName, bno, forceRefresh, filterOutMissingFromNetworkMap)
 
 
 
