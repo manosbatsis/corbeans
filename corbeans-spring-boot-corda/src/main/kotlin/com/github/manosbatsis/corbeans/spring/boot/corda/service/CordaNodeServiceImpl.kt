@@ -100,7 +100,9 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
      * @param name The name to convert to a party
      */
     override fun getPartyFromName(query: String): Party =
-            this.partiesFromName(query, true).firstOrNull()
+            if(query.contains("O=")) this.nodeRpcConnection.proxy.wellKnownPartyFromX500Name(CordaX500Name.parse(query))
+                    ?: throw IllegalArgumentException("No party found for query treated as an x500 name: ${query}")
+            else this.partiesFromName(query, true).firstOrNull()
                     ?: this.partiesFromName(query, false).single()
 
 

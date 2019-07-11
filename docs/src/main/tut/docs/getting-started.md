@@ -117,5 +117,8 @@ Bean Type            | Name                     | Description
 ------------------   | ------------------------ | -------------------
 CordaNetworkService  | {nodeName}NetworkService | Optionally used but convenient entry point to the cordbeans API 
 
-> Starting with version 0.24, you need to explicitly add a default or custom controller to expose node operations, 
+
+### Controllers
+
+Starting with version 0.24, you need to explicitly add a default or custom controller to expose node operations, 
 see [web-api](web-api.html) for details. 

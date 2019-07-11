@@ -146,7 +146,6 @@ Corbeans will create and register the appropriate BNMS service beans.
 
 ### Endpoints
 
-
 Starting with version 0.25, you need to explicitly add controllers 
 to expose BNMS operations for BNO and members via RESTful services.
 

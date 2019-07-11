@@ -24,8 +24,7 @@ import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesPropertiesWrapper
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.*
 import net.corda.core.flows.FlowLogic
 import net.corda.core.flows.IllegalFlowLogicException
 import net.corda.core.identity.CordaX500Name
@@ -77,6 +76,9 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProp
     }
 
     private var state = State.STOPPED
+    // Create job and scope
+    private val job = SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.Default + job)
 
     private lateinit var shutdownHook: Thread;
 
@@ -130,22 +132,40 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProp
         }
     }
 
+
+
     /**
      * Starts and maintains a network running in parallel with tests
      */
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
-    private fun startNetworkAsync() = GlobalScope.async {
-        logger.debug("startNetworkAsync called")
-        withDriverNodes{
-            var elapsed = 0
-            while (state == State.RUNNING) {
-                // wait for tests to finish
-                Thread.sleep(1000)
-                elapsed += 1000
-                logger.debug("startNetworkAsync waiting, elapsed: {}", elapsed)
-            }
+    private fun startNetworkAsync() = scope.launch {                       // (2)
+        try {
+            asyncWithDriverNodes()
+        } catch (e: Exception) {
+            logger.error("Corda network encountered an error.", e)
+            stopNetwork()
         }
     }
+
+    /**
+     * Call [withDriverNodes] asynchronously and keep it running while state equals RUNNING.
+     * May throw Exception
+     */
+    suspend fun asyncWithDriverNodes() = coroutineScope {     // (1)
+        async {
+            logger.debug("startNetworkAsync called")
+            withDriverNodes {
+                var elapsed = 0
+                while (state == State.RUNNING) {
+                    // wait for tests to finish
+                    Thread.sleep(1000)
+                    elapsed += 1000
+                    logger.debug("startNetworkAsync waiting, elapsed: {}", elapsed)
+                }
+            }
+        }.await()
+    }
+
     /**
      * Launch a network, execute the action code, and shut the network down
      */
