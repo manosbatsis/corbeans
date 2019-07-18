@@ -20,7 +20,6 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
 //import org.springframework.messaging.simp.SimpMessagingTemplate
-import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.info.NetworkInfo
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -38,11 +37,10 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
         private val SERVICE_NAME_SUFFIX = "NodeService"
     }
 
-    override val defaultNodeName: String by lazy {
-        if (nodeServices.keys.size == 1
-                || !nodeServices.keys.contains(NodeParams.NODENAME_CORDFORM))
-            nodeServices.keys.first().replace(SERVICE_NAME_SUFFIX, "")
-        else NodeParams.NODENAME_CORDFORM
+    override val defaultNodeName: String? by lazy {
+        if (nodeServices.keys.size == 1)
+            nodeServices.keys.single().replace(SERVICE_NAME_SUFFIX, "")
+        else null
     }
 
     override val nodeNamesByOrgName by lazy {
@@ -79,7 +77,7 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
 
     override fun getNodeService(optionalNodeName: Optional<String>): CordaNodeService {
         val nodeName = resolveNodeName(optionalNodeName)
-        logger.debug("getNodeService nodeName: ${nodeName}, node names: ${this.nodeServices.keys}, org names: ${this.nodeNamesByOrgName.keys}")
+        logger.debug("getNodeService nodeName: ${nodeName}, node names: ${this.nodeServices}, org names: ${this.nodeNamesByOrgName}")
         return this.nodeServices.get("${nodeName}NodeService")
                 ?: throw IllegalArgumentException("Node not found for name: ${optionalNodeName.orElse(null)}, resolved: $nodeName")
     }
@@ -89,14 +87,17 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
     }
 
     override fun resolveNodeName(optionalNodeName: Optional<String>): String {
-        var nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName
+        var nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName ?: throw IllegalArgumentException("No nodeName was given and a default one is not available")
         if (nodeName.isBlank()) throw IllegalArgumentException("nodeName cannot be an empty or blank string")
         // If organization name match
         return if (nodeServices.containsKey("${nodeName}${SERVICE_NAME_SUFFIX}")) nodeName
         else if (nodeNamesByOrgName.containsKey(nodeName)) nodeNamesByOrgName.getValue(nodeName)
         else if (nodeNamesByX500Name.containsKey(nodeName)) nodeNamesByX500Name.getValue(nodeName)
         else if (nodeServices.containsKey("${lowcaseFirst(nodeName)}${SERVICE_NAME_SUFFIX}")) lowcaseFirst(nodeName)
-        else throw IllegalArgumentException("Failed resolving node name: ${nodeName}, available node names: ${this.nodeServices.keys}, available org names: ${this.nodeNamesByOrgName.keys}, available X500 names: ${this.nodeNamesByX500Name.keys}")
+        else throw IllegalArgumentException("Failed resolving node name: ${nodeName}, " +
+                "available node names: ${this.nodeServices}, " +
+                "available org names: ${this.nodeNamesByOrgName}, " +
+                "available X500 names: ${this.nodeNamesByX500Name}")
     }
 
     private fun lowcaseFirst(s: String): String {

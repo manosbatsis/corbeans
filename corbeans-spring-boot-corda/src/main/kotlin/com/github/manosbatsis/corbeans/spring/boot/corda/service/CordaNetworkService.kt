@@ -28,8 +28,8 @@ import java.util.*
  */
 interface CordaNetworkService {
 
-    /* The default Node name */
-    val defaultNodeName: String
+    /** The default Node name or null */
+    val defaultNodeName: String?
 
     /** Organization name to node names */
     val nodeNamesByOrgName: Map<String, String>
