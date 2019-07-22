@@ -90,7 +90,7 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
         var nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName ?: throw IllegalArgumentException("No nodeName was given and a default one is not available")
         if (nodeName.isBlank()) throw IllegalArgumentException("nodeName cannot be an empty or blank string")
         // If organization name match
-        return if (nodeServices.containsKey("${nodeName}${SERVICE_NAME_SUFFIX}")) nodeName
+        val resolved = if (nodeServices.containsKey("${nodeName}${SERVICE_NAME_SUFFIX}")) nodeName
         else if (nodeNamesByOrgName.containsKey(nodeName)) nodeNamesByOrgName.getValue(nodeName)
         else if (nodeNamesByX500Name.containsKey(nodeName)) nodeNamesByX500Name.getValue(nodeName)
         else if (nodeServices.containsKey("${lowcaseFirst(nodeName)}${SERVICE_NAME_SUFFIX}")) lowcaseFirst(nodeName)
@@ -98,6 +98,8 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
                 "available node names: ${this.nodeServices}, " +
                 "available org names: ${this.nodeNamesByOrgName}, " +
                 "available X500 names: ${this.nodeNamesByX500Name}")
+        logger.debug("resolveNodeName, nodeName: $nodeName, resolved: $resolved")
+        return resolved
     }
 
     private fun lowcaseFirst(s: String): String {

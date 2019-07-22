@@ -174,7 +174,7 @@ POST   | /api/bnms/member/memberships            | Request the BNO to kick-off t
 PUT    | /api/bnms/member/memberships            | Propose a change to the membership metadata.
 
 
-This is suitable for a single node per Spring Boot app. To support multiple nodes on the same endpoints 
+> This is suitable for a single node per Spring Boot app. To support multiple nodes on the same endpoints 
 e.g. by inspecting headers, cookies or whatnot, you can override `getNodeName()`. Alternatively, 
 see path fragment based controllers bellow.
 

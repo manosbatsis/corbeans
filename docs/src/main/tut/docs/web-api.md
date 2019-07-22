@@ -35,7 +35,7 @@ GET    | /api/node/states                | Returns a list of states
 GET    | /api/node/flows                 | Returns a list of flow classnames
 
 
-This is suitable for a single node setup. To support multiple nodes on the same endpoints 
+> This is suitable for a single node setup. To support multiple nodes on the same endpoints 
 e.g. by inspecting headers, cookies or whatnot, you can override `getNodeName()`. Alternatively, 
 see `CordaPathFragmentNodeController` bellow.
 
