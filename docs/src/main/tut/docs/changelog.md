@@ -8,6 +8,10 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.26-SNAPSHOT
+
+- Improved `UniqueIdentifierConverter` to properly handle externalIDs that contain an underscore.
+
 ## 0.25
 
 - From now on Corbeans BNMS controllers will have to be explicitly added if desired, see [BNMS Starter](starter-bnms.html).

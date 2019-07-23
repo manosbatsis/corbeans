@@ -21,6 +21,9 @@ package com.github.manosbatsis.corbeans.corda.webserver.components
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.web.CordaNodeController
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
 
 @RestController
-class NodeController : CordaNodeController()
+class NodeController : CordaNodeController() {
+    override fun getRequestNodeName() = Optional.of("cordform")
+}

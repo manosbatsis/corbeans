@@ -25,15 +25,17 @@ import java.util.*
 
 /**
  * Custom converter for transparent String<>UniqueIdentifier binding.
- * External IDs are supported from strings following an ${externalId}_${id} format
+ * External ID conversions are supported for strings following an ${externalId}_${id} format
  */
 class UniqueIdentifierConverter : Converter<String, UniqueIdentifier> {
 
     override fun convert(source: String): UniqueIdentifier {
-        val parts = source.split('_')
-        return if (parts.size == 1) UniqueIdentifier.fromString(source)
-        else if (parts.size == 2) UniqueIdentifier(parts[0], UUID.fromString(parts[1]))
-        else throw SimpleConversionException("Invalid UniqueIdentifier string format: $source")
+        // Is an external ID included?
+        val separatorIndex = source.lastIndexOf('_')
+        return if (separatorIndex < 0) UniqueIdentifier.fromString(source)
+        else UniqueIdentifier(
+                source.substring(0, separatorIndex),
+                UUID.fromString(source.substring(separatorIndex + 1)))
     }
 
 

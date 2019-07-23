@@ -26,6 +26,7 @@ import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkSer
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 import com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension
 import com.github.manosbatsis.corbeans.test.integration.WithImplicitNetworkIT
+import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.identity.Party
 import net.corda.core.utilities.NetworkHostAndPort
@@ -43,6 +44,7 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.http.*
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.util.LinkedMultiValueMap
+import java.util.*
 import kotlin.test.assertTrue
 
 
@@ -169,9 +171,14 @@ class CorbeansSpringExtensionIntegrationTest {
     fun `Can handle object conversions`() {
         // convert to<>from SecureHash
         val hash = "6D1687C143DF792A011A1E80670A4E4E0C25D0D87A39514409B1ABFC2043581F"
-        val hashEcho = this.restTemplate.getForEntity("/api/echo/echoSecureHash/${hash.toString()}", Any::class.java)
+        val hashEcho = this.restTemplate.getForEntity("/api/echo/echoSecureHash/${hash}", Any::class.java)
         logger.info("hashEcho body:  ${hashEcho.body}")
         assertEquals(hash, hashEcho.body)
+        // convert to<>from UniqueIdentifier, including external ID with underscore
+        val linearId = UniqueIdentifier("foo_bar-baz", UUID.randomUUID())
+        val linearIdEcho = this.restTemplate.getForEntity("/api/echo/echoUniqueIdentifier/${linearId}", UniqueIdentifier::class.java)
+        logger.info("linearIdEcho body:  ${linearIdEcho.body}")
+        assertEquals(linearId, linearIdEcho.body)
         // convert to<>from CordaX500Name
         val cordaX500Name = CordaX500Name.parse("O=Bank A, L=New York, C=US, OU=Org Unit, CN=Service Name")
         val cordaX500NameEcho = this.restTemplate

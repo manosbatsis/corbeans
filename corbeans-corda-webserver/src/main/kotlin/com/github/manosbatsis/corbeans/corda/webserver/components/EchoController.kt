@@ -19,6 +19,7 @@
  */
 package com.github.manosbatsis.corbeans.corda.webserver.components
 
+import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.CordaX500Name
 import org.apache.logging.log4j.LogManager
@@ -45,6 +46,12 @@ class EchoController {
     @GetMapping("echoSecureHash/{value}")
     fun echoSecureHash(@PathVariable value: SecureHash): SecureHash {
         logger.info("SecureHash: {}", value)
+        return value
+    }
+
+    @GetMapping("echoUniqueIdentifier/{value}")
+    fun echoUniqueIdentifier(@PathVariable value: UniqueIdentifier): UniqueIdentifier {
+        logger.info("UniqueIdentifier: {}", value)
         return value
     }
 
