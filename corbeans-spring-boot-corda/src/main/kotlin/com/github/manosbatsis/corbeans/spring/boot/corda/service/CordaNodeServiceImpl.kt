@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory
 import java.io.InputStream
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.util.*
 
 
 /**
@@ -161,7 +162,7 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
         }
         // Return receipt
         return AttachmentReceipt(
-                date = LocalDateTime.now(),
+                date = Date(),
                 hash = hash,
                 files = attachment.filenames,
                 author = this.myIdentity.name.organisation,

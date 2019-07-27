@@ -191,8 +191,6 @@ class CorbeansSpringExtensionIntegrationTest {
     @Test
     @Throws(Exception::class)
     fun `Can save and retrieve regular files as attachments`() {
-        val headers = HttpHeaders()
-        headers.contentType = MediaType.MULTIPART_FORM_DATA
         // Upload a couple of files
         var attachmentReceipt: JsonNode = uploadAttachmentFiles(
                 Pair("test.txt", "text/plain"),

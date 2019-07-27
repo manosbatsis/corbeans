@@ -21,7 +21,7 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.model.upload
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import net.corda.core.serialization.CordaSerializable
-import java.time.LocalDateTime
+import java.util.*
 
 /**
  * Receipt of an attachment saved to the vault.
@@ -31,7 +31,7 @@ import java.time.LocalDateTime
 data class AttachmentReceipt(
         /** The datetime of attachment persistence to the vault */
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy, HH:mm:ss", timezone = "UTC")
-        val date: LocalDateTime? = null,
+        val date: Date? = null,
         /** The attachment [net.corda.core.crypto.SecureHash] string */
         val hash: String,
         /** The attached files */

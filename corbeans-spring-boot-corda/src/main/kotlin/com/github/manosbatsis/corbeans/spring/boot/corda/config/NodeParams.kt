@@ -59,7 +59,7 @@ class NodeParams {
         @JvmStatic
         fun mergeParams(partialParams: NodeParams, defaultParams: NodeParams): NodeParams {
             val nodeParams = NodeParams()
-            nodeParams.testPartyName = partialParams.testPartyName ?: null
+            nodeParams.testPartyName = partialParams.testPartyName
             nodeParams.username = partialParams.username ?: throw IllegalArgumentException("Node configuration is missing a username property")
             nodeParams.password = partialParams.password ?: throw IllegalArgumentException("Node configuration is missing a password property")
             nodeParams.address = partialParams.address ?: throw IllegalArgumentException("Node configuration is missing an address property")

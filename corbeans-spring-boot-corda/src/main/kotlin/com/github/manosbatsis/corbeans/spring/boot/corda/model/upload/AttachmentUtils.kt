@@ -41,9 +41,13 @@ fun toAttachmentFiles(uploadedFiles: Array<MultipartFile>): List<AttachmentFile>
             )
         }
 
+/** Converts the input [MultipartFile] to an [Attachment] */
+fun toAttachment(uploadedFile: MultipartFile): Attachment =
+        toAttachment(toAttachmentFiles(arrayOf(uploadedFile)))
+
 /** Converts the input [MultipartFile]s to an [Attachment] */
 fun toAttachment(uploadedFiles: Array<MultipartFile>): Attachment =
-    toAttachment(toAttachmentFiles(uploadedFiles))
+        toAttachment(toAttachmentFiles(uploadedFiles))
 
 /**
  * Converts the input [AttachmentFile]s to an [Attachment].

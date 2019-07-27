@@ -11,6 +11,7 @@ and can be helpful with version upgrades.
 ## 0.26-SNAPSHOT
 
 - Improved `UniqueIdentifierConverter` to properly handle externalIDs that contain an underscore.
+- Upgraded to Corda 4.1 and Gradle (wrapper) 4.10.2.
 
 ## 0.25
 
