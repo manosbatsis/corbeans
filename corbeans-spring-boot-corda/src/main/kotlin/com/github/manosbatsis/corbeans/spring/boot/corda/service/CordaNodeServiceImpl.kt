@@ -32,6 +32,8 @@ import net.corda.core.identity.Party
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.node.services.vault.QueryCriteria
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import java.io.InputStream
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -140,7 +142,10 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
     /** Retrieve the attachment matching the given hash string from the vault  */
     override fun openAttachment(hash: String): InputStream = this.openAttachment(SecureHash.parse(hash))
     /** Retrieve the attachment matching the given secure hash from the vault  */
-    override fun openAttachment(hash: SecureHash): InputStream = nodeRpcConnection.proxy.openAttachment(hash)
+    override fun openAttachment(hash: SecureHash): InputStream {
+        return if(nodeRpcConnection.proxy.attachmentExists(hash)) nodeRpcConnection.proxy.openAttachment(hash)
+        else throw ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find attachment ${hash}")
+    }
 
     /** Persist the given file(s) as a single attachment in the vault  */
     override fun saveAttachment(attachmentFile: AttachmentFile): AttachmentReceipt {

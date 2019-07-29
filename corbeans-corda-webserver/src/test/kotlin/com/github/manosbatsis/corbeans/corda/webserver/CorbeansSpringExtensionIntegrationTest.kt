@@ -27,6 +27,7 @@ import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeServic
 import com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension
 import com.github.manosbatsis.corbeans.test.integration.WithImplicitNetworkIT
 import net.corda.core.contracts.UniqueIdentifier
+import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.identity.Party
 import net.corda.core.utilities.NetworkHostAndPort
@@ -219,6 +220,10 @@ class CorbeansSpringExtensionIntegrationTest {
     fun `Can save and retrieve single zip and jar files as attachments`() {
         testArchiveUploadAndDownload("test.zip", "application/zip")
         testArchiveUploadAndDownload("test.jar", "application/java-archive")
+        // Ensure a proper 404
+        val attachment = this.restTemplate.getForEntity("/api/node/attachments/${SecureHash.randomSHA256()}", ByteArray::class.java)
+        assertEquals(HttpStatus.NOT_FOUND, attachment.statusCode)
+
     }
 
     private fun uploadAttachmentFiles(vararg files: Pair<String, String>): JsonNode {

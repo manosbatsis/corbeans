@@ -8,9 +8,10 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
-## 0.26-SNAPSHOT
+## 0.26
 
 - Improved `UniqueIdentifierConverter` to properly handle externalIDs that contain an underscore.
+- Return a 404 `ResponseStatusException` when an attachment (hash) is not found
 - Upgraded to Corda 4.1 and Gradle (wrapper) 4.10.2.
 
 ## 0.25
