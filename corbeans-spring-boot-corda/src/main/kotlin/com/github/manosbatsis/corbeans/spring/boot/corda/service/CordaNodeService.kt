@@ -23,6 +23,7 @@ import com.github.manosbatsis.corbeans.spring.boot.corda.model.info.NodeInfo
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.Attachment
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentFile
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
+import com.github.manosbatsis.vaultaire.dao.StateService
 import net.corda.core.contracts.ContractState
 import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.Party

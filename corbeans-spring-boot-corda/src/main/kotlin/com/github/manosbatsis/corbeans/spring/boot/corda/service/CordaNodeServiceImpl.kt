@@ -25,6 +25,8 @@ import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.Attachment
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.toAttachment
 import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection
+import com.github.manosbatsis.vaultaire.dao.BasicStateService
+import com.github.manosbatsis.vaultaire.dao.StateService
 import net.corda.core.contracts.ContractState
 import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.CordaX500Name
@@ -134,13 +136,14 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
 
     override fun flows() = nodeRpcConnection.proxy.registeredFlows()
 
-    /** Get a state service targeting the given `ContractState` type */
-    override fun <T : ContractState> createStateService(contractStateType: Class<T>): StateService<T>{
-        return StateService(contractStateType, this)
+    /** Get a state service targeting [contractStateType] */
+    override fun <T : ContractState> createStateService(contractStateType: Class<T>): StateService<T> {
+        return BasicStateService(this.proxy(), contractStateType)
     }
 
     /** Retrieve the attachment matching the given hash string from the vault  */
     override fun openAttachment(hash: String): InputStream = this.openAttachment(SecureHash.parse(hash))
+
     /** Retrieve the attachment matching the given secure hash from the vault  */
     override fun openAttachment(hash: SecureHash): InputStream {
         return if(nodeRpcConnection.proxy.attachmentExists(hash)) nodeRpcConnection.proxy.openAttachment(hash)

@@ -1,7 +1,7 @@
 
 
 dependencies {
-
+	compile "com.github.manosbatsis.vaultaire:vaultaire:$vaultaire_version"
 	compile("org.springframework.boot:spring-boot-autoconfigure:$spring_boot_version")
 
 	compile group: 'org.springframework', name: 'spring-context', version:spring_version

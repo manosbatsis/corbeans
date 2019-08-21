@@ -91,3 +91,9 @@ build/
 /project/project/
 /corbeans-corda-webserver/logs/
 /makeMicrosite
+
+# Mkdocs files
+docs/1.x/*
+docs/changelog.md
+docs/contributing.md
+docs/index.md

@@ -8,6 +8,10 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.27
+
+- Refactored and moved `StateService` to the [Vaultaire](https://manosbatsis.github.io/vaultaire) project
+
 ## 0.26
 
 - Improved `UniqueIdentifierConverter` to properly handle externalIDs that contain an underscore.
