@@ -19,9 +19,9 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.bind
 
+import com.github.manosbatsis.vaultaire.util.asUniqueIdentifier
 import net.corda.core.contracts.UniqueIdentifier
 import org.springframework.core.convert.converter.Converter
-import java.util.*
 
 /**
  * Custom converter for transparent String<>UniqueIdentifier binding.
@@ -30,12 +30,7 @@ import java.util.*
 class UniqueIdentifierConverter : Converter<String, UniqueIdentifier> {
 
     override fun convert(source: String): UniqueIdentifier {
-        // Is an external ID included?
-        val separatorIndex = source.lastIndexOf('_')
-        return if (separatorIndex < 0) UniqueIdentifier.fromString(source)
-        else UniqueIdentifier(
-                source.substring(0, separatorIndex),
-                UUID.fromString(source.substring(separatorIndex + 1)))
+       return source.asUniqueIdentifier()
     }
 
 
