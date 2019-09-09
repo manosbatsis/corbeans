@@ -58,6 +58,9 @@ interface CordaNodeService {
     /** Returns the node's network peers, excluding self and notaries. */
     fun peers(): List<Party>
 
+    /** Refreshes the node's NetworkMap cache */
+    fun refreshNetworkMapCache(): Unit
+    
     /**
      * Returns a list of candidate matches for a given string, with optional fuzzy(ish) matching. Fuzzy matching may
      * get smarter with time e.g. to correct spelling errors, so you should not hard-code indexes into the results

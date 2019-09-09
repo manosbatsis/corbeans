@@ -8,6 +8,12 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+
+## 0.28-SNAPSHOT
+
+- `NodeDriverHelper` now explicitly stops and closes nodes
+- Added `refreshNetworkMapCache` endpoint and service method
+
 ## 0.27
 
 - Refactored and moved `StateService` to the [Vaultaire](https://manosbatsis.github.io/vaultaire) project

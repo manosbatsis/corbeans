@@ -99,6 +99,10 @@ open class CordaPathFragmentNodeController : CorbeansBaseController() {
     @ApiOperation(value = "Get tbe node notaries.")
     override fun notaries(@PathVariable nodeName: Optional<String>): List<PartyNameModel> = super.notaries(nodeName)
 
+    @GetMapping("refreshNetworkMapCache")
+    @ApiOperation(value = "Refresh the Node's Network Map cache")
+    override fun refreshNetworkMapCache(@PathVariable nodeName: Optional<String>): Unit = super.refreshNetworkMapCache(nodeName)
+
     @GetMapping("attachments/{hash}/paths")
     @ApiOperation(value = "List the contents of the attachment archive matching the given hash.")
     override fun listAttachmentFiles(@PathVariable nodeName: Optional<String>,

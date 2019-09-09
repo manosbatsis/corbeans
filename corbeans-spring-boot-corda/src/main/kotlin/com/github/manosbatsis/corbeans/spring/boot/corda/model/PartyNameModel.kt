@@ -23,10 +23,10 @@ import net.corda.core.identity.CordaX500Name
 
 data class PartyNameModel(val commonName: String?,
                           val organisationUnit: String?,
-                          val organisation: String,
-                          val locality: String,
+                          val organisation: String?,
+                          val locality: String?,
                           val state: String?,
-                          val country: String) {
+                          val country: String?) {
     companion object {
         @JvmStatic
         fun fromCordaX500Name(name: CordaX500Name): PartyNameModel {

@@ -65,10 +65,12 @@ technologies:
 		  <div class="panel-footer text-right"><a href="https://manosbatsis.github.io/partiture/">More details</a></div>
 		</div>
 	</div>
+</div>
+<div class="row">
 	<div class="col-md-4">
 	</div>
 	<div class="col-md-4">
-		<div class="panel panel-warn">
+		<div class="panel panel-success">
 		  <div class="panel-heading text-center"><h2>Vaultaire</h2></div>
 		  <div class="panel-body">
 			<p>Query DSL and data access utilities for Corda developers.</p>

@@ -24,17 +24,17 @@ import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesPropertiesWrapper
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.SupervisorJob
+import kotlinx.coroutines.experimental.launch
 import net.corda.core.flows.FlowLogic
 import net.corda.core.flows.IllegalFlowLogicException
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.utilities.getOrThrow
 import net.corda.testing.common.internal.testNetworkParameters
 import net.corda.testing.core.DUMMY_NOTARY_NAME
-import net.corda.testing.driver.DriverDSL
-import net.corda.testing.driver.DriverParameters
-import net.corda.testing.driver.NodeParameters
-import net.corda.testing.driver.driver
+import net.corda.testing.driver.*
 import net.corda.testing.node.NotarySpec
 import net.corda.testing.node.User
 import net.corda.testing.node.internal.TestCordappImpl
@@ -82,6 +82,9 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProp
 
     private lateinit var shutdownHook: Thread;
 
+    private val nodeHandles = mutableMapOf<String, NodeHandle>()
+    private val driverNotaryHandles = mutableListOf<NotaryHandle>()
+
     /**
      * Starts the Corda network
      */
@@ -99,7 +102,6 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProp
         while (state == State.STARTING) {
             Thread.sleep(1000)
             elapsed += 1000
-            logger.debug("startNetwork waiting, elapsed: {}", elapsed)
         }
         logger.debug("startNetwork started")
     }
@@ -109,63 +111,79 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProp
      * Stops the Corda network
      */
     fun stopNetwork() {
-        logger.debug("stopNetwork called, nodes: {}", cordaNodesProperties.nodes.keys)
-        try {
-            if(state != State.STOPPED) state = State.STOPPING
-            // give time for a clean shutdown
-            val maxWait = 5000//ms
-            var elapsed = 0
-            while (state != State.STOPPED && elapsed < maxWait) {
-                logger.debug("stopNetwork waiting, elapsed: {}", elapsed)
-                elapsed += 1000
-                Thread.sleep(1000)
+        if(state != State.STOPPED) {
+            logger.debug("stopNetwork called, nodes: {}", cordaNodesProperties.nodes.keys)
+            state = State.STOPPING
+            this.nodeHandles.forEach { name, nodeHandle ->
+                stopAndClose(nodeHandle)
+            }
+            this.driverNotaryHandles.flatMap { it.nodeHandles.get() }.forEach { nodeHandle ->
+                stopAndClose(nodeHandle)
             }
             state = State.STOPPED
             logger.error("stopNetwork stopped")
+            // remove the shutdown hook if it exists
+            try {
+                if (::shutdownHook.isInitialized) Runtime.getRuntime().removeShutdownHook(shutdownHook)
+            } catch (e: Exception) {
+                // NO-OP
+            }
+        }
+        else logger.debug("stopNetwork called but network is already stopped")
+    }
+
+    private fun stopAndClose(nodeHandle: NodeHandle) {
+        val name = nodeHandle.nodeInfo.legalIdentities.first().name
+        try {
+            nodeHandle.stop()
         } catch (e: Exception) {
-            logger.error("stopNetwork failed: ${e.message}", e)
-            throw e
+            logger.error("Error stopping node $name, ${e.message}")
         }
         finally {
-            // remove the shutdown hook if it exists
-            if(::shutdownHook.isInitialized) Runtime.getRuntime().removeShutdownHook(shutdownHook)
+            try{
+                nodeHandle.close()
+            }catch (e: Exception){
+                logger.error("Error closing node $name, ${e.message}")
+            }
+
         }
     }
 
 
-
     /**
-     * Starts and maintains a network running in parallel with tests
+     *
+     * Call [withDriverNodes] asynchronously and keep it running while state equals RUNNING,
+     * i.e. in parallel with tests
      */
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
-    private fun startNetworkAsync() = scope.launch {                       // (2)
+    private fun startNetworkAsync() =
         try {
-            asyncWithDriverNodes()
-        } catch (e: Exception) {
-            logger.error("Corda network encountered an error.", e)
-            stopNetwork()
-        }
-    }
-
-    /**
-     * Call [withDriverNodes] asynchronously and keep it running while state equals RUNNING.
-     * May throw Exception
-     */
-    suspend fun asyncWithDriverNodes() = coroutineScope {     // (1)
-        async {
             logger.debug("startNetworkAsync called")
-            withDriverNodes {
-                var elapsed = 0
-                while (state == State.RUNNING) {
-                    // wait for tests to finish
-                    Thread.sleep(1000)
-                    elapsed += 1000
-                    logger.debug("startNetworkAsync waiting, elapsed: {}", elapsed)
+            scope.launch {
+                withDriverNodes {
+                    var elapsed = 0
+                    while (state == State.RUNNING) {
+                        // wait for tests to finish
+                        Thread.sleep(1000)
+                        elapsed += 1000
+                        logger.debug("startNetworkAsync waiting, elapsed: {}", elapsed)
+                    }
                 }
             }
+        } catch (e: Exception) {
+            logger.error("Corda network encountered an error, will stop network.", e)
+            stopNetwork()
+        }
+
+    /**
+     * May throw Exception
+
+    suspend fun asyncWithDriverNodes() = coroutineScope {
+        async {
+
         }.await()
     }
-
+     */
     /**
      * Launch a network, execute the action code, and shut the network down
      */
@@ -186,6 +204,8 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProp
                     networkParameters = testNetworkParameters(minimumPlatformVersion = 4))) {
                 startNodes(startedRpcAddresses)// Configure nodes per application.properties
                 state = State.RUNNING // mark as started
+                driverNotaryHandles.addAll(this.notaryHandles)
+                logger.debug("withDriverNodes, driverNotaryHandles: $driverNotaryHandles")
                 action() // execute code in context
                 state = State.STOPPING // mark as stopped
             }
@@ -202,6 +222,7 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProp
     }
 
     private fun DriverDSL.startNodes(startedRpcAddresses: MutableSet<String>) {
+
         getNodeParams().forEach {
             val nodeName = it.key
             val nodeParams = it.value
@@ -221,7 +242,7 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProp
 
                 val user = User(nodeParams.username!!, nodeParams.password!!, setOf("ALL"))
                 @Suppress("UNUSED_VARIABLE")
-                val handle = startNode(
+                nodeHandles[nodeName] = startNode(
                         defaultParameters = NodeParameters(flowOverrides = getFlowOverrides()),
                         providedName = x500Name,
                         rpcUsers = listOf(user),

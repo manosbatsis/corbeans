@@ -106,6 +106,10 @@ abstract class CorbeansBaseController {
         return getNodeService(nodeName).notaries().map { PartyNameModel.fromCordaX500Name(it.name) }
     }
 
+    /** Get tbe node notaries */
+    open fun refreshNetworkMapCache(nodeName: Optional<String>) =
+        getNodeService(nodeName).refreshNetworkMapCache()
+
     /** List the contents of the attachment archive matching the given hash */
     open fun listAttachmentFiles(nodeName: Optional<String>,
                                  hash: SecureHash): List<String> {

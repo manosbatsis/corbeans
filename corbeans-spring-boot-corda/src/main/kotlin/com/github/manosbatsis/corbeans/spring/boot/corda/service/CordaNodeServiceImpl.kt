@@ -136,6 +136,8 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
 
     override fun flows() = nodeRpcConnection.proxy.registeredFlows()
 
+    override fun refreshNetworkMapCache() = nodeRpcConnection.proxy.refreshNetworkMapCache()
+
     /** Get a state service targeting [contractStateType] */
     override fun <T : ContractState> createStateService(contractStateType: Class<T>): StateService<T> {
         return BasicStateService(this.proxy(), contractStateType)
