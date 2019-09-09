@@ -65,15 +65,19 @@ open class CordaPathFragmentNodeController : CorbeansBaseController() {
 
     @GetMapping("whoami")
     @ApiOperation(value = "Get the node's identity.")
-    override fun whoami(@PathVariable nodeName: Optional<String>) = super.whoami(nodeName)
+    override fun whoami(@PathVariable nodeName: Optional<String>): PartyNameModel = super.whoami(nodeName)
 
     @GetMapping("nodes")
     @ApiOperation(value = "Get a list of nodes in the network, including self and notaries.")
-    override fun nodes(@PathVariable nodeName: Optional<String>) = super.nodes(nodeName)
+    override fun nodes(@PathVariable nodeName: Optional<String>): List<PartyNameModel> = super.nodes(nodeName)
+
+    @GetMapping("notaries")
+    @ApiOperation(value = "Get tbe node notaries.")
+    override fun notaries(@PathVariable nodeName: Optional<String>): List<PartyNameModel> = super.notaries(nodeName)
 
     @GetMapping("peers")
     @ApiOperation(value = "Get a list of the node's network peers, excluding self and notaries.")
-    override fun peers(@PathVariable nodeName: Optional<String>) = super.peers(nodeName)
+    override fun peers(@PathVariable nodeName: Optional<String>): List<PartyNameModel> = super.peers(nodeName)
 
     @GetMapping("serverTime")
     @ApiOperation(value = "Get tbe node time in UTC.")
@@ -94,10 +98,6 @@ open class CordaPathFragmentNodeController : CorbeansBaseController() {
     @GetMapping("flows")
     @ApiOperation(value = "Get tbe node flows.")
     override fun flows(@PathVariable nodeName: Optional<String>): List<String> = super.flows(nodeName)
-
-    @GetMapping("notaries")
-    @ApiOperation(value = "Get tbe node notaries.")
-    override fun notaries(@PathVariable nodeName: Optional<String>): List<PartyNameModel> = super.notaries(nodeName)
 
     @GetMapping("refreshNetworkMapCache")
     @ApiOperation(value = "Refresh the Node's Network Map cache")

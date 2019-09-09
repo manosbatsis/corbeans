@@ -70,22 +70,17 @@ open class CordaNodeServiceImpl(open val nodeRpcConnection: NodeRpcConnection): 
 
 
     /** Get a list of nodes in the network, including self and notaries */
-    override fun nodes(): List<Party> {
-        val nodes = nodeRpcConnection.proxy.networkMapSnapshot()
-        return nodes.map { it.legalIdentities.first() }
-
-    }
+    override fun nodes(): List<Party> =
+        nodeRpcConnection.proxy.networkMapSnapshot().map { it.legalIdentities.first() }
 
     /** Get a list of network peers, i.e. nodes excluding self and notaries  */
     override fun peers(): List<Party> {
         val notaries = this.notaries()
-        val nodes = nodeRpcConnection.proxy.networkMapSnapshot()
-        return nodes.filter { nodeInfo ->
-            // Filter out self and notaries
-            nodeInfo.legalIdentities.find {
-                it == myIdentity || notaries.contains(it)
-            } == null
-        }
+        return nodeRpcConnection.proxy.networkMapSnapshot()
+                .filter { nodeInfo ->
+                    // Filter out self and notaries
+                    nodeInfo.legalIdentities.find { it == myIdentity || notaries.contains(it) } == null
+                }
                 .map { it.legalIdentities.first() }
     }
 

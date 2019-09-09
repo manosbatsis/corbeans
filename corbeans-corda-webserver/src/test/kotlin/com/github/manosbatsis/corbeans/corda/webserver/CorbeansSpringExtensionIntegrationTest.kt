@@ -130,22 +130,44 @@ class CorbeansSpringExtensionIntegrationTest {
     }
 
     @Test
-    fun `Can retrieve peer identities`() {
+    fun `Can retrieve identities`() {
         assertNotNull(service.identities())
-        val entity = this.restTemplate.getForEntity("/api/node/identities", Any::class.java)
+        val entity = this.restTemplate.getForEntity("/api/node/identities", JsonNode::class.java)
         assertEquals(HttpStatus.OK, entity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON.type, entity.headers.contentType?.type)
         assertEquals(MediaType.APPLICATION_JSON.subtype, entity.headers.contentType?.subtype)
+        assertTrue {entity.body!!.toList().isNotEmpty() }
+    }
+
+    @Test
+    fun `Can retrieve nodes`() {
+        assertNotNull(service.identities())
+        val entity = this.restTemplate.getForEntity("/api/node/nodes", JsonNode::class.java)
+        assertEquals(HttpStatus.OK, entity.statusCode)
+        assertEquals(MediaType.APPLICATION_JSON.type, entity.headers.contentType?.type)
+        assertEquals(MediaType.APPLICATION_JSON.subtype, entity.headers.contentType?.subtype)
+        assertTrue {entity.body!!.toList().isNotEmpty() }
+    }
+
+    @Test
+    fun `Can retrieve peers`() {
+        assertNotNull(service.identities())
+        val entity = this.restTemplate.getForEntity("/api/node/peers", JsonNode::class.java)
+        assertEquals(HttpStatus.OK, entity.statusCode)
+        assertEquals(MediaType.APPLICATION_JSON.type, entity.headers.contentType?.type)
+        assertEquals(MediaType.APPLICATION_JSON.subtype, entity.headers.contentType?.subtype)
+        assertTrue {entity.body!!.toList().isNotEmpty() }
     }
 
     @Test
     fun `Can retrieve notaries`() {
         val notaries: List<Party> = service.notaries()
         assertNotNull(notaries)
-        val entity = this.restTemplate.getForEntity("/api/node/notaries", Any::class.java)
+        val entity = this.restTemplate.getForEntity("/api/node/notaries", JsonNode::class.java)
         assertEquals(HttpStatus.OK, entity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON.type, entity.headers.contentType?.type)
         assertEquals(MediaType.APPLICATION_JSON.subtype, entity.headers.contentType?.subtype)
+        assertTrue {entity.body!!.toList().isNotEmpty() }
     }
 
     @Test

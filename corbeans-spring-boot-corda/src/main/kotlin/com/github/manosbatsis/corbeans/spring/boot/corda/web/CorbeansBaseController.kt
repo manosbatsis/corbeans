@@ -65,50 +65,40 @@ abstract class CorbeansBaseController {
     }
 
     /** Get the node's identity name. */
-    open fun whoami(nodeName: Optional<String>) =
+    open fun whoami(nodeName: Optional<String>): PartyNameModel =
             PartyNameModel.fromCordaX500Name(getNodeService(nodeName).myIdentity.name)
 
     /** Get a list of nodes in the network, including self and notaries.*/
-    open fun nodes(nodeName: Optional<String>) =
+    open fun nodes(nodeName: Optional<String>): List<PartyNameModel> =
             getNodeService(nodeName).nodes().map { PartyNameModel.fromCordaX500Name(it.name) }
-
-    /** Get a list of the node's network peers, excluding self and notaries.*/
-    open fun peers(nodeName: Optional<String>) =
-            getNodeService(nodeName).peers().map { PartyNameModel.fromCordaX500Name(it.name) }
-
-    /** Get tbe node time in UTC */
-    open fun serverTime(nodeName: Optional<String>): LocalDateTime {
-        return getNodeService(nodeName).serverTime()
-    }
-
-    /** Get tbe node addresses */
-    open fun addresses(nodeName: Optional<String>): List<NetworkHostAndPort> {
-        return getNodeService(nodeName).addresses()
-    }
-
-    /** Get tbe node identities */
-    open fun identities(nodeName: Optional<String>): List<PartyNameModel> {
-        return getNodeService(nodeName).identities().map { PartyNameModel.fromCordaX500Name(it.name) }
-    }
-
-    /** Get tbe node's platform version */
-    open fun platformVersion(nodeName: Optional<String>): Int {
-        return getNodeService(nodeName).platformVersion()
-    }
-
-    /** Get tbe node flows */
-    open fun flows(nodeName: Optional<String>): List<String> {
-        return getNodeService(nodeName).flows()
-    }
 
     /** Get tbe node notaries */
     open fun notaries(nodeName: Optional<String>): List<PartyNameModel> {
         return getNodeService(nodeName).notaries().map { PartyNameModel.fromCordaX500Name(it.name) }
     }
 
+    /** Get a list of the node's network peers, excluding self and notaries.*/
+    open fun peers(nodeName: Optional<String>): List<PartyNameModel> =
+            getNodeService(nodeName).peers().map { PartyNameModel.fromCordaX500Name(it.name) }
+
+    /** Get tbe node time in UTC */
+    open fun serverTime(nodeName: Optional<String>): LocalDateTime = getNodeService(nodeName).serverTime()
+
+    /** Get tbe node addresses */
+    open fun addresses(nodeName: Optional<String>): List<NetworkHostAndPort> = getNodeService(nodeName).addresses()
+
+    /** Get tbe node identities */
+    open fun identities(nodeName: Optional<String>): List<PartyNameModel> =
+        getNodeService(nodeName).identities().map { PartyNameModel.fromCordaX500Name(it.name) }
+
+    /** Get tbe node's platform version */
+    open fun platformVersion(nodeName: Optional<String>): Int = getNodeService(nodeName).platformVersion()
+
+    /** Get tbe node flows */
+    open fun flows(nodeName: Optional<String>): List<String> = getNodeService(nodeName).flows()
+
     /** Get tbe node notaries */
-    open fun refreshNetworkMapCache(nodeName: Optional<String>) =
-        getNodeService(nodeName).refreshNetworkMapCache()
+    open fun refreshNetworkMapCache(nodeName: Optional<String>) = getNodeService(nodeName).refreshNetworkMapCache()
 
     /** List the contents of the attachment archive matching the given hash */
     open fun listAttachmentFiles(nodeName: Optional<String>,
