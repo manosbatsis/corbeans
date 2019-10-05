@@ -102,6 +102,10 @@ open class CordaNetworkServiceImpl : CordaNetworkService {
         return resolved
     }
 
+    override fun refreshNetworkMapCaches() = nodeServices.values.forEach{
+        it.refreshNetworkMapCache()
+    }
+
     private fun lowcaseFirst(s: String): String {
         val c = s.toCharArray()
         c[0] = Character.toLowerCase(c[0])

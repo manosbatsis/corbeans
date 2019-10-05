@@ -97,8 +97,11 @@ abstract class CorbeansBaseController {
     /** Get tbe node flows */
     open fun flows(nodeName: Optional<String>): List<String> = getNodeService(nodeName).flows()
 
-    /** Get tbe node notaries */
+    /** Refresh the target node's network map cache */
     open fun refreshNetworkMapCache(nodeName: Optional<String>) = getNodeService(nodeName).refreshNetworkMapCache()
+
+    /** Refresh the network map cache of every node registered in corbeans configuration */
+    open fun refreshNetworkMapCaches() = networkService.refreshNetworkMapCaches()
 
     /** List the contents of the attachment archive matching the given hash */
     open fun listAttachmentFiles(nodeName: Optional<String>,

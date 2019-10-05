@@ -9,7 +9,7 @@ The following sections describe major changes per version
 and can be helpful with version upgrades.
 
 
-## 0.28-SNAPSHOT
+## 0.28
 
 - `NodeDriverHelper` now explicitly stops and closes nodes
 - Added `refreshNetworkMapCache` endpoint and service method

@@ -99,10 +99,6 @@ open class CordaNodeController : CorbeansBaseController() {
     @ApiOperation(value = "Get tbe node notaries.")
     fun notaries(): List<PartyNameModel> = super.notaries(getRequestNodeName())
 
-    @GetMapping("refreshNetworkMapCache")
-    @ApiOperation(value = "Refresh the Node's Network Map cache")
-    fun refreshNetworkMapCache(): Unit = super.refreshNetworkMapCache(getRequestNodeName())
-
     @GetMapping("attachments/{hash}/paths")
     @ApiOperation(value = "List the contents of the attachment archive matching the given hash.")
     fun listAttachmentFiles(@PathVariable hash: SecureHash): List<String> = super.listAttachmentFiles(getRequestNodeName(), hash)

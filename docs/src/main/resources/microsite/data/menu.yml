@@ -40,3 +40,6 @@ options:
 
   - title: Acknowledgements
     url: docs/acknowledgements.html
+
+  - title: FAQ
+    url: docs/faq.html

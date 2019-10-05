@@ -50,6 +50,9 @@ interface CordaNetworkService {
     /** Get information about known node network(s) and configuration */
     fun getInfo(): NetworkInfo
 
+    /** Refresh the network map cache of every node registered in corbeans configuration */
+    fun refreshNetworkMapCaches()
+
     /**
      * Get a Node service by name. Default is either the only node name if single,
      * or `cordform` based on node.conf otherwise
