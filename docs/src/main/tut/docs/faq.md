@@ -2,6 +2,7 @@
 layout: docs
 title: "Frequently Asked Questions"
 ---
+# Frequently Asked Questions
 
 ## Corda Enterprise
 
