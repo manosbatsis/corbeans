@@ -196,12 +196,13 @@ class NodeDriverHelper(val cordaNodesProperties: CordaNodesProperties = loadProp
         state = State.STARTING
         try {
             val startedRpcAddresses = mutableSetOf<String>()
-            // start the driver
-            driver(DriverParameters(
-                    startNodesInProcess = true,
-                    cordappsForAllNodes = cordappsForAllNodes(),
-                    notarySpecs = notarySpecs(),
-                    networkParameters = testNetworkParameters(minimumPlatformVersion = 4))) {
+            // start the driver, using with* to avoid CE 4.2 error
+            driver(DriverParameters()
+                    .withStartNodesInProcess(true)
+                    .withCordappsForAllNodes(cordappsForAllNodes())
+                    .withNotarySpecs(notarySpecs())
+                    .withNetworkParameters(testNetworkParameters(minimumPlatformVersion = 4))
+            ) {
                 startNodes(startedRpcAddresses)// Configure nodes per application.properties
                 state = State.RUNNING // mark as started
                 driverNotaryHandles.addAll(this.notaryHandles)
