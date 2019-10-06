@@ -8,7 +8,7 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
-## 0.29-SNAPSHOT
+## 0.29
 
 - Fixed [integration tests for Corda Enterprise 4.2](https://github.com/manosbatsis/corbeans/issues/24)
 
