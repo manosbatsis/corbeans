@@ -8,7 +8,9 @@ title: "Frequently Asked Questions"
 
 To use Corbeans, [Partiture](https://manosbatsis.github.io/partiture/) 
 or [Vaultaire](https://manosbatsis.github.io/vaultaire/) with Corda Enterprise, 
-you'll have to instruct your build to replace `net.corda` dependencies with `com.r3.corda`:
+you will have to update your build to [use the CE release](https://docs.corda.r3.com/app-upgrade-notes-enterprise.html).
+
+After switching to the appropriate corda_release_group and corda_release_version in your ext section, you can instruct your build to substitute transitive Corda OS dependencies with their CE equivalents: 
 
 ```groovy
 
@@ -34,4 +36,4 @@ allprojects {
 }
 ```
 
-> __Note__: The above assumes `ext.corda_release_group` and `ext.corda_release_version` are already set
+> __Note__: The above assumes ext.corda_release_group and ext.corda_release_version are already set, e.g. to com.r3.corda and 4.2 respectively.
