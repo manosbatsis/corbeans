@@ -12,7 +12,9 @@ ga('send', 'pageview');
 
 <p>To use Corbeans, <a href="https://manosbatsis.github.io/partiture/">Partiture</a> 
 or <a href="https://manosbatsis.github.io/vaultaire/">Vaultaire</a> with Corda Enterprise, 
-you’ll have to instruct your build to replace <code class="highlighter-rouge">net.corda</code> dependencies with <code class="highlighter-rouge">com.r3.corda</code>:</p>
+you will have to update your build to <a href="https://docs.corda.r3.com/app-upgrade-notes-enterprise.html">use the CE release</a>.</p>
+
+<p>After switching to the appropriate corda_release_group and corda_release_version in your ext section, you can instruct your build to substitute transitive Corda OS dependencies with their CE equivalents:</p>
 
 <div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="n">allprojects</span> <span class="o">{</span>
@@ -38,7 +40,7 @@ you’ll have to instruct your build to replace <code class="highlighter-rouge">
 </code></pre></div></div>
 
 <blockquote>
-  <p><strong>Note</strong>: The above assumes <code class="highlighter-rouge">ext.corda_release_group</code> and <code class="highlighter-rouge">ext.corda_release_version</code> are already set</p>
+  <p><strong>Note</strong>: The above assumes ext.corda_release_group and ext.corda_release_version are already set, e.g. to com.r3.corda and 4.2 respectively.</p>
 </blockquote>
 </section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/corbeans/highlight/highlight.pack.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/kotlin.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/gradle.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/xml.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/properties.min.js"></script><script>hljs.configure({languages:['kotlin','java','gradle','xml','bash','properties']});
 hljs.initHighlighting();
