@@ -109,7 +109,7 @@ allprojects {
 		maven { url 'https://repo.gradle.org/gradle/libs-releases' }
 	}
 
-	version = "0.30"
+	version = "0.31-SNAPSHOT"
 	group = 'com.github.manosbatsis.corbeans'
 	apply from: "$rootDir/gradle/published.gradle"
 	apply plugin: 'project-report'
