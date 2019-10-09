@@ -30,7 +30,7 @@ buildscript {
 		//netty_version = '4.1.22.Final'
 		h2 = '1.4.196'
 		dependency_management_version ="1.0.6.RELEASE"
-		vaultaire_version = '0.6'
+		vaultaire_version = '0.7'
 	}
 
 	// Customise depdendency versions for spring-boot-dependencies
