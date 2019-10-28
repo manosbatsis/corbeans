@@ -17,9 +17,8 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda.config
+package com.github.manosbatsis.corbeans.corda.common
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeServiceImpl
 import net.corda.client.rpc.CordaRPCClientConfiguration
 import java.time.Duration
 
@@ -40,7 +39,7 @@ class NodeParams {
         val DEFAULT = NodeParams()
         init {
             DEFAULT.eager = false
-            DEFAULT.primaryServiceType = CordaNodeServiceImpl::class.java.canonicalName
+            DEFAULT.primaryServiceType = "com.github.manosbatsis.corbeans.spring.boot.corda.serviceCordaNodeServiceImpl"
             DEFAULT.bnmsServiceType = null
             DEFAULT.connectionMaxRetryInterval = CordaRPCClientConfiguration.DEFAULT.connectionMaxRetryInterval
             DEFAULT.connectionRetryInterval = CordaRPCClientConfiguration.DEFAULT.connectionRetryInterval

@@ -38,6 +38,7 @@ dependencies {
 	compile ("com.github.manosbatsis.scrudbeans:scrudbeans-error:$scrudbeans_version")
 
 	compile "javax.json:javax.json-api:1.1.3"
+	compileOnly("org.springframework.boot:spring-boot-configuration-processor:$spring_boot_version")
 
 	testCompile project(':corbeans-spring-boot-starter-test')
 	// Used for logging config during tests

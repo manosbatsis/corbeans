@@ -19,7 +19,7 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.rpc
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
+import com.github.manosbatsis.corbeans.corda.common.NodeParams
 import net.corda.client.rpc.CordaRPCClient
 import net.corda.client.rpc.CordaRPCClientConfiguration
 import net.corda.client.rpc.CordaRPCClientConfiguration.Companion.DEFAULT

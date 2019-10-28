@@ -19,8 +19,8 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support
 
+import com.github.manosbatsis.corbeans.corda.common.NodeParams
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.service.CordaBnmsService
-import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
 import com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired

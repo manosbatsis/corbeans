@@ -19,6 +19,7 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.config
 
+import com.github.manosbatsis.corbeans.corda.common.NodesProperties
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
 
@@ -60,22 +61,4 @@ import org.springframework.stereotype.Component
  */
 @Component("cordaNodesProperties")
 @ConfigurationProperties(prefix = "corbeans")
-class CordaNodesProperties {
-    var cordapPackages: List<String> = mutableListOf()
-    var nodes: Map<String, NodeParams> = mutableMapOf()
-    var objectMapper: ObjectMapperProperties = ObjectMapperProperties()
-    var primaryControllerType: String? = "com.github.manosbatsis.corbeans.spring.boot.corda.web.CordaSingleNodeController"
-    var notarySpec: TestNotaryProperties = TestNotaryProperties()
-    var flowOverrides: List<String> = mutableListOf()
-
-    override fun toString(): String {
-        return "CordaNodesProperties(cordapPackages=$cordapPackages, " +
-                "nodes=$nodes, " +
-                "notarySpec=$notarySpec, " +
-                "flowOverrides=${flowOverrides}), " +
-                "primaryControllerType=${primaryControllerType}, " +
-                "objectMapper=${objectMapper}"
-    }
-
-
-}
+class CordaNodesProperties: NodesProperties()

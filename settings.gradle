@@ -1,6 +1,8 @@
 rootProject.name = 'corbeans'
 
 include 'corbeans-corda-webserver'
+include 'corbeans-corda-common'
+include 'corbeans-corda-common-test'
 include 'corbeans-spring-boot-autoconfigure'
 include 'corbeans-spring-boot-corda'
 include 'corbeans-spring-boot-rpc-datasource-starter'

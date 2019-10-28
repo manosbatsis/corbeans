@@ -19,7 +19,7 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.rpc
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
+import com.github.manosbatsis.corbeans.corda.common.NodeParams
 import net.corda.core.messaging.CordaRPCOps
 import org.slf4j.LoggerFactory
 

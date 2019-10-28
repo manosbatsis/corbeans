@@ -84,7 +84,7 @@ in favor of using `corbeans.cordapPackages` configuration in __application.prope
 	```
 	is now
 	```kotlin
-	import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
+	import com.github.manosbatsis.corbeans.corda.common.NodeParams
 	import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection
 	import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 	import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeServiceImpl

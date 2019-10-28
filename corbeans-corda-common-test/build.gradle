@@ -1,0 +1,14 @@
+
+
+dependencies {
+	compile project(":corbeans-corda-common")
+	implementation "com.github.manosbatsis.partiture:partiture-test:$partiture_version"
+
+	implementation "$corda_release_group:corda-node-driver:$corda_release_version"
+	implementation "$corda_release_group:corda-test-common:$corda_release_version"
+
+	implementation "$corda_release_group:corda-node-api:$corda_release_version"
+	//implementation "$corda_release_group:corda-webserver-impl:$corda_release_version"
+	implementation "$corda_release_group:corda-webserver:$corda_release_version"
+
+}

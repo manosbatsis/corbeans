@@ -1,6 +1,7 @@
 
 
 dependencies {
+	compile project(":corbeans-corda-common")
 	compile "com.github.manosbatsis.vaultaire:vaultaire:$vaultaire_version"
 	compile("org.springframework.boot:spring-boot-autoconfigure:$spring_boot_version")
 
@@ -9,8 +10,6 @@ dependencies {
 	compile group: 'org.springframework', name: 'spring-web', version:spring_version
 	compile group: 'org.springframework', name: 'spring-webmvc', version:spring_version
 	compile group: 'org.springframework.boot', name: 'spring-boot-actuator', version:spring_boot_version
-	
-	compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
 	
 	compile "$corda_release_group:corda-jackson:$corda_release_version"
 	compile "$corda_release_group:corda-rpc:$corda_release_version"

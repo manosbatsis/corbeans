@@ -19,8 +19,8 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure
 
+import com.github.manosbatsis.corbeans.corda.common.NodeParams
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.AbstractBeanFactoryPostProcessor
-import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
 import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.EagerNodeRpcConnection
 import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.LazyNodeRpcConnection
 import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection

@@ -19,9 +19,9 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.autoconfigure
 
+import com.github.manosbatsis.corbeans.corda.common.NodeParams
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.service.CordaBnmsService
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.AbstractBeanFactoryPostProcessor
-import com.github.manosbatsis.corbeans.spring.boot.corda.config.NodeParams
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.BeansException
