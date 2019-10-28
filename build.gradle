@@ -113,7 +113,6 @@ allprojects {
 
 	version = "0.31-SNAPSHOT"
 	group = 'com.github.manosbatsis.corbeans'
-	apply from: "$rootDir/gradle/published.gradle"
 	apply plugin: 'project-report'
 	apply plugin: "com.dorongold.task-tree"
 }

@@ -1,4 +1,5 @@
 
+apply from: "${rootProject.projectDir}/gradle/published.gradle"
 //apply plugin: 'kotlin-spring'
 
 dependencies {
