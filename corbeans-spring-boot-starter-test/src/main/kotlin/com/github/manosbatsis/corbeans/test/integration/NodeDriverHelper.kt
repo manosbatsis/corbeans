@@ -55,7 +55,7 @@ class NodeDriverHelper(val cordaNodesProperties: NodesProperties = Util.loadProp
     // Create job and scope
     private val job = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.Default + job)
-    private lateinit var nodeHandles: Map<String, NodeHandle>
+    private val nodeHandles: MutableMap<String, NodeHandle> = mutableMapOf()
     private val driverNotaryHandles = mutableListOf<NotaryHandle>()
 
     /**
@@ -95,9 +95,11 @@ class NodeDriverHelper(val cordaNodesProperties: NodesProperties = Util.loadProp
                 this.nodeHandles.forEach { name, nodeHandle ->
                     nodeHandle.ensureClosed()
                 }
+                this.nodeHandles.clear()
                 this.driverNotaryHandles.flatMap { it.nodeHandles.get() }.forEach { nodeHandle ->
                     nodeHandle.ensureClosed()
                 }
+                this.driverNotaryHandles.clear()
                 state = State.STOPPED
                 logger.error("stopNetwork stopped")
             } else logger.debug("stopNetwork called but network is already stopped")
@@ -160,7 +162,7 @@ class NodeDriverHelper(val cordaNodesProperties: NodesProperties = Util.loadProp
                     .withNotarySpecs(notarySpecs())
                     .withNetworkParameters(testNetworkParameters(minimumPlatformVersion = 4))
             ) {
-                nodeHandles = startNodes()// Configure nodes per application.properties
+                nodeHandles.putAll(startNodes())// Configure nodes per application.properties
                 driverNotaryHandles.addAll(this.notaryHandles.map {
                     logger.debug("withDriverNodes, adding notary handle: $it")
                     it
