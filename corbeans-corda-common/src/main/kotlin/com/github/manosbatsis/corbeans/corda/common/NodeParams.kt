@@ -39,7 +39,7 @@ class NodeParams {
         val DEFAULT = NodeParams()
         init {
             DEFAULT.eager = false
-            DEFAULT.primaryServiceType = "com.github.manosbatsis.corbeans.spring.boot.corda.serviceCordaNodeServiceImpl"
+            DEFAULT.primaryServiceType = "com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeServiceImpl"
             DEFAULT.bnmsServiceType = null
             DEFAULT.connectionMaxRetryInterval = CordaRPCClientConfiguration.DEFAULT.connectionMaxRetryInterval
             DEFAULT.connectionRetryInterval = CordaRPCClientConfiguration.DEFAULT.connectionRetryInterval
