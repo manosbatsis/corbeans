@@ -1,0 +1,285 @@
+<html><head><title>corbeans: BNMS Starter</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Manos Batsis" /><meta name="description" content="Corda integration for Spring Boot" /><meta name="og:image" content="/corbeans/img/poster.png" /><meta name="image" property="og:image" content="/corbeans/img/poster.png" /><meta name="og:title" content="corbeans: BNMS Starter" /><meta name="title" property="og:title" content="corbeans: BNMS Starter" /><meta name="og:site_name" content="corbeans" /><meta name="og:url" content="https://manosbatsis.github.io/corbeans/" /><meta name="og:type" content="website" /><meta name="og:description" content="Corda integration for Spring Boot" /><link rel="icon" type="image/png" href="/corbeans/img/favicon.png" /><meta name="twitter:title" content="corbeans: BNMS Starter" /><meta name="twitter:image" content="https://manosbatsis.github.io/corbeans/img/poster.png" /><meta name="twitter:description" content="Corda integration for Spring Boot" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="16x16" href="/corbeans/img/favicon16x16.png" /><link rel="icon" type="image/png" sizes="24x24" href="/corbeans/img/favicon24x24.png" /><link rel="icon" type="image/png" sizes="32x32" href="/corbeans/img/favicon32x32.png" /><link rel="icon" type="image/png" sizes="48x48" href="/corbeans/img/favicon48x48.png" /><link rel="icon" type="image/png" sizes="57x57" href="/corbeans/img/favicon57x57.png" /><link rel="icon" type="image/png" sizes="60x60" href="/corbeans/img/favicon60x60.png" /><link rel="icon" type="image/png" sizes="64x64" href="/corbeans/img/favicon64x64.png" /><link rel="icon" type="image/png" sizes="70x70" href="/corbeans/img/favicon70x70.png" /><link rel="icon" type="image/png" sizes="72x72" href="/corbeans/img/favicon72x72.png" /><link rel="icon" type="image/png" sizes="76x76" href="/corbeans/img/favicon76x76.png" /><link rel="icon" type="image/png" sizes="96x96" href="/corbeans/img/favicon96x96.png" /><link rel="icon" type="image/png" sizes="114x114" href="/corbeans/img/favicon114x114.png" /><link rel="icon" type="image/png" sizes="120x120" href="/corbeans/img/favicon120x120.png" /><link rel="icon" type="image/png" sizes="128x128" href="/corbeans/img/favicon128x128.png" /><link rel="icon" type="image/png" sizes="144x144" href="/corbeans/img/favicon144x144.png" /><link rel="icon" type="image/png" sizes="150x150" href="/corbeans/img/favicon150x150.png" /><link rel="icon" type="image/png" sizes="152x152" href="/corbeans/img/favicon152x152.png" /><link rel="icon" type="image/png" sizes="196x196" href="/corbeans/img/favicon196x196.png" /><link rel="icon" type="image/png" sizes="310x310" href="/corbeans/img/favicon310x310.png" /><link rel="icon" type="image/png" sizes="310x150" href="/corbeans/img/favicon310x150.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/corbeans/highlight/styles/github.css" /><link rel="stylesheet" href="/corbeans/css/style.css" /><link rel="stylesheet" href="/corbeans/css/palette.css" /><link rel="stylesheet" href="/corbeans/css/codemirror.css" /><link rel="stylesheet" href="/corbeans/css/override.css" /><script async="async">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-131279953-1' , 'auto');
+ga('send', 'pageview');
+      </script></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><ul id="sidebar" class="sidebar-nav"><li class="sidebar-brand"><a href="/corbeans/" class="brand"><div class="brand-wrapper"><span>corbeans</span></div></a></li> <li><a href="/corbeans/docs/index.html" class="">Introduction</a></li> <li><a href="/corbeans/docs/getting-started.html" class="">Getting Started</a></li> <li><a href="/corbeans/docs/project-template.html" class="">Project Template</a></li> <li><a href="/corbeans/docs/web-api.html" class="">Web API</a></li> <li><a href="/corbeans/docs/component-api.html" class="">Components API</a></li> <li><a href="/corbeans/docs/actuator-api.html" class="">Actuator API</a></li> <li><a href="/corbeans/docs/starter-test.html" class="">Testing</a></li> <li><a href="/corbeans/docs/data-rpc.html" class="">Data RPC</a></li> <li><a href="/corbeans/docs/starter-bnms.html" class=" active ">BNMS Starter</a></li> <li><a href="/corbeans/docs/webserver.html" class="">Sample Webserver</a></li> <li><a href="/corbeans/docs/build-howto.html" class="">Build Howto</a></li> <li><a href="/corbeans/dokka/corbeans/" class="">KDoc API Reference</a></li> <li><a href="/corbeans/docs/changelog.html" class="">Changelog</a></li> <li><a href="/corbeans/docs/acknowledgements.html" class="">Acknowledgements</a></li> <li><a href="/corbeans/docs/faq.html" class="">FAQ</a></li></ul></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li id="gh-eyes-item" class="hidden-xs"><a href="https://github.com/manosbatsis/corbeans"><i class="fa fa-eye"></i><span>WATCH<span id="eyes" class="label label-default">--</span></span></a></li><li id="gh-stars-item" class="hidden-xs"><a href="https://github.com/manosbatsis/corbeans"><i class="fa fa-star-o"></i><span>STARS<span id="stars" class="label label-default">--</span></span></a></li></ul></div></div></div></div><div id="content" data-github-owner="manosbatsis" data-github-repo="corbeans"><div class="content-wrapper"><section><h1 id="bnms-starter">BNMS Starter</h1>
+
+<!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+
+<ul>
+  <li><a href="#installation">Installation</a>
+    <ul>
+      <li><a href="#corda-bnms-repository">Corda BNMS Repository</a></li>
+      <li><a href="#cordapp-dependencies">Cordapp Dependencies</a></li>
+      <li><a href="#spring-boot-application-dependencies">Spring Boot Application Dependencies</a></li>
+    </ul>
+  </li>
+  <li><a href="#configuration">Configuration</a>
+    <ul>
+      <li><a href="#custom-metadata-class">Custom Metadata Class</a></li>
+      <li><a href="#bnms-service-implementation">BNMS Service Implementation</a></li>
+      <li><a href="#nodes-configuration">Nodes Configuration</a></li>
+    </ul>
+  </li>
+  <li><a href="#endpoints">Endpoints</a></li>
+</ul>
+
+<!-- /TOC -->
+
+<p>The <code class="highlighter-rouge">corbeans-spring-boot-bnms-starter</code> provides autoconfigured, RESTful
+BNMS services for Corda’s <a href="https://github.com/manosbatsis/corda-solutions/tree/master/bn-apps/memberships-management">memberships-management</a>
+cordapp. The services expose operations for both members and BNOs, e.g.:</p>
+
+<ul>
+  <li>List business network members</li>
+  <li>Request a membership or amend own membership’s metadata</li>
+  <li>Activate or suspend membership (for BNO nodes)</li>
+</ul>
+
+<p>This document describes how to use the starter and quickly implement BNMS
+services for your Spring Boot app.</p>
+
+<h2 id="installation">Installation</h2>
+
+<h3 id="corda-bnms-repository">Corda BNMS Repository</h3>
+
+<p>Make sure to add the corda-solutions-releases repository to your build modules.</p>
+
+<div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c1">// Corda BNMS repo</span>
+	<span class="n">maven</span> <span class="o">{</span> <span class="n">url</span> <span class="s1">'https://ci-artifactory.corda.r3cev.com/artifactory/corda-solutions-releases'</span><span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="cordapp-dependencies">Cordapp Dependencies</h3>
+
+<p>Add the Corda BNMS dependencies to your cordapp:</p>
+
+<div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">dependencies</span> <span class="o">{</span>
+	<span class="c1">// Corda memberships-management deps</span>
+    <span class="n">compile</span> <span class="s2">"com.r3.businessnetworks:membership-service:$corda_solutions_version"</span>
+    <span class="n">compile</span> <span class="s2">"com.r3.businessnetworks:membership-service-contracts-and-states:$corda_solutions_version"</span>
+    <span class="c1">//...</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="spring-boot-application-dependencies">Spring Boot Application Dependencies</h3>
+
+<p>Corbeans is available in Maven central. To install the main and BNMS starters, add the
+following dependencies to your build.</p>
+
+<div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dependencies</span> <span class="o">{</span>
+    <span class="c1">// Corbeans starter</span>
+    <span class="n">compile</span> <span class="o">(</span><span class="s2">"com.github.manosbatsis.corbeans:corbeans-spring-boot-starter:$corbeans_version"</span><span class="o">)</span>
+    <span class="c1">// Corbeans BNMS starter</span>
+    <span class="n">compile</span> <span class="o">(</span><span class="s2">"com.github.manosbatsis.corbeans:corbeans-spring-boot-bnms-starter:$corbeans_version"</span><span class="o">)</span>
+    <span class="c1">// Optional: control the BNMS dependency versions</span>
+    	<span class="n">compile</span> <span class="s2">"com.r3.businessnetworks:membership-service:$corda_solutions_version"</span>
+    	<span class="n">compile</span> <span class="s2">"com.r3.businessnetworks:membership-service-contracts-and-states:$corda_solutions_version"</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>The following steps are required to properly configure and use the BNMS starter.</p>
+
+<ul>
+  <li>Create your custom membership metadata class</li>
+  <li>Implement a custom BNMS service</li>
+</ul>
+
+<p>The sections bellow describe the steps in detail.</p>
+
+<h3 id="custom-metadata-class">Custom Metadata Class</h3>
+
+<p>First of all you need to create a metadata class that fits your needs.</p>
+
+<p><code class="highlighter-rouge">MembershipState</code> allows the use of a custom type as
+the value of it’s <code class="highlighter-rouge">membershipMetadata</code> member. It’s worth noting the type
+is also used by [com.r3.businessnetworks.membership.flows.GenericsUtilsKt#getAttachmentIdForGenericParam(com.r3.businessnetworks.membership.states.MembershipState&lt;? extends java.lang.Object&gt;)]
+to to find the appropriate class location and turn it into an attachment.</p>
+
+<p>Here’s a sample implementation that adds a simple comment metadatum:</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@CordaSerializable</span>
+<span class="kd">data class</span> <span class="nc">MyCustomMembershipMetadata</span><span class="p">(</span>
+        <span class="kd">val</span> <span class="py">comment</span><span class="p">:</span> <span class="n">String</span>
+        <span class="c1">// Add more custom members here</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Your metadata class belongs to your cordapp module</p>
+</blockquote>
+
+<h3 id="bnms-service-implementation">BNMS Service Implementation</h3>
+
+<p>To integrate your custom metadata class with Corbeans, implement a <code class="highlighter-rouge">CordaBnmsService</code>
+by extending <code class="highlighter-rouge">AbstractCordaBnmsServiceImpl</code> to provide a mapping function between a <code class="highlighter-rouge">JsonNode</code>
+and your custom metadata class:</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/** BNMS service implementation */</span>
+<span class="kd">class</span> <span class="nc">MyCustomBnmsService</span><span class="p">(</span>
+        <span class="nv">nodeRpcConnection</span><span class="p">:</span> <span class="nc">NodeRpcConnection</span>
+<span class="p">):</span> <span class="nc">AbstractCordaBnmsServiceImpl</span><span class="p">&lt;</span><span class="nc">MyCustomMembershipMetadata</span><span class="p">&gt;(</span><span class="n">nodeRpcConnection</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="cm">/** Convert the given JSON node to the target [MyCustomMembershipMetadata] instance */</span>
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">toMembershipMetadata</span><span class="p">(</span><span class="nv">jsonNode</span><span class="p">:</span> <span class="nc">JsonNode</span><span class="p">?):</span> <span class="nc">MyCustomMembershipMetadata</span> <span class="p">{</span>
+        <span class="kd">val</span> <span class="py">givenComment</span> <span class="p">=</span> <span class="c1">// read from JSON...</span>
+        <span class="k">return</span> <span class="n">MyCustomMembershipMetadata</span><span class="p">(</span><span class="n">comment</span> <span class="p">=</span> <span class="n">givenComment</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="nodes-configuration">Nodes Configuration</h3>
+
+<p>Last but not least, specify the custom BNMS Service implementation
+using the <code class="highlighter-rouge">bnmsServiceType</code> slot for each of your nodes in <em>application.properties</em>.</p>
+
+<div class="language-properties highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Common node config properties...
+</span><span class="py">corbeans.nodes.partyA.username</span><span class="p">=</span><span class="s">user1</span>
+<span class="py">corbeans.nodes.partyA.password</span><span class="p">=</span><span class="s">test</span>
+<span class="py">corbeans.nodes.partyA.address</span><span class="p">=</span><span class="s">localhost:10006</span>
+<span class="py">corbeans.nodes.partyA.adminAddress</span><span class="p">=</span><span class="s">localhost:10046</span>
+
+<span class="c"># Custom BNMS service type for this node
+</span><span class="py">corbeans.nodes.partyA.bnmsServiceType</span><span class="p">=</span><span class="s">mypackage.MyCustomBnmsService</span>
+</code></pre></div></div>
+
+<p>Corbeans will create and register the appropriate BNMS service beans.</p>
+
+<h3 id="endpoints">Endpoints</h3>
+
+<p>Starting with version 0.25, you need to explicitly add controllers 
+to expose BNMS operations for BNO and members via RESTful services.</p>
+
+<h4 id="simple-node-controllers">Simple Node Controllers</h4>
+
+<p>Implement minimal controller subclasses of <code class="highlighter-rouge">CorbeansBmnsBnoController</code> 
+and/or <code class="highlighter-rouge">CorbeansBmnsMemberController</code> like bellow:</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@RestController</span>
+<span class="kd">class</span> <span class="nc">MyBmnsBnoController</span><span class="p">:</span> <span class="n">CorbeansBmnsBnoController</span><span class="p">()</span>
+
+
+<span class="nd">@RestController</span>
+<span class="kd">class</span> <span class="nc">MyBmnsMemberController</span><span class="p">:</span> <span class="n">CorbeansBmnsMemberController</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>This will expose the folowing endpoints:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Path</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PUT</td>
+      <td>/api/bnms/bno/memberships</td>
+      <td>Activate a pending membership</td>
+    </tr>
+    <tr>
+      <td>DELETE</td>
+      <td>/api/bnms/bno/memberships</td>
+      <td>Suspend an active membership</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>/api/bnms/member/memberships</td>
+      <td>Get a memberships list from a BNO. URL params: <code class="highlighter-rouge">bno</code> (string) the BNO party name, <code class="highlighter-rouge">filterOutMissingFromNetworkMap</code> (boolean) whether to filter out anyone missing from the Network Map, default is true, <code class="highlighter-rouge">forceRefresh</code> (boolean) whether to force a refresh, default value is false</td>
+    </tr>
+    <tr>
+      <td>POST</td>
+      <td>/api/bnms/member/memberships</td>
+      <td>Request the BNO to kick-off the on-boarding procedure</td>
+    </tr>
+    <tr>
+      <td>PUT</td>
+      <td>/api/bnms/member/memberships</td>
+      <td>Propose a change to the membership metadata.</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>This is suitable for a single node per Spring Boot app. To support multiple nodes on the same endpoints 
+e.g. by inspecting headers, cookies or whatnot, you can override <code class="highlighter-rouge">getNodeName()</code>. Alternatively, 
+see path fragment based controllers bellow.</p>
+</blockquote>
+
+<h4 id="path-fragment-based-controllers">Path Fragment Based Controllers</h4>
+
+<p>Implement minimal controller subclasses of <code class="highlighter-rouge">CorbeansBmnsBnoPathFragmentController</code> 
+and/or <code class="highlighter-rouge">CorbeansBmnsMemberPathFragmentController</code> like bellow:</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@RestController</span>
+<span class="kd">class</span> <span class="nc">MyBmnsBnoController</span><span class="p">:</span> <span class="n">CorbeansBmnsBnoPathFragmentController</span><span class="p">()</span>
+
+
+<span class="nd">@RestController</span>
+<span class="kd">class</span> <span class="nc">MyBmnsMemberController</span><span class="p">:</span> <span class="n">CorbeansBmnsMemberPathFragmentController</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>This will expose the folowing endpoints:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Path</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PUT</td>
+      <td>/api/bnms/bnos/{nodeName}/memberships</td>
+      <td>Activate a pending membership</td>
+    </tr>
+    <tr>
+      <td>DELETE</td>
+      <td>/api/bnms/bnos/{nodeName}/memberships</td>
+      <td>Suspend an active membership</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>/api/bnms/members/{nodeName}/memberships</td>
+      <td>Get a memberships list from a BNO. URL params: <code class="highlighter-rouge">bno</code> (string) the BNO party name, <code class="highlighter-rouge">filterOutMissingFromNetworkMap</code> (boolean) whether to filter out anyone missing from the Network Map, default is true, <code class="highlighter-rouge">forceRefresh</code> (boolean) whether to force a refresh, default value is false</td>
+    </tr>
+    <tr>
+      <td>POST</td>
+      <td>/api/bnms/members/{nodeName}/memberships</td>
+      <td>Request the BNO to kick-off the on-boarding procedure</td>
+    </tr>
+    <tr>
+      <td>PUT</td>
+      <td>/api/bnms/members/{nodeName}/memberships</td>
+      <td>Propose a change to the membership metadata.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Where <code class="highlighter-rouge">nodeName</code> path fragment is one of:</p>
+
+<ul>
+  <li>the node name (e.g. <code class="highlighter-rouge">partyA</code> for configuration properties that read <code class="highlighter-rouge">corbeans.nodes.partyA.*</code>)</li>
+  <li>the node identity organization name</li>
+  <li>the node identity X500 name</li>
+</ul>
+
+<h3 id="custom-controllers">Custom Controllers</h3>
+
+<p>Implement a controller by subclassing <code class="highlighter-rouge">CorbeansBmnsBnoBaseController</code> or <code class="highlighter-rouge">CorbeansBmnsMemberBaseController</code> 
+depending on your requirements.</p>
+</section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/corbeans/highlight/highlight.pack.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/kotlin.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/gradle.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/xml.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/properties.min.js"></script><script>hljs.configure({languages:['kotlin','java','gradle','xml','bash','properties']});
+hljs.initHighlighting();
+              </script><script>((window.gitter = {}).chat = {}).options = {
+room: 'manosbatsis/corbeans'};</script><script src="https://sidecar.gitter.im/dist/sidecar.v1.js"></script><script src="/corbeans/js/main.js"></script></body></html>
