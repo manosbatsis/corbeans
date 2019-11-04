@@ -3,7 +3,7 @@ layout: docs
 title: "Sample Webserver"
 ---
 
-# Sample Webserver
+# Running Webserver
 
 <!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
@@ -26,9 +26,12 @@ node via `runNodes` or multiple manually configured nodes, see bellow for a conf
 You can use your own custom webserver based on the [starter](getting-started.html) or download the sample at
 https://oss.sonatype.org/content/repositories/releases/com/github/manosbatsis/corbeans/corbeans-corda-webserver/
 
+> The `corbeans-corda-webserver` only goes up to version 0.30, the reason being you are actually expected to 
+> __use corbeans for creating your own__ Spring Boot app anyway.
+
 ## Running the Server
 
-Spring Boot applications using the [starter](getting-started.html) can be run either manually or via `runNodes` as a
+Spring Boot applications using the [starter](getting-started.html) can be run either manually (i.e. `../gradlew bootRun`) or via `runNodes` as a
 drop-in replacement to the corda-webserver.
 
 
@@ -63,7 +66,7 @@ the default *corda-webserver.jar*:
 │   └── runnodes.jar
 </pre>
 
-With Corda and `cordformation` Gradle plugin versions 4 and 4.0.25 and up respectively, you can automate this by setting the `webserverJar` property of
+With Corda and `cordformation` Gradle plugin versions 4+ and 4.0.25+ and up respectively, you can automate this by setting the `webserverJar` property of
 the `CordForm` plugin, by applyihng the following changes in your cordapp build:
 
 ```groovy
