@@ -1,0 +1,228 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>CorbeansBaseController - corbeans</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">corbeans</a>&nbsp;/&nbsp;<a href="../index.html">com.github.manosbatsis.corbeans.spring.boot.corda.web</a>&nbsp;/&nbsp;<a href="./index.html">CorbeansBaseController</a><br/>
+<br/>
+<h1>CorbeansBaseController</h1>
+<code><span class="keyword">abstract</span> <span class="keyword">class </span><span class="identifier">CorbeansBaseController</span></code>
+<p>Base controller implementation with basic utility for Corda nodes. Supports multiple nodes by
+using an optional nodeName method parameter to construct a Service Bean name,
+then uses it as a key to lookup and obtain  a CordaNodeService for the specific node
+from the autowired services map.</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">CorbeansBaseController</span><span class="symbol">(</span><span class="symbol">)</span></code>
+<p>Base controller implementation with basic utility for Corda nodes. Supports multiple nodes by
+using an optional nodeName method parameter to construct a Service Bean name,
+then uses it as a key to lookup and obtain  a CordaNodeService for the specific node
+from the autowired services map.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="network-service.html">networkService</a></p>
+</td>
+<td>
+<code><span class="keyword">lateinit</span> <span class="keyword">var </span><span class="identifier">networkService</span><span class="symbol">: </span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.service/-corda-network-service/index.html"><span class="identifier">CordaNetworkService</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="addresses.html">addresses</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">addresses</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$addresses(java.util.Optional((kotlin.String)))/nodeName">nodeName</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Optional.html"><span class="identifier">Optional</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get tbe node addresses</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="flows.html">flows</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">flows</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$flows(java.util.Optional((kotlin.String)))/nodeName">nodeName</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Optional.html"><span class="identifier">Optional</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code>
+<p>Get tbe node flows</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-node-service.html">getNodeService</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getNodeService</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$getNodeService(java.util.Optional((kotlin.String)))/nodeName">nodeName</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Optional.html"><span class="identifier">Optional</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.service/-corda-node-service/index.html"><span class="identifier">CordaNodeService</span></a></code>
+<p>Get the <a href="#">CordaNodeService</a> matching the given name in application.properties</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="identities.html">identities</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">identities</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$identities(java.util.Optional((kotlin.String)))/nodeName">nodeName</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Optional.html"><span class="identifier">Optional</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.model/-party-name-model/index.html"><span class="identifier">PartyNameModel</span></a><span class="symbol">&gt;</span></code>
+<p>Get tbe node identities</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="list-attachment-files.html">listAttachmentFiles</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">listAttachmentFiles</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$listAttachmentFiles(java.util.Optional((kotlin.String)), )/nodeName">nodeName</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Optional.html"><span class="identifier">Optional</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$listAttachmentFiles(java.util.Optional((kotlin.String)), )/hash">hash</span><span class="symbol">:</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code>
+<p>List the contents of the attachment archive matching the given hash</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="nodes.html">nodes</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">nodes</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$nodes(java.util.Optional((kotlin.String)))/nodeName">nodeName</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Optional.html"><span class="identifier">Optional</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.model/-party-name-model/index.html"><span class="identifier">PartyNameModel</span></a><span class="symbol">&gt;</span></code>
+<p>Get a list of nodes in the network, including self and notaries.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="notaries.html">notaries</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">notaries</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$notaries(java.util.Optional((kotlin.String)))/nodeName">nodeName</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Optional.html"><span class="identifier">Optional</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.model/-party-name-model/index.html"><span class="identifier">PartyNameModel</span></a><span class="symbol">&gt;</span></code>
+<p>Get tbe node notaries</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="open-attachment.html">openAttachment</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">openAttachment</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$openAttachment(java.util.Optional((kotlin.String)), , , )/nodeName">nodeName</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Optional.html"><span class="identifier">Optional</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$openAttachment(java.util.Optional((kotlin.String)), , , )/hash">hash</span><span class="symbol">:</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">, </span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$openAttachment(java.util.Optional((kotlin.String)), , , )/req">req</span><span class="symbol">:</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">, </span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$openAttachment(java.util.Optional((kotlin.String)), , , )/resp">resp</span><span class="symbol">:</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Download full attachment archives or individual files within those</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="peers.html">peers</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">peers</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$peers(java.util.Optional((kotlin.String)))/nodeName">nodeName</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Optional.html"><span class="identifier">Optional</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.model/-party-name-model/index.html"><span class="identifier">PartyNameModel</span></a><span class="symbol">&gt;</span></code>
+<p>Get a list of the node's network peers, excluding self and notaries.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="platform-version.html">platformVersion</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">platformVersion</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$platformVersion(java.util.Optional((kotlin.String)))/nodeName">nodeName</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Optional.html"><span class="identifier">Optional</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code>
+<p>Get tbe node's platform version</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="post-construct-log.html">postConstructLog</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">postConstructLog</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="refresh-network-map-cache.html">refreshNetworkMapCache</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">refreshNetworkMapCache</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$refreshNetworkMapCache(java.util.Optional((kotlin.String)))/nodeName">nodeName</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Optional.html"><span class="identifier">Optional</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Refresh the target node's network map cache</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="refresh-network-map-caches.html">refreshNetworkMapCaches</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">refreshNetworkMapCaches</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Refresh the network map cache of every node registered in corbeans configuration</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="save-attachment.html">saveAttachment</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">saveAttachment</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$saveAttachment(java.util.Optional((kotlin.String)), kotlin.Array(()))/nodeName">nodeName</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Optional.html"><span class="identifier">Optional</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$saveAttachment(java.util.Optional((kotlin.String)), kotlin.Array(()))/files">files</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">&lt;</span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.model.upload/-attachment-receipt/index.html"><span class="identifier">AttachmentReceipt</span></a><span class="symbol">&gt;</span></code>
+<p>Persist the given file(s) as a vault attachment.
+A single JAR or ZIP file will be persisted as-is, otherwise a new archive will be created.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="server-time.html">serverTime</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">serverTime</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$serverTime(java.util.Optional((kotlin.String)))/nodeName">nodeName</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Optional.html"><span class="identifier">Optional</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">LocalDateTime</span></code>
+<p>Get tbe node time in UTC</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="whoami.html">whoami</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">whoami</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController$whoami(java.util.Optional((kotlin.String)))/nodeName">nodeName</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Optional.html"><span class="identifier">Optional</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.model/-party-name-model/index.html"><span class="identifier">PartyNameModel</span></a></code>
+<p>Get the node's identity name.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support/-corbeans-bmns-base-controller/index.html">CorbeansBmnsBaseController</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">CorbeansBmnsBaseController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">CorbeansBaseController</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../-corda-node-controller/index.html">CordaNodeController</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">CordaNodeController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">CorbeansBaseController</span></a></code>
+<p>Exposes <a href="./index.html">CorbeansBaseController</a> methods as endpoints for a single node or,
+by overriding <code>getRequestNodeName()</code>, multiple nodes.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-corda-path-fragment-node-controller/index.html">CordaPathFragmentNodeController</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">CordaPathFragmentNodeController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">CorbeansBaseController</span></a></code>
+<p>Exposes <a href="./index.html">CorbeansBaseController</a> methods as endpoints.
+Supports multiple Corda nodes via a nodeName path variable.
+The <code>nodeName</code> is used to obtain  an autoconfigured  <code>CordaNodeService</code>
+for the node configuration matching <code>nodeName</code> in application properties.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
