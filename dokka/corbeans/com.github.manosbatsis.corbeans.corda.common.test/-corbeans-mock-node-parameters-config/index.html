@@ -1,0 +1,75 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>CorbeansMockNodeParametersConfig - corbeans</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">corbeans</a>&nbsp;/&nbsp;<a href="../index.html">com.github.manosbatsis.corbeans.corda.common.test</a>&nbsp;/&nbsp;<a href="./index.html">CorbeansMockNodeParametersConfig</a><br/>
+<br/>
+<h1>CorbeansMockNodeParametersConfig</h1>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">CorbeansMockNodeParametersConfig</span></code>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">CorbeansMockNodeParametersConfig</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.corda.common.test.CorbeansMockNodeParametersConfig$<init>(kotlin.Boolean)/requireApplicationProperties">requireApplicationProperties</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a>&nbsp;<span class="symbol">=</span>&nbsp;false<span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="corda-nodes-properties.html">cordaNodesProperties</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">cordaNodesProperties</span><span class="symbol">: </span><a href="../../com.github.manosbatsis.corbeans.corda.common/-nodes-properties/index.html"><span class="identifier">NodesProperties</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="require-application-properties.html">requireApplicationProperties</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">requireApplicationProperties</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="get-cordapp-packages.html">getCordappPackages</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getCordappPackages</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="get-node-parameters.html">getNodeParameters</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getNodeParameters</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get node parameters for the <a href="#">StartedMockNode</a>s to create. Uses an application.properties
+configuration used to configure Corbeans (you may use a shared test resources module or JAR, or even add to your test resource paths)
+to create the hints if such a file is fount in the classpath, otherwise returns defaults
+<a href="#">ALICE_NAME</a>, <a href="#">BOB_NAME</a> and <a href="#">CHARLIE_NAME</a> or throws an error based on</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="load-corda-nodes-properties.html">loadCordaNodesProperties</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">loadCordaNodesProperties</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.github.manosbatsis.corbeans.corda.common/-nodes-properties/index.html"><span class="identifier">NodesProperties</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
