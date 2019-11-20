@@ -4,6 +4,12 @@ title: "Frequently Asked Questions"
 ---
 # Frequently Asked Questions
 
+## License
+
+Corbeans is distributed under the GNU __Lesser__ General Public License or LGPL. This is the same 
+license adopted by Corda dependencies like Hibernate. It allows Corbeans to be used as a library 
+with no effect to your project.
+
 ## Corda Enterprise
 
 To use Corbeans, [Partiture](https://manosbatsis.github.io/partiture/) 
