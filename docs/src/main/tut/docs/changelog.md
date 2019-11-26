@@ -10,7 +10,8 @@ and can be helpful with version upgrades.
 
 ## 0.34
 
-- Added alternative method signatures to `CordaBnmsService`
+- Added alternative method signatures to `CordaBnmsService` and applied the 
+membership metadata param regularly. 
 
 ## 0.30-33
 

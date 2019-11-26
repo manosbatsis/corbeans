@@ -38,22 +38,22 @@ interface CordaBnmsService<T : Any> : CordaNodeService {
     // --------------------------
 
     /** Get the membership matching the given criteria */
-    fun getMembership(member: Party, bno: Party): StateAndRef<MembershipState<Any>>?
+    fun getMembership(member: Party, bno: Party): StateAndRef<MembershipState<T>>?
 
     /** Request the BNO to kick-off the on-boarding procedure. */
-    fun createMembershipRequest(input: MembershipRequestMessage): MembershipState<*>
+    fun createMembershipRequest(input: MembershipRequestMessage): MembershipState<T>
 
     /** Request the BNO to kick-off the on-boarding procedure. */
-    fun createMembershipRequest(bno: Party, metadata: T): MembershipState<*>
+    fun createMembershipRequest(bno: Party, metadata: T): MembershipState<T>
 
     /** Propose a change to the membership metadata. */
-    fun ammendMembershipRequest(input: MembershipRequestMessage): MembershipState<*>
+    fun ammendMembershipRequest(input: MembershipRequestMessage): MembershipState<T>
 
     /** Propose a change to the membership metadata. */
-    fun ammendMembershipRequest(bno: Party, metadata: T): MembershipState<*>
+    fun ammendMembershipRequest(bno: Party, metadata: T): MembershipState<T>
 
     /** Get a memberships list from a BNO. */
-    fun listMemberships(input: MembershipsListRequestMessage): List<MembershipState<Any>>
+    fun listMemberships(input: MembershipsListRequestMessage): List<MembershipState<T>>
 
     /**
      * Get a memberships list from a BNO
@@ -64,7 +64,7 @@ interface CordaBnmsService<T : Any> : CordaNodeService {
     fun listMemberships(
             bno: Party,
             forceRefresh: Boolean = false,
-            filterOutMissingFromNetworkMap: Boolean = true): List<MembershipState<Any>>
+            filterOutMissingFromNetworkMap: Boolean = true): List<MembershipState<T>>
     /**
      * Convert the given JSON node to the target `membershipMetadata` instance.
      * By overriding this method you can constructing a metadata instance using the desired type,
@@ -79,15 +79,15 @@ interface CordaBnmsService<T : Any> : CordaNodeService {
     // --------------------------
 
     /** Activate a pending membership. */
-    fun activateMembership(input: MembershipPartiesMessage): MembershipState<*>
+    fun activateMembership(input: MembershipPartiesMessage): MembershipState<T>
 
     /** Activate a pending membership. */
-    fun activateMembership(member: Party, bno: Party = myIdentity): MembershipState<*>
+    fun activateMembership(member: Party, bno: Party = myIdentity): MembershipState<T>
 
     /** Suspend an active membership.*/
-    fun suspendMembership(input: MembershipPartiesMessage): MembershipState<*>
+    fun suspendMembership(input: MembershipPartiesMessage): MembershipState<T>
 
     /** Suspend an active membership.*/
-    fun suspendMembership(member: Party, bno: Party = myIdentity): MembershipState<*>
+    fun suspendMembership(member: Party, bno: Party = myIdentity): MembershipState<T>
 
 }

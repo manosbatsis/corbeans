@@ -104,7 +104,7 @@ data class MyCustomMembershipMetadata(
 )
 ```
 
-> Your metadata class belongs to your cordapp module
+> Your metadata class belongs to your cordapp contract module
 
 ### BNMS Service Implementation
 

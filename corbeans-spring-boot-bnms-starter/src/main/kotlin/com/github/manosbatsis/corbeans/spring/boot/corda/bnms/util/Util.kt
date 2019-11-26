@@ -29,14 +29,19 @@ import net.corda.core.node.services.vault.QueryCriteria
 import net.corda.core.node.services.vault.builder
 
 /** Find the membership matching the given member and BNO parties */
-fun getMembership(member: Party, bno: Party, nodeService: CordaNodeService): StateAndRef<MembershipState<Any>>? {
+fun <T: Any> getMembership(member: Party, bno: Party, nodeService: CordaNodeService): StateAndRef<MembershipState<T>>? {
     val criteria = QueryCriteria.VaultQueryCriteria(Vault.StateStatus.UNCONSUMED)
             .and(memberCriteria(member))
             .and(bnoCriteria(bno))
     val states = nodeService.proxy()
-            .vaultQueryByCriteria<MembershipState<Any>>(criteria, MembershipState::class.java).states
-    return if (states.isEmpty()) null else (states.sortedBy { it.state.data.modified }.last())
+            .vaultQueryByCriteria(criteria, MembershipState::class.java).states
+    return if (states.isEmpty()) null
+    else (states.sortedBy { it.state.data.modified }.last() as StateAndRef<MembershipState<T>>)
 }
 
-private fun memberCriteria(member: Party) = QueryCriteria.VaultCustomQueryCriteria(builder { MembershipStateSchemaV1.PersistentMembershipState::member.equal(member) })
-private fun bnoCriteria(bno: Party) = QueryCriteria.VaultCustomQueryCriteria(builder { MembershipStateSchemaV1.PersistentMembershipState::bno.equal(bno) })
+private fun memberCriteria(member: Party) =
+        QueryCriteria.VaultCustomQueryCriteria(
+                builder { MembershipStateSchemaV1.PersistentMembershipState::member.equal(member) })
+private fun bnoCriteria(bno: Party) =
+        QueryCriteria.VaultCustomQueryCriteria(
+                builder { MembershipStateSchemaV1.PersistentMembershipState::bno.equal(bno) })
