@@ -33,7 +33,6 @@ import net.corda.core.identity.Party
  */
 interface CordaBnmsService<T : Any> : CordaNodeService {
 
-
     // --------------------------
     // Member methods
     // --------------------------
@@ -44,12 +43,28 @@ interface CordaBnmsService<T : Any> : CordaNodeService {
     /** Request the BNO to kick-off the on-boarding procedure. */
     fun createMembershipRequest(input: MembershipRequestMessage): MembershipState<*>
 
+    /** Request the BNO to kick-off the on-boarding procedure. */
+    fun createMembershipRequest(bno: Party, metadata: T): MembershipState<*>
+
     /** Propose a change to the membership metadata. */
     fun ammendMembershipRequest(input: MembershipRequestMessage): MembershipState<*>
+
+    /** Propose a change to the membership metadata. */
+    fun ammendMembershipRequest(bno: Party, metadata: T): MembershipState<*>
 
     /** Get a memberships list from a BNO. */
     fun listMemberships(input: MembershipsListRequestMessage): List<MembershipState<Any>>
 
+    /**
+     * Get a memberships list from a BNO
+     * @param bno The BNO party
+     * @param forceRefresh Whether to force a refresh.
+     * @param filterOutMissingFromNetworkMap Whether to filter out anyone missing from the Network Map.
+     */
+    fun listMemberships(
+            bno: Party,
+            forceRefresh: Boolean = false,
+            filterOutMissingFromNetworkMap: Boolean = true): List<MembershipState<Any>>
     /**
      * Convert the given JSON node to the target `membershipMetadata` instance.
      * By overriding this method you can constructing a metadata instance using the desired type,
@@ -66,7 +81,13 @@ interface CordaBnmsService<T : Any> : CordaNodeService {
     /** Activate a pending membership. */
     fun activateMembership(input: MembershipPartiesMessage): MembershipState<*>
 
+    /** Activate a pending membership. */
+    fun activateMembership(member: Party, bno: Party = myIdentity): MembershipState<*>
+
     /** Suspend an active membership.*/
     fun suspendMembership(input: MembershipPartiesMessage): MembershipState<*>
+
+    /** Suspend an active membership.*/
+    fun suspendMembership(member: Party, bno: Party = myIdentity): MembershipState<*>
 
 }

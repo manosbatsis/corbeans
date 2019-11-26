@@ -111,7 +111,7 @@ allprojects {
 		maven { url 'https://repo.gradle.org/gradle/libs-releases' }
 	}
 
-	version = "0.33"
+	version = "0.34-SNAPSHOT"
 	group = 'com.github.manosbatsis.corbeans'
 	apply plugin: 'project-report'
 	apply plugin: "com.dorongold.task-tree"

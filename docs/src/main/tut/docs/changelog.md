@@ -8,6 +8,10 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.34
+
+- Added alternative method signatures to `CordaBnmsService`
+
 ## 0.30-33
 
 - Misc improvements and fixes.
