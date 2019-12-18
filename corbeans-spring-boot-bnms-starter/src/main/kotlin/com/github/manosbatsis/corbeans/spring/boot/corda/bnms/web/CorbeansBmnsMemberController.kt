@@ -25,8 +25,13 @@ import com.r3.businessnetworks.membership.states.MembershipState
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
 import org.slf4j.LoggerFactory
-import org.springframework.web.bind.annotation.*
-import java.util.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import java.util.Optional
 
 /**
  *  Exposes BNMS member methods as endpoints for a single node or,
@@ -74,6 +79,9 @@ open class CorbeansBmnsMemberController : CorbeansBmnsMemberBaseController() {
             @ApiParam(value = "The BNO party name")
             @RequestParam(required = true)
             bno: String,
+            @ApiParam(value = "The network ID")
+            @RequestParam(required = false)
+            networkId: Optional<String>,
             @ApiParam(value = "Whether to force a refresh.")
             @RequestParam(required = false, defaultValue = "false")
             forceRefresh: Boolean,
@@ -81,7 +89,7 @@ open class CorbeansBmnsMemberController : CorbeansBmnsMemberBaseController() {
             @RequestParam(required = false, defaultValue = "true")
             filterOutMissingFromNetworkMap: Boolean
     ): List<MembershipState<*>> =
-            super.listMemberships(getRequestNodeName(), bno, forceRefresh, filterOutMissingFromNetworkMap)
+            super.listMemberships(getRequestNodeName(), bno, networkId, forceRefresh, filterOutMissingFromNetworkMap)
 
 
 

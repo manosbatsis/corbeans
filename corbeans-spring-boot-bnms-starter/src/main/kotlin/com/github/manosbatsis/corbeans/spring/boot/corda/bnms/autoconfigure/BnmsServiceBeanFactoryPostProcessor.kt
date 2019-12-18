@@ -59,7 +59,7 @@ open class BnmsServiceBeanFactoryPostProcessor : AbstractBeanFactoryPostProcesso
                 val nodeParams = NodeParams.mergeParams(partialParams, defaultParams)
                 // register BNMS service
                 registerBnmsService(nodeParams, nodeName, beanDefinitionRegistry)
-                logger.debug("PRocessed, BNMS for node name: {}", nodeName)
+                logger.debug("Processed, BNMS for node name: {}", nodeName)
             } else logger.warn("Skipping, BNMS config for default node name: {}", nodeName)
 
         }

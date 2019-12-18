@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
-import java.util.*
+import java.util.Optional
 
 
 @Api(tags = arrayOf("BNMS Member"), description = "BNMS membership operation endpoints")
@@ -56,6 +56,9 @@ open class CorbeansBmnsMemberBaseController : CorbeansBmnsBaseController() {
             @ApiParam(value = "The BNO party name")
             @RequestParam(required = true)
             bno: String,
+            @ApiParam(value = "The network ID")
+            @RequestParam(required = false)
+            networkId: Optional<String>,
             @ApiParam(value = "Wether to force a refresh.")
             @RequestParam(required = false, defaultValue = "false")
             forceRefresh: Boolean,
@@ -65,7 +68,7 @@ open class CorbeansBmnsMemberBaseController : CorbeansBmnsBaseController() {
     ): List<MembershipState<*>> =
             this.getBmnsService(nodeName)
                     .listMemberships(
-                            MembershipsListRequestMessage(bno, forceRefresh, filterOutMissingFromNetworkMap))
+                            MembershipsListRequestMessage(bno, networkId.orElse(null), forceRefresh, filterOutMissingFromNetworkMap))
 
 
 

@@ -35,6 +35,8 @@ import net.corda.core.serialization.CordaSerializable
 class MembershipRequestMessage(
         @ApiModelProperty(value = "The BNO party name")
         val party: String,
+        @ApiModelProperty(value = "The network ID")
+        val networkId: String? = null,
         @ApiModelProperty(value = "The membership metadata")
         @JsonDeserialize(using = JsonNodeDeserializer::class)
         var membershipMetadata: JsonNode? = null

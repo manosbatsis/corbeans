@@ -25,7 +25,7 @@ import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.Membership
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipsListRequestMessage
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.util.getMembership
 import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection
-import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeServiceImpl
+import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaRpcServiceBase
 import com.r3.businessnetworks.membership.flows.bno.ActivateMembershipFlow
 import com.r3.businessnetworks.membership.flows.bno.SuspendMembershipFlow
 import com.r3.businessnetworks.membership.flows.member.AmendMembershipMetadataFlow
@@ -50,12 +50,12 @@ import org.slf4j.LoggerFactory
  *
  *  for Corbeans to create and register the corresponding service beans for you.
  */
-abstract class AbstractCordaBnmsServiceImpl<T : Any>(
+abstract class CordaBnmsServiceBase<T : Any>(
         nodeRpcConnection: NodeRpcConnection
-) : CordaNodeServiceImpl(nodeRpcConnection), CordaBnmsService<T> {
+) : CordaRpcServiceBase(nodeRpcConnection), CordaBnmsService<T> {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(AbstractCordaBnmsServiceImpl::class.java)
+        private val logger = LoggerFactory.getLogger(CordaBnmsServiceBase::class.java)
     }
 
     /** Get the membership matching the given criteria */
@@ -64,23 +64,29 @@ abstract class AbstractCordaBnmsServiceImpl<T : Any>(
 
     /** Request the BNO to kick-off the on-boarding procedure. */
     override fun createMembershipRequest(input: MembershipRequestMessage): MembershipState<T> =
-            createMembershipRequest(getPartyFromName(input.party), toMembershipMetadata(input.membershipMetadata))
+            createMembershipRequest(
+                    getPartyFromName(input.party),
+                    toMembershipMetadata(input.membershipMetadata),
+                    input.networkId)
 
     /** Request the BNO to kick-off the on-boarding procedure. */
-    override fun createMembershipRequest(bno: Party, membershipMetadata: T): MembershipState<T> {
+    override fun createMembershipRequest(bno: Party, membershipMetadata: T, networkId: String?): MembershipState<T> {
         // Create the state and return
         val flowHandle: FlowHandle<SignedTransaction> = proxy()
-                .startFlowDynamic(RequestMembershipFlow::class.java, bno, membershipMetadata)
+                .startFlowDynamic(RequestMembershipFlow::class.java, bno, membershipMetadata, networkId)
         return flowHandle.use { it.returnValue.getOrThrow() }
                 .tx.outputStates.single() as MembershipState<T>
     }
 
     /** Propose a change to the membership metadata. */
     override fun ammendMembershipRequest(input: MembershipRequestMessage): MembershipState<T> =
-            ammendMembershipRequest(getPartyFromName(input.party), toMembershipMetadata(input.membershipMetadata))
+            ammendMembershipRequest(
+                    getPartyFromName(input.party),
+                    toMembershipMetadata(input.membershipMetadata),
+                    input.networkId)
 
     /** Propose a change to the membership metadata. */
-    override fun ammendMembershipRequest(bno: Party, membershipMetadata: T): MembershipState<T> {
+    override fun ammendMembershipRequest(bno: Party, membershipMetadata: T, networkId: String?): MembershipState<T> {
         // Create the state
         val flowHandle: FlowHandle<SignedTransaction> = proxy()
                 .startFlowDynamic(AmendMembershipMetadataFlow::class.java, bno, membershipMetadata)
@@ -95,7 +101,11 @@ abstract class AbstractCordaBnmsServiceImpl<T : Any>(
      * @param filterOutMissingFromNetworkMap Whether to filter out anyone missing from the Network Map.
      */
     override fun listMemberships(input: MembershipsListRequestMessage): List<MembershipState<T>> =
-            listMemberships(getPartyFromName(input.bno), input.forceRefresh, input.filterOutMissingFromNetworkMap)
+            listMemberships(
+                    getPartyFromName(input.bno),
+                    input.networkId,
+                    input.forceRefresh,
+                    input.filterOutMissingFromNetworkMap)
 
     /**
      * Get a memberships list from a BNO
@@ -105,16 +115,19 @@ abstract class AbstractCordaBnmsServiceImpl<T : Any>(
      */
     override fun listMemberships(
             bno: Party,
+            networkID: String?,
             forceRefresh: Boolean,
             filterOutMissingFromNetworkMap: Boolean): List<MembershipState<T>> {
-
+        proxy()
         // Load memberships
         val flowHandle: FlowHandle<Map<Party, StateAndRef<MembershipState<Any>>>> = proxy()
                 .startFlowDynamic(
                         GetMembershipsFlow::class.java,
                         bno,
+                        networkID,
                         forceRefresh,
                         filterOutMissingFromNetworkMap)
+
         // Map to a list and return
         return flowHandle.use { it.returnValue.getOrThrow() }
                 .values.map { it.state.data as MembershipState<T>}

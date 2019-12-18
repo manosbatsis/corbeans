@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipPartiesMessage
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipRequestMessage
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipsListRequestMessage
-import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
+import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaRpcService
 import com.r3.businessnetworks.membership.states.MembershipState
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.identity.Party
@@ -31,7 +31,7 @@ import net.corda.core.identity.Party
 /**
  *  Basic interface for Business Network Membership services
  */
-interface CordaBnmsService<T : Any> : CordaNodeService {
+interface CordaBnmsService<T : Any> : CordaRpcService {
 
     // --------------------------
     // Member methods
@@ -44,13 +44,13 @@ interface CordaBnmsService<T : Any> : CordaNodeService {
     fun createMembershipRequest(input: MembershipRequestMessage): MembershipState<T>
 
     /** Request the BNO to kick-off the on-boarding procedure. */
-    fun createMembershipRequest(bno: Party, metadata: T): MembershipState<T>
+    fun createMembershipRequest(bno: Party, metadata: T, networkId: String?): MembershipState<T>
 
     /** Propose a change to the membership metadata. */
     fun ammendMembershipRequest(input: MembershipRequestMessage): MembershipState<T>
 
     /** Propose a change to the membership metadata. */
-    fun ammendMembershipRequest(bno: Party, metadata: T): MembershipState<T>
+    fun ammendMembershipRequest(bno: Party, membershipMetadata: T, networkId: String?): MembershipState<T>
 
     /** Get a memberships list from a BNO. */
     fun listMemberships(input: MembershipsListRequestMessage): List<MembershipState<T>>
@@ -63,6 +63,7 @@ interface CordaBnmsService<T : Any> : CordaNodeService {
      */
     fun listMemberships(
             bno: Party,
+            networkID: String? = null,
             forceRefresh: Boolean = false,
             filterOutMissingFromNetworkMap: Boolean = true): List<MembershipState<T>>
     /**

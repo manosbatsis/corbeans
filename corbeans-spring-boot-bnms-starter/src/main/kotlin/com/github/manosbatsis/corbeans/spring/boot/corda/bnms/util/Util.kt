@@ -19,7 +19,7 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.util
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
+import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaRpcService
 import com.r3.businessnetworks.membership.states.MembershipState
 import com.r3.businessnetworks.membership.states.MembershipStateSchemaV1
 import net.corda.core.contracts.StateAndRef
@@ -29,11 +29,13 @@ import net.corda.core.node.services.vault.QueryCriteria
 import net.corda.core.node.services.vault.builder
 
 /** Find the membership matching the given member and BNO parties */
-fun <T: Any> getMembership(member: Party, bno: Party, nodeService: CordaNodeService): StateAndRef<MembershipState<T>>? {
+fun <T: Any> getMembership(
+        member: Party, bno: Party, cordaRpcService: CordaRpcService
+): StateAndRef<MembershipState<T>>? {
     val criteria = QueryCriteria.VaultQueryCriteria(Vault.StateStatus.UNCONSUMED)
             .and(memberCriteria(member))
             .and(bnoCriteria(bno))
-    val states = nodeService.proxy()
+    val states = cordaRpcService.proxy()
             .vaultQueryByCriteria(criteria, MembershipState::class.java).states
     return if (states.isEmpty()) null
     else (states.sortedBy { it.state.data.modified }.last() as StateAndRef<MembershipState<T>>)

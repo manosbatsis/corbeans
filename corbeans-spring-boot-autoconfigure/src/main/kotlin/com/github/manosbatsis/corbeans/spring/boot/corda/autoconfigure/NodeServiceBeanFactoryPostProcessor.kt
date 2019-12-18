@@ -104,19 +104,21 @@ open class NodeServiceBeanFactoryPostProcessor : AbstractBeanFactoryPostProcesso
         if (!CordaNodeService::class.java.isAssignableFrom(serviceType)) {
             throw IllegalArgumentException("Provided service type for node ${nodeName} does not implement CordaNodeService")
         }
+        logger.debug("Registered node service bean {} for Party {}", serviceType.simpleName, nodeName)
         return serviceType
     }
 
     /** Register RPC connection wrapper bean */
     private fun registerConnectionWrapper(nodeParams: NodeParams, nodeName: String, beanDefinitionRegistry: BeanDefinitionRegistry): String {
         val rpcConnectionBeanName = "${nodeName}RpcConnection"
+        val rpcConnectionType = if (nodeParams.eager!!) EagerNodeRpcConnection::class.java else LazyNodeRpcConnection::class.java
         val rpcConnectionBean = BeanDefinitionBuilder
-                .rootBeanDefinition(if (nodeParams.eager!!) EagerNodeRpcConnection::class.java else LazyNodeRpcConnection::class.java)
+                .rootBeanDefinition(rpcConnectionType)
                 .setScope(SCOPE_SINGLETON)
                 .addConstructorArgValue(nodeParams)
                 .getBeanDefinition()
         beanDefinitionRegistry.registerBeanDefinition(rpcConnectionBeanName, rpcConnectionBean)
-        logger.debug("Registered RPC connection bean {} for Party {}", rpcConnectionBeanName, nodeName)
+        logger.debug("Registered RPC connection bean {} for Party {}, type: {}", rpcConnectionBeanName, nodeName, rpcConnectionType.simpleName)
         return rpcConnectionBeanName
     }
 
