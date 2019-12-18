@@ -22,14 +22,25 @@ package com.github.manosbatsis.corbeans.test.integration
 import com.github.manosbatsis.corbeans.corda.common.NodeParams
 import com.github.manosbatsis.corbeans.corda.common.NodesProperties
 import com.github.manosbatsis.corbeans.corda.common.Util
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.SupervisorJob
+import kotlinx.coroutines.experimental.isActive
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.runBlocking
 import net.corda.core.concurrent.CordaFuture
 import net.corda.core.flows.FlowLogic
 import net.corda.core.flows.IllegalFlowLogicException
 import net.corda.core.identity.CordaX500Name
 import net.corda.testing.common.internal.testNetworkParameters
 import net.corda.testing.core.DUMMY_NOTARY_NAME
-import net.corda.testing.driver.*
+import net.corda.testing.driver.DriverDSL
+import net.corda.testing.driver.DriverParameters
+import net.corda.testing.driver.NodeHandle
+import net.corda.testing.driver.NodeParameters
+import net.corda.testing.driver.NotaryHandle
+import net.corda.testing.driver.VerifierType.InMemory
+import net.corda.testing.driver.driver
 import net.corda.testing.node.NotarySpec
 import net.corda.testing.node.User
 import net.corda.testing.node.internal.TestCordappImpl
@@ -212,9 +223,12 @@ class NodeDriverHelper(val cordaNodesProperties: NodesProperties = Util.loadProp
                 val user = User(nodeParams.username!!, nodeParams.password!!, setOf("ALL"))
                 @Suppress("UNUSED_VARIABLE")
                 nodeName to startNode(
-                        defaultParameters = NodeParameters(flowOverrides = getFlowOverrides()),
+                        defaultParameters = NodeParameters(
+                                flowOverrides = getFlowOverrides(),
+                                rpcUsers = listOf(user),
+                                verifierType = InMemory),
                         providedName = x500Name,
-                        rpcUsers = listOf(user),
+                        //rpcUsers = listOf(user),
                         customOverrides = mapOf(
                                 "rpcSettings.address" to nodeParams.address,
                                 "rpcSettings.adminAddress" to nodeParams.adminAddress))

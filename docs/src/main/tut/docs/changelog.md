@@ -10,7 +10,7 @@ and can be helpful with version upgrades.
 
 ## 0.34
 
-<!-- Upgraded Corda dependencies to 4.3.-->
+- Upgraded Corda dependencies to 4.3.
 - Extracted common `CordaRpcService` base class for node and BNMS services to extend from.
 - Added alternative method signatures to `CordaBnmsService` and applied the 
 membership metadata param regularly. 
