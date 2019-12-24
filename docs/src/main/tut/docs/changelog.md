@@ -10,7 +10,8 @@ and can be helpful with version upgrades.
 
 ## 0.34
 
-- Upgraded Corda dependencies to 4.3.
+- Updated to and requiring Corda 4.3, at least for running tests. 
+If you are on Corda 4.1, it is recommended you use Corbeans 0.33.
 - Extracted common `CordaRpcService` base class for node and BNMS services to extend from.
 - Added alternative method signatures to `CordaBnmsService` and applied the 
 membership metadata param regularly. 

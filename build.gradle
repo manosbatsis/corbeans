@@ -31,8 +31,8 @@ buildscript {
 		//netty_version = '4.1.22.Final'
 		h2 = '1.4.196'
 		dependency_management_version ="1.0.6.RELEASE"
-		vaultaire_version = '0.9'
-		partiture_version = '0.8-SNAPSHOT'
+		vaultaire_version = '0.11'
+		partiture_version = '0.8'
 		quasar_exclusions = [
 				'co.paralleluniverse**',
 				'groovy**',
@@ -148,7 +148,7 @@ allprojects {
 		maven { url "https://software.r3.com/artifactory/corda-dependencies" }
 	}
 
-	version = "0.34-SNAPSHOT"
+	version = "0.34"
 	group = 'com.github.manosbatsis.corbeans'
 	apply plugin: 'project-report'
 	apply plugin: "com.dorongold.task-tree"
