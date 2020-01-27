@@ -8,6 +8,10 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.35
+
+- Switched to Corda 4.3's [automatic RPC reconnection](https://docs.corda.net/clientrpc.html?highlight=rpc#enabling-automatic-reconnection)
+
 ## 0.34
 
 - Updated to and requiring Corda 4.3, at least for running tests. 

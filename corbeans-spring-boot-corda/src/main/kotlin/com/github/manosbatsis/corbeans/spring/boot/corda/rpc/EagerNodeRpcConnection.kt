@@ -36,5 +36,6 @@ open class EagerNodeRpcConnection(
         private val logger = LoggerFactory.getLogger(EagerNodeRpcConnection::class.java)
     }
 
+    /** Provides eager access to a [CordaRPCOps] RPC proxy */
     override val proxy: CordaRPCOps = createProxy()
 }
