@@ -24,6 +24,7 @@ import net.corda.client.rpc.CordaRPCClient
 import net.corda.client.rpc.CordaRPCClientConfiguration
 import net.corda.client.rpc.CordaRPCClientConfiguration.Companion.DEFAULT
 import net.corda.client.rpc.CordaRPCConnection
+import net.corda.client.rpc.GracefulReconnect
 import net.corda.client.rpc.RPCException
 import net.corda.core.messaging.ClientRpcSslOptions
 import net.corda.core.messaging.CordaRPCOps
@@ -59,8 +60,12 @@ abstract class NodeRpcConnection(private val nodeParams: NodeParams) {
             logger.debug("Initializing RPC connection for address {}, attempt: {}", nodeParams.address, attemptCount)
             attemptCount++
             try {
+                val gracefulReconnect = GracefulReconnect(
+                        onDisconnect= { this.onDisconnect() },
+                        onReconnect = { this.onReconnect() },
+                        maxAttempts = nodeParams.maxReconnectAttempts ?: 5)
                 val rpcClient = CordaRPCClient(buildRpcAddress(), buildRpcClientConfig(), clientRpcSslOptions())
-                rpcConnection = rpcClient.start(nodeParams.username!!, nodeParams.password!!)
+                rpcConnection = rpcClient.start(nodeParams.username!!, nodeParams.password!!, gracefulReconnect)
                 created = rpcConnection.proxy
             } catch (secEx: ActiveMQSecurityException) {
                 // Happens when incorrect credentials provided - no point to retry connecting.
@@ -76,6 +81,16 @@ abstract class NodeRpcConnection(private val nodeParams: NodeParams) {
                 "Initialized RPC connection for ${nodeParams.address} on port ${nodeParams.adminAddress}, name: {}",
                 created.nodeInfo().legalIdentities.first().name)
         return created
+    }
+
+    /** Override to handle RPC reconnect */
+    open fun onReconnect() {
+        logger.warn("RPC reconnected")
+    }
+
+    /** Override to handle RPC disconnect */
+    open fun onDisconnect() {
+        logger.warn("RPC disconnected")
     }
 
     /**

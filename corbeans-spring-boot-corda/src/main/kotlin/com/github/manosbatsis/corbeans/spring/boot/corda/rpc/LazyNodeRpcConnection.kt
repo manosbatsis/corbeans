@@ -36,7 +36,7 @@ open class LazyNodeRpcConnection(
         private val logger = LoggerFactory.getLogger(LazyNodeRpcConnection::class.java)
     }
 
-    /** Provides eager access to an identity service */
+    /** Provides lazy access to a [CordaRPCOps] RPC proxy */
     override val proxy: CordaRPCOps by lazy {
         createProxy()
     }
