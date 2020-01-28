@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>com.github.manosbatsis.corbeans.spring.boot.corda.model.upload - corbeans</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">corbeans</a>&nbsp;/&nbsp;<a href="./index.html">com.github.manosbatsis.corbeans.spring.boot.corda.model.upload</a><br/>
+<br/>
+<h2>Package com.github.manosbatsis.corbeans.spring.boot.corda.model.upload</h2>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-attachment/index.html">Attachment</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Attachment</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/io/Closeable.html"><span class="identifier">Closeable</span></a></code>
+<p>Data transfer object representing an attachment to be persisted in the vault</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-attachment-file/index.html">AttachmentFile</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">AttachmentFile</span></code>
+<p>Data transfer object representing an attachment file to be persisted in the vault</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-attachment-receipt/index.html">AttachmentReceipt</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">AttachmentReceipt</span></code>
+<p>Receipt of an attachment saved to the vault.
+Annotated with <a href="#">CordaSerializable</a> and thus <a href="#">ContractState</a>-embeddable.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-a-c-c-e-p-t-e-d_-t-y-p-e-s.html">ACCEPTED_TYPES</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">ACCEPTED_TYPES</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-t-m-p_-f-i-l-e_-p-r-e-f-i-x.html">TMP_FILE_PREFIX</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">TMP_FILE_PREFIX</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-t-m-p_-f-i-l-e_-s-u-f-f-i-x.html">TMP_FILE_SUFFIX</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">TMP_FILE_SUFFIX</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="to-attachment.html">toAttachment</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">toAttachment</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.model.upload$toAttachment()/uploadedFile">uploadedFile</span><span class="symbol">:</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="-attachment/index.html"><span class="identifier">Attachment</span></a></code>
+<p>Converts the input <a href="#">MultipartFile</a> to an <a href="-attachment/index.html">Attachment</a></p>
+<code><span class="keyword">fun </span><span class="identifier">toAttachment</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.model.upload$toAttachment(kotlin.Array(()))/uploadedFiles">uploadedFiles</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="-attachment/index.html"><span class="identifier">Attachment</span></a></code>
+<p>Converts the input <a href="#">MultipartFile</a>s to an <a href="-attachment/index.html">Attachment</a></p>
+<code><span class="keyword">fun </span><span class="identifier">toAttachment</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.model.upload$toAttachment(kotlin.collections.List((com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentFile)))/attachmentFiles">attachmentFiles</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="-attachment-file/index.html"><span class="identifier">AttachmentFile</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="-attachment/index.html"><span class="identifier">Attachment</span></a></code>
+<p>Converts the input <a href="-attachment-file/index.html">AttachmentFile</a>s to an <a href="-attachment/index.html">Attachment</a>.
+Uses the original pre-archived file if only such a single file is given.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="to-attachment-files.html">toAttachmentFiles</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">toAttachmentFiles</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.model.upload$toAttachmentFiles(kotlin.Array(()))/uploadedFiles">uploadedFiles</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="-attachment-file/index.html"><span class="identifier">AttachmentFile</span></a><span class="symbol">&gt;</span></code>
+<p>Converts <a href="#">MultipartFile</a><code>s to [AttachmentFile]</code>s</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
