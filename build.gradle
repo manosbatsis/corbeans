@@ -148,7 +148,7 @@ allprojects {
 		maven { url "https://software.r3.com/artifactory/corda-dependencies" }
 	}
 
-	version = "0.36"
+	version = "0.37-SNAPSHOT"
 	group = 'com.github.manosbatsis.corbeans'
 	apply plugin: 'project-report'
 	apply plugin: "com.dorongold.task-tree"
