@@ -100,6 +100,15 @@ corbeans.nodes.partyB.password=test
 corbeans.nodes.partyB.address=localhost:10009
 ```  
 
+For the full list of root-level and node-level configuration properties checkout 
+the KDoc `CordaNodesProperties` and  `NodeParams` respectively.
+
+To apply "global" node configuration properties, use `default` as the node key, e.g.:
+
+```properties
+corbeans.nodes.default.primaryServiceType=my.custom.CordaNodeServiceImpl
+``` 
+
 ### Registered Beans
 
 The auto-configuration will generate and register the following beans __per Corda Node__ 
