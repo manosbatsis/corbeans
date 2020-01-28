@@ -8,6 +8,10 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.36
+
+- Added `disableGracefulReconnect` configuration property, default is `false`
+
 ## 0.35
 
 - Switched to Corda 4.3's [automatic RPC reconnection](https://docs.corda.net/clientrpc.html?highlight=rpc#enabling-automatic-reconnection)

@@ -46,6 +46,7 @@ class NodeParams {
             DEFAULT.connectionRetryIntervalMultiplier = CordaRPCClientConfiguration.DEFAULT.connectionRetryIntervalMultiplier
             DEFAULT.deduplicationCacheExpiry = CordaRPCClientConfiguration.DEFAULT.deduplicationCacheExpiry
             DEFAULT.maxFileSize = CordaRPCClientConfiguration.DEFAULT.maxFileSize
+            DEFAULT.disableGracefulReconnect = false
             DEFAULT.maxReconnectAttempts = CordaRPCClientConfiguration.DEFAULT.maxReconnectAttempts
             DEFAULT.minimumServerProtocolVersion = CordaRPCClientConfiguration.DEFAULT.minimumServerProtocolVersion
             DEFAULT.observationExecutorPoolSize = CordaRPCClientConfiguration.DEFAULT.observationExecutorPoolSize
@@ -65,13 +66,13 @@ class NodeParams {
             nodeParams.adminAddress = partialParams.adminAddress ?: throw IllegalArgumentException("Node configuration is missing an adminAddress property")
             nodeParams.eager = partialParams.eager ?: defaultParams.eager ?: DEFAULT.eager!!
             nodeParams.primaryServiceType = partialParams.primaryServiceType ?: defaultParams.primaryServiceType ?: DEFAULT.primaryServiceType!!
-            nodeParams.bnmsServiceType = partialParams.bnmsServiceType ?: defaultParams.bnmsServiceType
-                    ?: DEFAULT.bnmsServiceType
+            nodeParams.bnmsServiceType = partialParams.bnmsServiceType ?: defaultParams.bnmsServiceType ?: DEFAULT.bnmsServiceType
             nodeParams.connectionMaxRetryInterval = partialParams.connectionMaxRetryInterval ?: defaultParams.connectionMaxRetryInterval ?: DEFAULT.connectionMaxRetryInterval!!
             nodeParams.connectionRetryInterval = partialParams.connectionRetryInterval ?: defaultParams.connectionRetryInterval ?: DEFAULT.connectionRetryInterval!!
             nodeParams.connectionRetryIntervalMultiplier = partialParams.connectionRetryIntervalMultiplier ?: defaultParams.connectionRetryIntervalMultiplier ?: DEFAULT.connectionRetryIntervalMultiplier!!
             nodeParams.deduplicationCacheExpiry = partialParams.deduplicationCacheExpiry ?: defaultParams.deduplicationCacheExpiry ?: DEFAULT.deduplicationCacheExpiry!!
             nodeParams.maxFileSize = partialParams.maxFileSize ?: defaultParams.maxFileSize ?: DEFAULT.maxFileSize!!
+            nodeParams.disableGracefulReconnect = partialParams.disableGracefulReconnect ?: defaultParams.disableGracefulReconnect ?: DEFAULT.disableGracefulReconnect!!
             nodeParams.maxReconnectAttempts = partialParams.maxReconnectAttempts ?: defaultParams.maxReconnectAttempts ?: DEFAULT.maxReconnectAttempts!!
             nodeParams.minimumServerProtocolVersion = partialParams.minimumServerProtocolVersion ?: defaultParams.minimumServerProtocolVersion ?: DEFAULT.minimumServerProtocolVersion!!
             nodeParams.observationExecutorPoolSize = partialParams.observationExecutorPoolSize ?: defaultParams.observationExecutorPoolSize ?: DEFAULT.observationExecutorPoolSize!!
@@ -109,10 +110,10 @@ class NodeParams {
     var trustStorePassword: String? = null
     /** Corresponds to [ClientRpcSslOptions.trustStoreProvider] */
     var trustStoreProvider: String = "JKS"
-
+    /** Whether to use GracefulReconnect (4.3+) */
+    var disableGracefulReconnect: Boolean? = null
     // Configuration properties for Corda v4.0+
     // ====================================
-
     /**
      * The maximum retry interval for re-connections. The client will retry connections if the host is lost with ever
      * increasing spacing until the max is reached. The default is 3 minutes.

@@ -65,7 +65,10 @@ abstract class NodeRpcConnection(private val nodeParams: NodeParams) {
                         onReconnect = { this.onReconnect() },
                         maxAttempts = nodeParams.maxReconnectAttempts ?: 5)
                 val rpcClient = CordaRPCClient(buildRpcAddress(), buildRpcClientConfig(), clientRpcSslOptions())
-                rpcConnection = rpcClient.start(nodeParams.username!!, nodeParams.password!!, gracefulReconnect)
+                rpcConnection = rpcClient.start(
+                        username = nodeParams.username!!,
+                        password = nodeParams.password!!,
+                        gracefulReconnect = if(nodeParams.disableGracefulReconnect!!) null else gracefulReconnect)
                 created = rpcConnection.proxy
             } catch (secEx: ActiveMQSecurityException) {
                 // Happens when incorrect credentials provided - no point to retry connecting.
