@@ -96,7 +96,7 @@ class MyWithDriverNodesIntegrationTest : WithDriverNodesIT() {
 
 ## Implicit Network
 
-> Consider using CorbeansSpringExtension instead (see next section) as it starts nodes and the container in the correct order. 
+> __Deprecated__: Consider using CorbeansSpringExtension instead (see next section) as it starts nodes and the container in the correct order. 
 
 Extending `WithImplicitNetworkIT` will automatically create and maintain a single Corda network throughout test 
 execution, using the corbeans' config from `application.properties`. You may override the latter with an
@@ -146,5 +146,45 @@ Example:
 @ExtendWith(CorbeansSpringExtension::class)
 class MyWithSingleNetworkIntegrationTest {
 	// Same members as in the previous section
+}
+```
+
+### Nested Tests
+
+Some times you may want to speed up the build by using a single network throughout all tests.
+You can do that using a single main test with `CorbeansSpringExtension` while nesting actual 
+tests to structure properly via separate class files.
+
+```kotlin
+import com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.client.TestRestTemplate
+
+/**
+ * Root integration test suite. Launches a complete, preconfigured 
+ * Corda network and RESTful service using [SpringBootTest] and [CorbeansSpringExtension], 
+ * based on _cordapp-*_ and _server_ project modules.
+ *
+ * The actual "Foo" and "Bar" tests are structured as nested classes, allowing reuse the 
+ * same network and webapp instance.
+ *
+ * If your tests require [Autowired] components, add them here and pass them via constructors.
+ */
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// Note we are using CorbeansSpringExtension Instead of SpringExtension
+@ExtendWith(CorbeansSpringExtension::class)
+class MainIntegrationTest {
+
+    @Autowired
+    lateinit var restTemplate: TestRestTemplate
+
+    @Nested
+    inner class `Foo tests` : FooTests(restTemplate)
+
+    @Nested
+    inner class `Bar tests` : BarTests(restTemplate)
 }
 ```

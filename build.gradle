@@ -83,7 +83,6 @@ buildscript {
 		maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 		// Corda dependencies for the patched Quasar version
 		maven { url "https://software.r3.com/artifactory/corda-dependencies" }
-		maven {url "https://plugins.gradle.org/m2/"}
 
 	}
 
