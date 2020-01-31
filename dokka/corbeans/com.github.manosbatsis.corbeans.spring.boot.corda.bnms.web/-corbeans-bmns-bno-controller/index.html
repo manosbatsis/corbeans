@@ -1,0 +1,84 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>CorbeansBmnsBnoController - corbeans</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">corbeans</a>&nbsp;/&nbsp;<a href="../index.html">com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web</a>&nbsp;/&nbsp;<a href="./index.html">CorbeansBmnsBnoController</a><br/>
+<br/>
+<h1>CorbeansBmnsBnoController</h1>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">CorbeansBmnsBnoController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support/-corbeans-bmns-bno-base-controller/index.html"><span class="identifier">CorbeansBmnsBnoBaseController</span></a></code>
+<p>Exposes BNMS Operator (BNO) methods as endpoints for a single node or,
+if by overriding <code>getRequestNodeName()</code>, multiple nodes.</p>
+<p>To use the controller simply extend it and add a <code>@RestController</code> annotation:</p>
+<pre><code>@RestController
+class MyBmnsBnoController: CorbeansBmnsBnoController()
+</code></pre>
+<p><strong>See Also</strong><br/>
+<p><a href="../-corbeans-bmns-bno-path-fragment-controller/index.html">CorbeansBmnsBnoPathFragmentController</a></p>
+</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">CorbeansBmnsBnoController</span><span class="symbol">(</span><span class="symbol">)</span></code>
+<p>Exposes BNMS Operator (BNO) methods as endpoints for a single node or,
+if by overriding <code>getRequestNodeName()</code>, multiple nodes.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="activate-membership.html">activateMembership</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">activateMembership</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.CorbeansBmnsBnoController$activateMembership(com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipPartiesMessage)/input">input</span><span class="symbol">:</span>&nbsp;<a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message/-membership-parties-message/index.html"><span class="identifier">MembershipPartiesMessage</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">&lt;</span><span class="keyword">out</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="get-request-node-name.html">getRequestNodeName</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getRequestNodeName</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/util/Optional.html"><span class="identifier">Optional</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code>
+<p>Override to control how the the node name is resolved based on the request by e.g. parsing headers</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="suspend-membership.html">suspendMembership</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">suspendMembership</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.CorbeansBmnsBnoController$suspendMembership(com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipPartiesMessage)/input">input</span><span class="symbol">:</span>&nbsp;<a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message/-membership-parties-message/index.html"><span class="identifier">MembershipPartiesMessage</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">&lt;</span><span class="keyword">out</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inherited Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support/-corbeans-bmns-bno-base-controller/activate-membership.html">activateMembership</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">activateMembership</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support.CorbeansBmnsBnoBaseController$activateMembership(java.util.Optional((kotlin.String)), com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipPartiesMessage)/nodeName">nodeName</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Optional.html"><span class="identifier">Optional</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support.CorbeansBmnsBnoBaseController$activateMembership(java.util.Optional((kotlin.String)), com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipPartiesMessage)/input">input</span><span class="symbol">:</span>&nbsp;<a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message/-membership-parties-message/index.html"><span class="identifier">MembershipPartiesMessage</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">&lt;</span><span class="keyword">out</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support/-corbeans-bmns-bno-base-controller/suspend-membership.html">suspendMembership</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">suspendMembership</span><span class="symbol">(</span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support.CorbeansBmnsBnoBaseController$suspendMembership(java.util.Optional((kotlin.String)), com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipPartiesMessage)/nodeName">nodeName</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Optional.html"><span class="identifier">Optional</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support.CorbeansBmnsBnoBaseController$suspendMembership(java.util.Optional((kotlin.String)), com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipPartiesMessage)/input">input</span><span class="symbol">:</span>&nbsp;<a href="../../com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message/-membership-parties-message/index.html"><span class="identifier">MembershipPartiesMessage</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">&lt;</span><span class="keyword">out</span>&nbsp;<span class="identifier">&lt;ERROR CLASS&gt;</span><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
