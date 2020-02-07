@@ -24,7 +24,7 @@ buildscript {
 		scrudbeans_version = '0.7'
 		springfox_version = '2.9.2'
 
-		artemis_version = "2.6.2"
+		artemis_version = "2.11.0"
 		jackson_version = "2.9.7"
 		jopt_simple_version = '5.0.2'
 		guava_version = '25.1-jre'
