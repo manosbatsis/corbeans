@@ -22,8 +22,9 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipRequestMessage
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipsListRequestMessage
 import com.r3.businessnetworks.membership.states.MembershipState
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiParam
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.tags.Tag
+
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
@@ -31,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import java.util.Optional
 
 
-@Api(tags = arrayOf("BNMS Member"), description = "BNMS membership operation endpoints")
+@Tag(name = "BNMS Member", description = "BNMS membership operation endpoints")
 open class CorbeansBmnsMemberBaseController : CorbeansBmnsBaseController() {
 
     companion object {
@@ -53,16 +54,16 @@ open class CorbeansBmnsMemberBaseController : CorbeansBmnsBaseController() {
     open fun listMemberships(
             @PathVariable
             nodeName: Optional<String>,
-            @ApiParam(value = "The BNO party name")
+            @Parameter(name = "The BNO party name")
             @RequestParam(required = true)
             bno: String,
-            @ApiParam(value = "The network ID")
+            @Parameter(name = "The network ID")
             @RequestParam(required = false)
             networkId: Optional<String>,
-            @ApiParam(value = "Wether to force a refresh.")
+            @Parameter(name = "Wether to force a refresh.")
             @RequestParam(required = false, defaultValue = "false")
             forceRefresh: Boolean,
-            @ApiParam(value = "Wether to filter out anyone missing from the Network Map.")
+            @Parameter(name = "Wether to filter out anyone missing from the Network Map.")
             @RequestParam(required = false, defaultValue = "true")
             filterOutMissingFromNetworkMap: Boolean
     ): List<MembershipState<*>> =

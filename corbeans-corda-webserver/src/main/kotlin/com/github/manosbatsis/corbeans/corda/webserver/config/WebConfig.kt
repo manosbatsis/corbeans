@@ -17,22 +17,25 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.corda.common
+package com.github.manosbatsis.corbeans.corda.webserver.config
 
-/**
- * [NotarySpec] configuration for testing
- */
-class TestNotaryProperties {
+import org.springframework.context.annotation.Configuration
+import org.springframework.web.servlet.config.annotation.CorsRegistry
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+
+@Configuration
+class WebConfig : WebMvcConfigurer {
 
     /**
-     * Whether to use a NON-validating notary
+     * Configure cross origin requests processing.
+     * @since 4.2
      */
-    var nonValidating: Boolean = false
-
-    var address: String? = null
-
-    override fun toString(): String {
-        return "TestNotaryProperties(nonValidating=${nonValidating}, address=${address}})"
+    override fun addCorsMappings(registry: CorsRegistry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedMethods("*")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+        // .maxAge(3600)
     }
-
 }

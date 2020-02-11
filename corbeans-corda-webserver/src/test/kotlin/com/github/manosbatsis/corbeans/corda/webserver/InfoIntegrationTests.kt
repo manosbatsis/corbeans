@@ -19,56 +19,37 @@
  */
 package com.github.manosbatsis.corbeans.corda.webserver
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
-import com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension
-import com.github.manosbatsis.corbeans.test.integration.WithImplicitNetworkIT
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpStatus
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 
-/**
- * Same as [SingleNetworkIntegrationTest] only using [CorbeansSpringExtension]
- * instead of extending [WithImplicitNetworkIT]
- */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-// Note we are using CorbeansSpringExtension Instead of SpringExtension
-@ExtendWith(CorbeansSpringExtension::class)
-@AutoConfigureMockMvc
-class InfoIntegrationTest {
+open class InfoIntegrationTests(
+        val restTemplate: TestRestTemplate,
+        val networkService: CordaNetworkService
+) {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(InfoIntegrationTest::class.java)
+        private val logger = LoggerFactory.getLogger(InfoIntegrationTests::class.java)
 
     }
 
-    // autowire a network service, used to access node services
-    @Autowired
-    lateinit var networkService: CordaNetworkService
-
-    @Autowired
-    lateinit var mockMvc: MockMvc
-
-    @Autowired
-    lateinit var restTemplate: TestRestTemplate
 
     @Test
     fun `Can access swagger UI`() {
         // Check swagger endpoint
-        this.mockMvc.perform(get("/api-docs"))
-                .andExpect(status().isOk())
+        var apiDocs = restTemplate
+                .getForEntity("/v3/api-docs", JsonNode::class.java)
+        // Ensure a 200 OK
+        Assertions.assertEquals(HttpStatus.OK, apiDocs.statusCode)
         // Check Swagger UI
-        this.mockMvc.perform(get("/swagger-ui.html"))
-                .andExpect(status().isOk())
+        var swaggerUi = restTemplate.getForEntity("/swagger-ui.html", String::class.java)
+        // Ensure a 200 OK
+        Assertions.assertEquals(HttpStatus.OK, swaggerUi.statusCode)
     }
 
     @Test

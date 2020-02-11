@@ -22,8 +22,7 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.deser.std.JsonNodeDeserializer
-import io.swagger.annotations.ApiModel
-import io.swagger.annotations.ApiModelProperty
+import io.swagger.v3.oas.annotations.media.Schema
 import net.corda.core.serialization.CordaSerializable
 
 /**
@@ -31,13 +30,13 @@ import net.corda.core.serialization.CordaSerializable
  * in combination with a custom
  */
 @CordaSerializable
-@ApiModel(description = "A message with the information necessary to create or ammend a membership request.")
+@Schema(description = "A message with the information necessary to create or ammend a membership request.")
 class MembershipRequestMessage(
-        @ApiModelProperty(value = "The BNO party name")
+        @Schema(title = "The BNO party name")
         val party: String,
-        @ApiModelProperty(value = "The network ID")
+        @Schema(title = "The network ID")
         val networkId: String? = null,
-        @ApiModelProperty(value = "The membership metadata")
+        @Schema(title = "The membership metadata")
         @JsonDeserialize(using = JsonNodeDeserializer::class)
         var membershipMetadata: JsonNode? = null
 )

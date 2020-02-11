@@ -82,6 +82,7 @@ docs/virtualenv/
 project/project/
 project/target/
 target/
+log/
 /docs/target/
 /target/
 .idea/

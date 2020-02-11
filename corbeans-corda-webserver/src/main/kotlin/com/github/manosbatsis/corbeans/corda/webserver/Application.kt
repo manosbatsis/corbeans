@@ -20,14 +20,15 @@
 package com.github.manosbatsis.corbeans.corda.webserver
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.runApplication
 
-
-/**
- * Our Spring Boot application.
- */
-//@EnableAutoConfiguration
-@SpringBootApplication
+/** Our Spring Boot application */
+@SpringBootApplication(
+        exclude = arrayOf(SecurityAutoConfiguration::class),
+        excludeName = ["org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration",
+            "org.springframework.boot.autoconfigure.jms.artemis.ArtemisAutoConfiguration"]
+)
 class Application
 
 

@@ -1,33 +1,13 @@
 
 apply from: "${rootProject.projectDir}/gradle/published.gradle"
 
+apply plugin: 'kotlin-spring'
+
 dependencies {
 
 	compile project(':corbeans-spring-boot-corda')
 	compile "com.r3.businessnetworks:membership-service:$corda_solutions_version"
 	compile "com.r3.businessnetworks:membership-service-contracts-and-states:$corda_solutions_version"
 	compile("org.springframework.boot:spring-boot-autoconfigure:$spring_boot_version")
-
-	compile group: 'org.springframework', name: 'spring-context', version:spring_version
-	compile group: 'org.springframework', name: 'spring-beans', version:spring_version
-	compile group: 'org.springframework', name: 'spring-web', version:spring_version
-	compile group: 'org.springframework', name: 'spring-webmvc', version:spring_version
-	compile group: 'org.springframework.boot', name: 'spring-boot-actuator', version:spring_boot_version
-	
-	compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
-	compile "javax.json:javax.json-api:1.1.4"
-	
-	compile "$corda_release_group:corda-jackson:$corda_release_version"
-	compile "$corda_release_group:corda-rpc:$corda_release_version"
-	compile "org.apache.commons:commons-compress:1.18"
-
-	compile "io.springfox:springfox-swagger2:$springfox_version"
-	// JOpt: for command line flags.
-	compile "net.sf.jopt-simple:jopt-simple:$jopt_simple_version"
-	
-	compile "org.apache.activemq:artemis-core-client:${artemis_version}"
-	compile "org.apache.activemq:artemis-commons:${artemis_version}"
-	
-	compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
 
 }

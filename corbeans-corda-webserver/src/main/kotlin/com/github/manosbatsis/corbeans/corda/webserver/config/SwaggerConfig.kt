@@ -19,36 +19,30 @@
  */
 package com.github.manosbatsis.corbeans.corda.webserver.config
 
+import io.swagger.v3.oas.models.ExternalDocumentation
+import io.swagger.v3.oas.models.OpenAPI
+import io.swagger.v3.oas.models.info.Info
+import io.swagger.v3.oas.models.info.License
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import springfox.documentation.builders.ApiInfoBuilder
-import springfox.documentation.builders.PathSelectors
-import springfox.documentation.builders.RequestHandlerSelectors
-import springfox.documentation.service.ApiInfo
-import springfox.documentation.spi.DocumentationType
-import springfox.documentation.spring.web.plugins.Docket
-import springfox.documentation.swagger2.annotations.EnableSwagger2
 
 /**
  * Swagger configuration
  */
 @Configuration
-@EnableSwagger2
 class SwaggerConfig {
 
     @Bean
-    fun api(): Docket {
-        return Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
-                .build()
+    fun springShopOpenAPI(): OpenAPI? {
+        return OpenAPI()
+                .info(Info().title("SpringShop API")
+                        .description("Corbeans Sample Webserver")
+                        .version("v0.0.1")
+                        .license(License().name("GNU Lesser GPL").url("https://www.gnu.org/licenses/lgpl-3.0.html")))
+                .externalDocs(ExternalDocumentation()
+                        .description("Corbeans Documentation")
+                        .url("https://manosbatsis.github.io/corbeans/"))
     }
 
-    protected fun apiInfo(): ApiInfo {
-        return ApiInfoBuilder().title("Corda Spring Boot Webserver")
-                .description("A rest API for Corda Nodes using Spring Boot 2").version("0.1").build()
-    }
 
 }

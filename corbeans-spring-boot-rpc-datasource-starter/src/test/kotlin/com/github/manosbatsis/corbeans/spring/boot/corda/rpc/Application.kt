@@ -20,9 +20,12 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.rpc
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.runApplication
 
-@SpringBootApplication
+@SpringBootApplication(
+        exclude = arrayOf(SecurityAutoConfiguration::class),
+        excludeName = ["org.springframework.boot.autoconfigure.jms.artemis.ArtemisAutoConfiguration"])
 class Application
 
 fun main(args: Array<String>) {

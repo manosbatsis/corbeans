@@ -19,13 +19,12 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message
 
-import io.swagger.annotations.ApiModel
-import io.swagger.annotations.ApiModelProperty
+import io.swagger.v3.oas.annotations.media.Schema
 import net.corda.core.serialization.CordaSerializable
 
 @CordaSerializable
-@ApiModel(description = "A message with the information necessary to identify a membership state.")
+@Schema(description = "A message with the information necessary to identify a membership state.")
 open class MembershipPartiesMessage(
-        @ApiModelProperty(value = "The member party name") var member: String,
-        @ApiModelProperty(value = "The bno party name", required = false) var bno: String? = null
+        @Schema(title = "The member party name") var member: String,
+        @Schema(title = "The bno party name", required = false) var bno: String? = null
 )

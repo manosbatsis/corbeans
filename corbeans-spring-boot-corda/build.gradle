@@ -1,28 +1,36 @@
 
 apply from: "${rootProject.projectDir}/gradle/published.gradle"
 
-dependencies {
-	compile project(":corbeans-corda-common")
-	compile "com.github.manosbatsis.vaultaire:vaultaire:$vaultaire_version"
-	compile("org.springframework.boot:spring-boot-autoconfigure:$spring_boot_version")
+apply plugin: 'kotlin-spring'
 
+dependencies {
+	compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+	// Module  dependencies.
+	compile project(":corbeans-corda-common")
+	// Corda dependencies.
+	compile "$corda_release_group:corda-rpc:$corda_release_version"
+
+	// Misc dependencies.
+	compile "com.github.manosbatsis.vaultaire:vaultaire:$vaultaire_version"
+	compile "org.apache.commons:commons-compress:1.18"
+	compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
+	// OpenAPI/SpringDoc
+	compile ("org.springdoc:springdoc-openapi-common:${springdoc_version}") {
+		exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+	}
+	compile ("org.springdoc:springdoc-openapi-data-rest:${springdoc_version}") {
+			exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+	}
+	// Spring dependencies.
+	compile "org.springframework.boot:spring-boot-actuator:$spring_boot_version"
 	compile group: 'org.springframework', name: 'spring-context', version:spring_version
 	compile group: 'org.springframework', name: 'spring-beans', version:spring_version
 	compile group: 'org.springframework', name: 'spring-web', version:spring_version
 	compile group: 'org.springframework', name: 'spring-webmvc', version:spring_version
 	compile group: 'org.springframework.boot', name: 'spring-boot-actuator', version:spring_boot_version
-	
-	compile "$corda_release_group:corda-jackson:$corda_release_version"
-	compile "$corda_release_group:corda-rpc:$corda_release_version"
-	compile "org.apache.commons:commons-compress:1.18"
-
-	compile "io.springfox:springfox-swagger2:$springfox_version"
-	// JOpt: for command line flags.
-	compile "net.sf.jopt-simple:jopt-simple:$jopt_simple_version"
-	
-	compile "org.apache.activemq:artemis-core-client:${artemis_version}"
-	compile "org.apache.activemq:artemis-commons:${artemis_version}"
-	
-	compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
-
+	// Logging dependencies.
+	compile "org.apache.logging.log4j:log4j-slf4j-impl:${log4j_version}"
+	compile "org.apache.logging.log4j:log4j-web:${log4j_version}"
+	compile "org.slf4j:jul-to-slf4j:$slf4j_version"
 }

@@ -171,6 +171,7 @@ class NodeDriverHelper(val cordaNodesProperties: NodesProperties = Util.loadProp
                     .withStartNodesInProcess(true)
                     .withCordappsForAllNodes(cordappsForAllNodes())
                     .withNotarySpecs(notarySpecs())
+                    .withNotaryCustomOverrides(notaryCustomOverrides())
                     .withNetworkParameters(testNetworkParameters(minimumPlatformVersion = 4))
             ) {
                 nodeHandles.putAll(startNodes())// Configure nodes per application.properties
@@ -262,6 +263,11 @@ class NodeDriverHelper(val cordaNodesProperties: NodesProperties = Util.loadProp
                 validating = !cordaNodesProperties.notarySpec.nonValidating))
         return notarySpecs
     }
+
+    private fun notaryCustomOverrides(): Map<String, Any?>  =
+        if(cordaNodesProperties.notarySpec.address != null)
+            mapOf( "rpcSettings.address" to cordaNodesProperties.notarySpec.address)
+        else emptyMap()
 
     /**
      * Load node config from spring-boot application

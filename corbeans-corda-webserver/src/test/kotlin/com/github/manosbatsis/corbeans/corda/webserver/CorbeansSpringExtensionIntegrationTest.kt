@@ -33,19 +33,22 @@ import net.corda.core.identity.Party
 import net.corda.core.utilities.NetworkHostAndPort
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.core.io.ClassPathResource
-import org.springframework.http.*
-import org.springframework.test.web.servlet.MockMvc
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.util.LinkedMultiValueMap
-import java.util.*
+import java.util.UUID
 import kotlin.test.assertTrue
 
 
@@ -57,7 +60,6 @@ import kotlin.test.assertTrue
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 // Note we are using CorbeansSpringExtension Instead of SpringExtension
 @ExtendWith(CorbeansSpringExtension::class)
-@AutoConfigureMockMvc
 class CorbeansSpringExtensionIntegrationTest {
 
     companion object {
@@ -88,9 +90,6 @@ class CorbeansSpringExtensionIntegrationTest {
     lateinit var customCervice: SampleCustomCordaNodeServiceImpl
 
     @Autowired
-    lateinit var mockMvc: MockMvc
-
-    @Autowired
     lateinit var restTemplate: TestRestTemplate
 
     /* TODO: test single/multiple nodes using profiles
@@ -102,7 +101,8 @@ class CorbeansSpringExtensionIntegrationTest {
         assertNotNull(partyANodeMe.organisation)
     }
     */
-
+    @Nested
+    inner class `Can access Actuator and Swagger` : InfoIntegrationTests(restTemplate, networkService)
 
     @Test
     fun `Can inject services`() {

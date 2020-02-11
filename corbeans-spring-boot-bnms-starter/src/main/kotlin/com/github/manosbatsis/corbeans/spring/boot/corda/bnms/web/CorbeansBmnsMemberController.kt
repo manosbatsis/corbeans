@@ -22,8 +22,10 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipRequestMessage
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support.CorbeansBmnsMemberBaseController
 import com.r3.businessnetworks.membership.states.MembershipState
-import io.swagger.annotations.ApiOperation
-import io.swagger.annotations.ApiParam
+
+
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -58,34 +60,34 @@ open class CorbeansBmnsMemberController : CorbeansBmnsMemberBaseController() {
 
 
     @PostMapping("memberships")
-    @ApiOperation(value = "Request the BNO to kick-off the on-boarding procedure.")
+    @Operation(summary = "Request the BNO to kick-off the on-boarding procedure.")
     fun createMembershipRequest(@RequestBody input: MembershipRequestMessage): MembershipState<*> =
             super.createMembershipRequest(getRequestNodeName(), input)
 
 
     @PutMapping("memberships")
-    @ApiOperation(value = "Propose a change to the membership metadata.")
+    @Operation(summary = "Propose a change to the membership metadata.")
     fun ammendMembershipRequest(@RequestBody input: MembershipRequestMessage): MembershipState<*> =
             super.ammendMembershipRequest(getRequestNodeName(), input)
 
 
     @GetMapping("memberships")
-    @ApiOperation(value = "Get a memberships list from a BNO.",
-            notes = "Members retrieve the full list on the first invocation only. " +
+    @Operation(summary = "Get a memberships list from a BNO.",
+            description = "Members retrieve the full list on the first invocation only. " +
                     "All subsequent updates are delivered via push notifications from the BNO. " +
                     "Memberships cache can be force-refreshed by setting forceRefresh of GetMembershipsFlow to true. " +
                     "Members that are missing from the Network Map are filtered out from the result list.")
     fun listMemberships(
-            @ApiParam(value = "The BNO party name")
+            @Parameter(name = "The BNO party name")
             @RequestParam(required = true)
             bno: String,
-            @ApiParam(value = "The network ID")
+            @Parameter(name = "The network ID")
             @RequestParam(required = false)
             networkId: Optional<String>,
-            @ApiParam(value = "Whether to force a refresh.")
+            @Parameter(name = "Whether to force a refresh.")
             @RequestParam(required = false, defaultValue = "false")
             forceRefresh: Boolean,
-            @ApiParam(value = "Whether to filter out anyone missing from the Network Map.")
+            @Parameter(name = "Whether to filter out anyone missing from the Network Map.")
             @RequestParam(required = false, defaultValue = "true")
             filterOutMissingFromNetworkMap: Boolean
     ): List<MembershipState<*>> =

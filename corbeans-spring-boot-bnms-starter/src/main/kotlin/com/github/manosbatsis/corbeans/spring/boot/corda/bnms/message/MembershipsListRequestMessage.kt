@@ -19,19 +19,18 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message
 
-import io.swagger.annotations.ApiModel
-import io.swagger.annotations.ApiModelProperty
+import io.swagger.v3.oas.annotations.media.Schema
 import net.corda.core.serialization.CordaSerializable
 
 @CordaSerializable
-@ApiModel(description = "A message with the information necessary to obtain the members list.")
+@Schema(description = "A message with the information necessary to obtain the members list.")
 open class MembershipsListRequestMessage(
-        @ApiModelProperty(value = "The BNO party name")
+        @Schema(title = "The BNO party name")
         var bno: String,
-        @ApiModelProperty(value = "The network ID")
+        @Schema(title = "The network ID")
         var networkId: String? = null,
-        @ApiModelProperty(value = "Wether to force a refresh.")
+        @Schema(title = "Wether to force a refresh.")
         var forceRefresh: Boolean = false,
-        @ApiModelProperty(value = "Wether to filter out anyone missing from the Network Map.")
+        @Schema(title = "Wether to filter out anyone missing from the Network Map.")
         var filterOutMissingFromNetworkMap: Boolean = true
 )

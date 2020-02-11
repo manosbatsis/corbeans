@@ -21,12 +21,12 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipPartiesMessage
 import com.r3.businessnetworks.membership.states.MembershipState
-import io.swagger.annotations.Api
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
-import java.util.*
+import java.util.Optional
 
-@Api(tags = arrayOf("BNMS BNO"), description = "BNO operation endpoints")
+@Tag(name = "BNMS BNO", description = "BNO operation endpoints")
 open class CorbeansBmnsBnoBaseController : CorbeansBmnsBaseController() {
 
     open fun activateMembership(

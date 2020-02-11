@@ -22,9 +22,13 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipPartiesMessage
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support.CorbeansBmnsBnoBaseController
 import com.r3.businessnetworks.membership.states.MembershipState
-import io.swagger.annotations.ApiOperation
-import org.springframework.web.bind.annotation.*
-import java.util.*
+import io.swagger.v3.oas.annotations.Operation
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import java.util.Optional
 
 /**
  *  Exposes BNMS Operator (BNO) methods as endpoints.
@@ -45,14 +49,14 @@ import java.util.*
 open class CorbeansBmnsBnoPathFragmentController : CorbeansBmnsBnoBaseController() {
 
     @PutMapping("memberships")
-    @ApiOperation(value = "Activate a pending membership.")
+    @Operation(summary = "Activate a pending membership.")
     override fun activateMembership(
             @PathVariable nodeName: Optional<String>,
             @RequestBody input: MembershipPartiesMessage): MembershipState<*> =
             super.activateMembership(nodeName, input)
 
     @DeleteMapping("memberships")
-    @ApiOperation(value = "Suspend an active membership.")
+    @Operation(summary = "Suspend an active membership.")
     override fun suspendMembership(
             @PathVariable nodeName: Optional<String>,
             @RequestBody input: MembershipPartiesMessage): MembershipState<*> =
