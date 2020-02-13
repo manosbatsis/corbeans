@@ -71,3 +71,32 @@ uploadArchives {
 		}
 	}
 }
+
+
+dokka {
+	outputFormat = 'javadoc'
+	outputDirectory = javadoc.destinationDir
+	linkMapping {
+		dir = "src/main/kotlin"
+		url = "https://github.com/manosbatsis/vaultaire/tree/master/${project.name}/src/main/kotlin/"
+		suffix = "#L"
+	}
+}
+
+task generateSourcesJar(type: Jar) {
+	group = 'jar'
+	from sourceSets.main.kotlin.srcDirs
+	classifier = 'sources'
+}
+
+
+task generateJavadoc(type: Jar, dependsOn: dokka) {
+	group = 'jar'
+	classifier = 'javadoc'
+	from javadoc.destinationDir
+}
+
+artifacts {
+	archives generateJavadoc
+	archives generateSourcesJar
+}

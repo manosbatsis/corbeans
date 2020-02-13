@@ -3,7 +3,7 @@ buildscript {
     file("$projectDir/./constants.properties").withInputStream { constants.load(it) }
 
     ext {
-
+        vcsUrl='https://manosbatsis.github.io/corbeans'
         //corda_gradle_plugins_version = '4.0.45'
 
         corda_release_group = constants.getProperty("cordaReleaseGroup")
@@ -116,8 +116,8 @@ plugins {
     id "com.github.hierynomus.license" version"0.15.0"
 }
 
-apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'io.codearte.nexus-staging'
+
 nexusStaging {
     packageGroup = 'com.github.manosbatsis.corbeans'
     stagingProfileId = 'com.github.manosbatsis'
@@ -162,6 +162,7 @@ subprojects {
     apply plugin: 'license'
     apply plugin: 'java'
     apply plugin: 'kotlin'
+    apply plugin: 'org.jetbrains.dokka'
 
     license {
         header rootProject.file("${rootProject.rootDir}/etc/license/header.txt")
@@ -241,20 +242,6 @@ apply plugin: 'net.corda.plugins.cordformation'
 apply plugin: 'net.corda.plugins.quasar-utils'
 
 
-dependencies {
-    // Corda dependencies.
-    cordaCompile "$corda_core_release_group:corda-core:$corda_core_release_version"
-    cordaRuntime "$corda_release_group:corda-node-api:$corda_release_version"
-    cordaRuntime "$corda_release_group:corda:$corda_release_version"
-
-    // CorDapp dependencies.
-    //cordapp project(":workflows")
-    //cordapp project(":contracts")
-
-    cordaCompile "org.apache.logging.log4j:log4j-slf4j-impl:${log4j_version}"
-    cordaCompile "org.apache.logging.log4j:log4j-web:${log4j_version}"
-    cordaCompile "org.slf4j:jul-to-slf4j:$slf4j_version"
-}
 
 cordapp {
     info {
