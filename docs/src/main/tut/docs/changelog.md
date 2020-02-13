@@ -8,6 +8,10 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.37
+
+- Build cleanup
+
 ## 0.36
 
 - Added `disableGracefulReconnect` configuration property, default is `false`
