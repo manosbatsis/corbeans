@@ -20,6 +20,7 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.rpc
 
 import com.github.manosbatsis.corbeans.corda.common.NodeParams
+import com.github.manosbatsis.vaultaire.rpc.NodeRpcConnection
 import net.corda.client.rpc.CordaRPCClient
 import net.corda.client.rpc.CordaRPCClientConfiguration
 import net.corda.client.rpc.CordaRPCClientConfiguration.Companion.DEFAULT
@@ -39,14 +40,13 @@ import javax.annotation.PreDestroy
 /**
  * Wraps a Corda Node RPC connection
  */
-abstract class NodeRpcConnection(private val nodeParams: NodeParams) {
+abstract class AbstractNodeRpcConnection(private val nodeParams: NodeParams) : NodeRpcConnection {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(NodeRpcConnection::class.java)
+        private val logger = LoggerFactory.getLogger(AbstractNodeRpcConnection::class.java)
     }
 
     private lateinit var rpcConnection: CordaRPCConnection
-    abstract val proxy: CordaRPCOps
 
     /**
      * Attempt to obtain a [CordaRPCConnection], retry five times with
@@ -157,5 +157,5 @@ abstract class NodeRpcConnection(private val nodeParams: NodeParams) {
     }
 
     /** Controls ignoring this node for Actuator */
-    fun skipInfo(): Boolean = this.nodeParams.skipInfo ?: false
+    override fun skipInfo(): Boolean = this.nodeParams.skipInfo ?: false
 }

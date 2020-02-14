@@ -24,8 +24,8 @@ import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.Membership
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipRequestMessage
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipsListRequestMessage
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.util.getMembership
-import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaRpcServiceBase
+import com.github.manosbatsis.vaultaire.rpc.NodeRpcConnection
 import com.r3.businessnetworks.membership.flows.bno.ActivateMembershipFlow
 import com.r3.businessnetworks.membership.flows.bno.SuspendMembershipFlow
 import com.r3.businessnetworks.membership.flows.member.AmendMembershipMetadataFlow

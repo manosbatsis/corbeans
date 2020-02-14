@@ -19,8 +19,8 @@
  */
 package com.github.manosbatsis.corbeans.corda.webserver.components
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeServiceImpl
+import com.github.manosbatsis.vaultaire.rpc.NodeRpcConnection
 
 
 class SampleCustomCordaNodeServiceImpl(

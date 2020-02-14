@@ -19,7 +19,6 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.config
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.context.properties.bind.Binder

@@ -8,6 +8,14 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.38
+
+- Refactored to [com.github.manosbatsis.vaultaire.rpc.NodeRpcConnection] interface
+
+## 0.37
+
+- Bumbed vaultaire version
+
 ## 0.37
 
 - Build cleanup
@@ -109,7 +117,7 @@ in favor of using `corbeans.cordapPackages` configuration in __application.prope
 	is now
 	```kotlin
 	import com.github.manosbatsis.corbeans.corda.common.NodeParams
-	import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection
+	import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.AbstractNodeRpcConnection
 	import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 	import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeServiceImpl
 	```

@@ -4,6 +4,7 @@
 // The signing plugin allows you to get the components,
 // created by standard Gradle tasks, signed:
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 // Conditional signature of artifacts

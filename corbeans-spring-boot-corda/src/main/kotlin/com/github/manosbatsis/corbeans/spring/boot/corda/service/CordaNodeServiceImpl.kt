@@ -19,7 +19,7 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection
+import com.github.manosbatsis.vaultaire.rpc.NodeRpcConnection
 import org.slf4j.LoggerFactory
 
 
@@ -33,5 +33,4 @@ open class CordaNodeServiceImpl(
     companion object {
         private val logger = LoggerFactory.getLogger(CordaNodeServiceImpl::class.java)
     }
-
 }

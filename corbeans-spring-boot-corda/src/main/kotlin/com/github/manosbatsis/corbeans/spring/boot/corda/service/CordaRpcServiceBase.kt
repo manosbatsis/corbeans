@@ -19,14 +19,13 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
-//import org.springframework.messaging.simp.SimpMessagingTemplate
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.Attachment
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentFile
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.toAttachment
-import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection
 import com.github.manosbatsis.vaultaire.dao.BasicStateService
 import com.github.manosbatsis.vaultaire.dao.StateService
+import com.github.manosbatsis.vaultaire.rpc.NodeRpcConnection
 import net.corda.core.contracts.ContractState
 import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.CordaX500Name

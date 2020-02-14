@@ -23,7 +23,6 @@ import com.github.manosbatsis.corbeans.corda.common.NodeParams
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.AbstractBeanFactoryPostProcessor
 import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.EagerNodeRpcConnection
 import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.LazyNodeRpcConnection
-import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.NodeRpcConnection
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkServiceImpl
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 import org.slf4j.LoggerFactory
