@@ -151,7 +151,7 @@ abstract class AbstractNodeRpcConnection(private val nodeParams: NodeParams) : N
         try{
             if (::rpcConnection.isInitialized) rpcConnection.notifyServerAndClose()
         }
-        catch (e: Exception){
+        catch (e: Throwable){
             logger.warn("Error notifying server ${nodeParams.address}", e)
         }
     }

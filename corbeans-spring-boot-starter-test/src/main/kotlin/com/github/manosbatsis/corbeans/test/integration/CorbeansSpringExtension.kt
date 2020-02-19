@@ -20,8 +20,11 @@
 package com.github.manosbatsis.corbeans.test.integration
 
 import org.junit.jupiter.api.extension.ExtensionContext
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace
+import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource
 import org.slf4j.LoggerFactory
 import org.springframework.test.context.junit.jupiter.SpringExtension
+
 
 /**
  *
@@ -66,7 +69,7 @@ class CorbeansSpringExtension: SpringExtension() {
         private val logger = LoggerFactory.getLogger(CorbeansSpringExtension::class.java)
     }
 
-    lateinit var nodeDriverHelper: NodeDriverHelper
+    private var ownsNetwork = false
 
     /**
      * Delegate to [SpringExtension.beforeAll],
@@ -74,13 +77,15 @@ class CorbeansSpringExtension: SpringExtension() {
      */
     @Throws(Exception::class)
     override fun beforeAll(context: ExtensionContext) {
-        logger.debug("Starting network")
-        // Start the network
-        this.nodeDriverHelper = NodeDriverHelper()
-        this.nodeDriverHelper.startNetwork()
-        logger.debug("Network is up, starting container")
-        // Nodes are started so we can go on with Spring
+        context.getStore(Namespace.create(CorbeansSpringExtension::class))
+                .getOrComputeIfAbsent("cordaNetwork", {key -> startNodes(context)})
+        logger.debug("Network is up, starting Spring container")
         super.beforeAll(context)
+    }
+
+    fun startNodes(context: ExtensionContext): CordaNetwork{
+        ownsNetwork = true
+        return CordaNetwork()
     }
 
     /**
@@ -89,11 +94,32 @@ class CorbeansSpringExtension: SpringExtension() {
      */
     @Throws(Exception::class)
     override fun afterAll(context: ExtensionContext) {
-        // Stop Spring first
-        logger.debug("Stopping container...")
+        // Is network owner?
+        if(ownsNetwork){
+            // Remove/stop network if existing
+            val cordaNetwork: CordaNetwork? = context.getStore(Namespace.create(CorbeansSpringExtension::class))
+                    .remove("cordaNetwork", CordaNetwork::class.java)
+            if(cordaNetwork != null) cordaNetwork.close()
+        }
+        logger.debug("Stopping Spring container...")
         super.afterAll(context)
-        // Spring stopped, shutdown the network
-        logger.debug("Stopping network...")
-        this.nodeDriverHelper.stopNetwork()
+    }
+
+    class CordaNetwork : CloseableResource {
+
+        val nodeDriverHelper: NodeDriverHelper
+
+        init {
+            logger.debug("Starting Corda network")
+            // Start the network
+            this.nodeDriverHelper = NodeDriverHelper()
+            this.nodeDriverHelper.startNetwork()
+        }
+
+        override fun close() {
+            logger.debug("Stopping Corda network...")
+            this.nodeDriverHelper.stopNetwork()
+        }
+
     }
 }

@@ -8,9 +8,14 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.39
+
+- Fixed `com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension` 
+trying to launch multiple Corda networks when using inner test classes
+
 ## 0.38
 
-- Refactored to [com.github.manosbatsis.vaultaire.rpc.NodeRpcConnection] interface
+- Refactored to `com.github.manosbatsis.vaultaire.rpc.NodeRpcConnection` interface
 
 ## 0.37
 
