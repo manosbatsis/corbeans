@@ -8,6 +8,10 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.40
+
+- Bumped Vaultaire to 0.20
+
 ## 0.39
 
 - Fixed `com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension` 
