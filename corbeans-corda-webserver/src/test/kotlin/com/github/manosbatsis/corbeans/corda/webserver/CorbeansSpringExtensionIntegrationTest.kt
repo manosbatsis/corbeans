@@ -20,12 +20,11 @@
 package com.github.manosbatsis.corbeans.corda.webserver
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.manosbatsis.corbeans.corda.webserver.components.SampleCustomCordaNodeServiceImpl
+import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 import com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension
-import com.github.manosbatsis.corbeans.test.integration.WithImplicitNetworkIT
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.CordaX500Name
@@ -41,16 +40,20 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.http.client.BufferingClientHttpRequestFactory
+import org.springframework.http.client.SimpleClientHttpRequestFactory
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.util.LinkedMultiValueMap
+import org.springframework.web.client.RestTemplate
 import java.util.UUID
 import kotlin.test.assertTrue
-
 
 /**
  * Same as [SingleNetworkIntegrationTest] only using [CorbeansSpringExtension]
@@ -64,12 +67,7 @@ class CorbeansSpringExtensionIntegrationTest {
 
     companion object {
         private val logger = LoggerFactory.getLogger(CorbeansSpringExtensionIntegrationTest::class.java)
-
     }
-
-    // autowire a JSON object mapper
-    @Autowired
-    lateinit var objectMapper: ObjectMapper
 
     // autowire a network service, used to access node services
     @Autowired
@@ -90,17 +88,14 @@ class CorbeansSpringExtensionIntegrationTest {
     lateinit var customCervice: SampleCustomCordaNodeServiceImpl
 
     @Autowired
-    lateinit var restTemplate: TestRestTemplate
+    lateinit var restTemplateOrig: TestRestTemplate
 
-    /* TODO: test single/multiple nodes using profiles
-    @Test
-    fun `Can use both default node and multiple node controller endpoints`() {
-        val defaultNodeMe = this.restTemplate.getForObject("/api/node/whoami", PartyNameModel::class.java)
-        assertNotNull(defaultNodeMe.organisation)
-        val partyANodeMe = this.restTemplate.getForObject("/api/node/whoami", PartyNameModel::class.java)
-        assertNotNull(partyANodeMe.organisation)
+    val restTemplate: TestRestTemplate by lazy {
+        restTemplateOrig.restTemplate.requestFactory = BufferingClientHttpRequestFactory(SimpleClientHttpRequestFactory())
+        restTemplateOrig.restTemplate.interceptors.add(RequestResponseLoggingInterceptor())
+        restTemplateOrig
     }
-    */
+
     @Nested
     inner class `Can access Actuator and Swagger` : InfoIntegrationTests(restTemplate, networkService)
 
@@ -215,13 +210,13 @@ class CorbeansSpringExtensionIntegrationTest {
     @Throws(Exception::class)
     fun `Can save and retrieve regular files as attachments`() {
         // Upload a couple of files
-        var attachmentReceipt: JsonNode = uploadAttachmentFiles(
+        var attachmentReceipt = uploadAttachmentFiles(
                 Pair("test.txt", "text/plain"),
                 Pair("test.png", "image/png"))
         // Make sure the attachment has a hash, is not marked as original and contains all uploaded files
-        val hash = attachmentReceipt.get("hash").asText()
+        val hash = attachmentReceipt.hash
         assertNotNull(hash)
-        // TODO assertTrue(attachmentReceipt.files.containsAll(listOf("test.txt", "test.png")))
+        assertTrue(attachmentReceipt.files.containsAll(listOf("test.txt", "test.png")))
         // Test archive download
         var attachment = this.restTemplate.getForEntity("/api/node/attachments/${hash}", ByteArray::class.java)
         assertEquals(HttpStatus.OK, attachment.statusCode)
@@ -248,7 +243,7 @@ class CorbeansSpringExtensionIntegrationTest {
 
     }
 
-    private fun uploadAttachmentFiles(vararg files: Pair<String, String>): JsonNode {
+    private fun uploadAttachmentFiles(vararg files: Pair<String, String>): AttachmentReceipt {
         val parameters = LinkedMultiValueMap<String, Any>()
         files.forEach {
             parameters.add("file", ClassPathResource("/uploadfiles/${it.first}"))
@@ -260,9 +255,9 @@ class CorbeansSpringExtensionIntegrationTest {
         val entity = HttpEntity(parameters, headers)
 
         val response = this.restTemplate.exchange("/api/node/attachments",
-                HttpMethod.POST, entity, JsonNode::class.java, "")
+                HttpMethod.POST, entity, AttachmentReceipt::class.java, "")
 
-        var attachmentReceipt: JsonNode? = response.body
+        var attachmentReceipt: AttachmentReceipt? = response.body
         logger.info("uploadAttachmentFiles, attachmentReceipt: ${attachmentReceipt.toString()}")
         return attachmentReceipt!!
     }
@@ -272,12 +267,12 @@ class CorbeansSpringExtensionIntegrationTest {
         headers.contentType = MediaType.MULTIPART_FORM_DATA
         // Add the archive to the upload
         // Test upload
-        var attachmentReceipt: JsonNode = uploadAttachmentFiles(Pair(fileName, mimeType))
+        var attachmentReceipt = uploadAttachmentFiles(Pair(fileName, mimeType))
         // Make sure the attachment has a hash, is marked as original and contains the uploaded archive
-        val hash = attachmentReceipt.get("hash").asText()
+        val hash = attachmentReceipt.hash
         assertNotNull(hash)
-        assertTrue(attachmentReceipt.get("savedOriginal").asBoolean())
-        //TODO assertNotNull(attachmentReceipt.withArray("files").toList().find{it == fileName}.singleOrNull())
+        assertTrue(attachmentReceipt.savedOriginal)
+        assertNotNull(attachmentReceipt.files.firstOrNull{it == fileName})
         // Test archive download
         val attachment = this.restTemplate.getForEntity("/api/node/attachments/${hash}", ByteArray::class.java)
         assertEquals(HttpStatus.OK, attachment.statusCode)

@@ -34,7 +34,11 @@ import net.corda.testing.node.StartedMockNode
 
 open class CorbeansMockNodeParametersConfig(val requireApplicationProperties: Boolean = false): SimpleMockNodeParametersConfig() {
 
-    val cordaNodesProperties: NodesProperties by lazy {
+    companion object{
+        val ignoredNodeNames = listOf("default", "cordform")
+    }
+
+    open val cordaNodesProperties: NodesProperties by lazy {
         loadCordaNodesProperties()
     }
 
@@ -49,11 +53,11 @@ open class CorbeansMockNodeParametersConfig(val requireApplicationProperties: Bo
      * [ALICE_NAME], [BOB_NAME] and [CHARLIE_NAME] or throws an error based on
      */
     override fun getNodeParameters(): List<MockNodeParameters> {
+
         return if (this.cordaNodesProperties.nodes.isNotEmpty()) {
-            this.cordaNodesProperties.nodes.map{
+            this.cordaNodesProperties.nodes.filterNot { ignoredNodeNames.contains(it.key) }.map{
                 val nodeName = it.key
-                val nodeParams = it.value
-                val testPartyName = nodeParams.testPartyName
+                val testPartyName = it.value.testPartyName
                 val x500Name = if (testPartyName != null) CordaX500Name.parse(testPartyName)
                 else CordaX500Name(nodeName, "Athens", "GR")
                 MockNodeParameters(legalName = x500Name)

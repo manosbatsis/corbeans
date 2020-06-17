@@ -19,24 +19,26 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.model.upload
 
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonFormat
 import net.corda.core.serialization.CordaSerializable
-import java.util.*
+import java.util.Date
 
 /**
  * Receipt of an attachment saved to the vault.
  * Annotated with [CordaSerializable] and thus [ContractState]-embeddable.
  */
 @CordaSerializable
-data class AttachmentReceipt(
+class AttachmentReceipt @JsonCreator constructor(
         /** The datetime of attachment persistence to the vault */
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy, HH:mm:ss", timezone = "UTC")
-        val date: Date? = null,
+        @field:JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy, HH:mm:ss", timezone = "UTC")
+        var date: Date? = null,
         /** The attachment [net.corda.core.crypto.SecureHash] string */
-        val hash: String,
+        var hash: String? = null,
         /** The attached files */
-        val files: List<String>,
+        var files: List<String> = emptyList(),
         /** The attachment authoring organization */
-        val author: String,
+        var author: String? = null,
         /** Whether an original archive was persisted in the vault, `false` if automatically created  */
-        val savedOriginal: Boolean = false)
+        var savedOriginal: Boolean = false
+)

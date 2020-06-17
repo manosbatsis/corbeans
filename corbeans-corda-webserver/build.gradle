@@ -2,6 +2,7 @@
 //apply from: "${rootProject.projectDir}/gradle/published.gradle"
 //apply plugin: 'application'
 apply plugin: 'kotlin-spring'
+apply plugin: 'kotlin-allopen'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'net.corda.plugins.quasar-utils'
 apply plugin: 'org.asciidoctor.convert'
@@ -27,11 +28,11 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-actuator:$spring_boot_version"){
 		exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
 	}
+	compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
 	compile("org.springframework.boot:spring-boot-starter-web:$spring_boot_version") {
 		exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
 	}
 	compileOnly("org.springframework.boot:spring-boot-configuration-processor:$spring_boot_version")
-
 	testCompile project(':corbeans-spring-boot-starter-test')
-	//compile project(":corbeans-spring-boot-bnms-starter")
+	//compile project(":corbeans-spring-boot`-bnms-starter")
 }

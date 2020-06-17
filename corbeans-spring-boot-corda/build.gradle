@@ -2,9 +2,9 @@
 apply from: "${rootProject.projectDir}/gradle/published.gradle"
 
 apply plugin: 'kotlin-spring'
-
 dependencies {
 	compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+	compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
 	// Module  dependencies.
 	compile project(":corbeans-corda-common")

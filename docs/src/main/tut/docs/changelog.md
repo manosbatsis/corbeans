@@ -8,6 +8,12 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+
+## 0.41
+
+- `CorbeansMockNodeParametersConfig` and thus `CorbeansMockNetworkFlowTest` 
+will now ignore `default` and `cordform` node configurations when creating a MockNetwork
+
 ## 0.40
 
 - Bumped Vaultaire to 0.20

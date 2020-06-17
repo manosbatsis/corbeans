@@ -20,6 +20,7 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure
 
 
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.github.manosbatsis.corbeans.spring.boot.corda.actuator.CordaInfoContributor
 import com.github.manosbatsis.corbeans.spring.boot.corda.actuator.CordaInfoEndpoint
 import com.github.manosbatsis.corbeans.spring.boot.corda.bind.CordaX500NameConverter
@@ -27,17 +28,17 @@ import com.github.manosbatsis.corbeans.spring.boot.corda.bind.SecureHashConverte
 import com.github.manosbatsis.corbeans.spring.boot.corda.bind.UniqueIdentifierConverter
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
-import net.corda.client.jackson.JacksonSupport
+import net.corda.client.jackson.internal.CordaModule
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.boot.jackson.JsonComponentModule
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.http.converter.json.SpringHandlerInstantiator
 
 
@@ -105,9 +106,37 @@ class CordaNodesAutoConfiguration {
     fun cordaInfoContributor(): CordaInfoContributor {
         return CordaInfoContributor()
     }
-
-    /** Force Spring/Jackson to use a Corda ObjectMapper for (de)serialization */
+    /*
     @Bean
+    fun mappingJackson2HttpMessageConverter(): MappingJackson2HttpMessageConverter {
+        return MappingJackson2HttpMessageConverter().apply {
+            this.objectMapper = ObjectMapper().apply {
+                registerModule(KotlinModule().apply {
+                    setDeserializerModifier(KotlinObjectDeserializerModifier)
+                })
+            }
+        }
+    }
+*/
+    @Bean
+    fun addAutowireInjectionToJackson(): Jackson2ObjectMapperBuilderCustomizer {
+        return Jackson2ObjectMapperBuilderCustomizer() {
+            fun customize(jacksonObjectMapperBuilder: Jackson2ObjectMapperBuilder) {
+
+                jacksonObjectMapperBuilder.handlerInstantiator(
+                        SpringHandlerInstantiator(this.applicationContext.autowireCapableBeanFactory))
+
+            }
+        }
+    }
+
+    @Bean
+    fun addCordaJacksonModule(): CordaModule {
+        return CordaModule()
+    }
+    /** Force Spring/Jackson to use a Corda ObjectMapper for (de)serialization
+    @Bean
+    @Primary
     @ConditionalOnProperty(
             prefix = "corbeans",
             name = arrayOf("objectmapper.disable"),
@@ -146,6 +175,6 @@ class CordaNodesAutoConfiguration {
         val converter = MappingJackson2HttpMessageConverter()
         converter.objectMapper = mapper
         return converter
-    }
+    } */
 
 }

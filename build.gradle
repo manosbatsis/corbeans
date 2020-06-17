@@ -9,7 +9,6 @@ buildscript {
         corda_release_group = constants.getProperty("cordaReleaseGroup")
         corda_core_release_group =  constants.getProperty("cordaCoreReleaseGroup")
         corda_release_version = constants.getProperty("cordaVersion")
-        corda_core_release_version = constants.getProperty("cordaCoreVersion")
         corda_gradle_plugins_version = constants.getProperty("gradlePluginsVersion")
         kotlin_version = constants.getProperty("kotlinVersion")
 
@@ -25,7 +24,7 @@ buildscript {
         // Misc
         corda_solutions_version = '2.0'
         kotlinx_coroutines_version = '0.30.2'
-        jackson_version = "2.9.7"
+        jackson_version = "2.10.3"
         hibernate_version = '5.4.3.Final'
         artemis_version = "2.6.2"
         netty_version = constants.getProperty("nettyVersion")
@@ -33,9 +32,9 @@ buildscript {
 
         dokka_version = '0.9.17'
         jupiter_api = '5.3.2'
-        scrudbeans_version = '0.15'
+        scrudbeans_version = '0.24'
         vaultaire_version = '0.20'
-        partiture_version = '0.8'
+        partiture_version = '0.10'
         springdoc_version = '1.2.30'
         quasar_group = 'co.paralleluniverse'
         quasar_version = constants.getProperty("quasarVersion")
@@ -138,6 +137,26 @@ allprojects {
     apply plugin: "com.dorongold.task-tree"
     apply plugin: 'idea'
 
+    configurations {
+        all {
+            // Stop deprecation warnings since we use stdlib-jdkX
+            exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre8'
+            exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre7'
+            resolutionStrategy {
+                eachDependency { DependencyResolveDetails details ->
+                    // Force corda_release_version
+                    def exclusions = ['corda-finance-contracts']
+                    if (details.requested.group == "net.corda" && !exclusions.contains(details.requested.name)) {
+                        details.useTarget group: corda_release_group, name: details.requested.name, version: corda_release_version
+                    }
+                    // Force dependencies to use the same version of as Kotlin as we.
+                    if (details.requested.group == "org.jetbrains.kotlin") {
+                        details.useTarget group: details.requested.group, name: details.requested.name, version: kotlin_version
+                    }
+                }
+            }
+        }
+    }
     idea {
         module {
             downloadJavadoc = false
