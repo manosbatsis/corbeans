@@ -30,7 +30,8 @@ import org.slf4j.LoggerFactory
  * @property proxy The RPC proxy.
  */
 open class LazyNodeRpcConnection(
-        nodeParams: NodeParams): AbstractNodeRpcConnection(nodeParams) {
+        nodeParams: NodeParams
+): AbstractNodeRpcConnection(nodeParams) {
 
     companion object {
         private val logger = LoggerFactory.getLogger(LazyNodeRpcConnection::class.java)

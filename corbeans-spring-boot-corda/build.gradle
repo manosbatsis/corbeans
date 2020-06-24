@@ -1,36 +1,37 @@
 
 apply from: "${rootProject.projectDir}/gradle/published.gradle"
 
-apply plugin: 'kotlin-spring'
 
+apply plugin: 'java-library'
+apply plugin: 'kotlin-spring'
 dependencies {
-	compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
 	// Module  dependencies.
-	compile project(":corbeans-corda-common")
+	api project(":corbeans-corda-common")
+	api "com.github.manosbatsis.vaultaire:vaultaire:$vaultaire_version"
 	// Corda dependencies.
-	compile "$corda_release_group:corda-rpc:$corda_release_version"
+	api "$corda_release_group:corda-rpc:$corda_release_version"
 
-	// Misc dependencies.
-	compile "com.github.manosbatsis.vaultaire:vaultaire:$vaultaire_version"
-	compile "org.apache.commons:commons-compress:1.18"
-	compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
+	// Spring dependencies.
+	api "org.springframework.boot:spring-boot-actuator:$spring_boot_version"
+	api group: 'org.springframework', name: 'spring-context', version:spring_version
+	api group: 'org.springframework', name: 'spring-beans', version:spring_version
+	api group: 'org.springframework', name: 'spring-web', version:spring_version
+	api group: 'org.springframework', name: 'spring-webmvc', version:spring_version
+
 	// OpenAPI/SpringDoc
-	compile ("org.springdoc:springdoc-openapi-common:${springdoc_version}") {
+	api ("org.springdoc:springdoc-openapi-common:${springdoc_version}") {
 		exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
 	}
-	compile ("org.springdoc:springdoc-openapi-data-rest:${springdoc_version}") {
-			exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+	api ("org.springdoc:springdoc-openapi-data-rest:${springdoc_version}") {
+		exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
 	}
-	// Spring dependencies.
-	compile "org.springframework.boot:spring-boot-actuator:$spring_boot_version"
-	compile group: 'org.springframework', name: 'spring-context', version:spring_version
-	compile group: 'org.springframework', name: 'spring-beans', version:spring_version
-	compile group: 'org.springframework', name: 'spring-web', version:spring_version
-	compile group: 'org.springframework', name: 'spring-webmvc', version:spring_version
-	compile group: 'org.springframework.boot', name: 'spring-boot-actuator', version:spring_boot_version
+	// Misc dependencies.
+	implementation "org.apache.commons:commons-compress:1.18"
 	// Logging dependencies.
-	compile "org.apache.logging.log4j:log4j-slf4j-impl:${log4j_version}"
-	compile "org.apache.logging.log4j:log4j-web:${log4j_version}"
-	compile "org.slf4j:jul-to-slf4j:$slf4j_version"
+	//compile "org.apache.logging.log4j:log4j-slf4j-impl:${log4j_version}"
+	//compile "org.apache.logging.log4j:log4j-web:${log4j_version}"
+	//compile "org.slf4j:jul-to-slf4j:$slf4j_version"
+
+	compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
 }

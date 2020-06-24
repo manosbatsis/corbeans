@@ -25,6 +25,7 @@ import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.EagerNodeRpcConnect
 import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.LazyNodeRpcConnection
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkServiceImpl
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
+import net.corda.core.serialization.SerializationCustomSerializer
 import org.slf4j.LoggerFactory
 import org.springframework.beans.BeansException
 import org.springframework.beans.factory.config.BeanDefinition.SCOPE_SINGLETON
@@ -32,7 +33,9 @@ import org.springframework.beans.factory.config.BeanFactoryPostProcessor
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
 import org.springframework.beans.factory.support.BeanDefinitionBuilder
 import org.springframework.beans.factory.support.BeanDefinitionRegistry
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider
 import org.springframework.core.annotation.Order
+import org.springframework.core.type.filter.AssignableTypeFilter
 
 
 /**
@@ -45,7 +48,11 @@ open class NodeServiceBeanFactoryPostProcessor : AbstractBeanFactoryPostProcesso
 
     companion object {
         private val logger = LoggerFactory.getLogger(NodeServiceBeanFactoryPostProcessor::class.java)
+        // TODO: AssignableTypeFilter
+
     }
+
+
 
     /**
      * Create and register a [CordaNodeService] bean per node according to configuration
@@ -55,6 +62,14 @@ open class NodeServiceBeanFactoryPostProcessor : AbstractBeanFactoryPostProcesso
         val beanDefinitionRegistry = beanFactory as BeanDefinitionRegistry
         // Pickup any user-defined global defaultParams, use defaults if missing
         val defaultParams = this.cordaNodesProperties.nodes.getOrDefault(NodeParams.NODENAME_DEFAULT, NodeParams.DEFAULT)
+        // Find and register SerializationCustomSerializer implementations with our RPC ops
+        val customSerializerTypes = findCustomSerializerTypes()
+        val customSerializers = customSerializerTypes
+                .map { it.getConstructor().newInstance() as SerializationCustomSerializer<*,*>}
+                .toSet()
+        val serializerNames = customSerializers.joinToString(",") { it.javaClass.canonicalName }
+        logger.debug("Loaded SerializationCustomSerializers: ${ serializerNames}")
+
         // Process node connection definitions
         this.cordaNodesProperties.nodes.forEach{ (nodeName, partialParams) ->
             // Ignore "default" overrides
@@ -62,6 +77,7 @@ open class NodeServiceBeanFactoryPostProcessor : AbstractBeanFactoryPostProcesso
                 logger.debug("Registering, node name: {}, address: {}", nodeName, partialParams.address)
                 // Merge params to complete config
                 val nodeParams = NodeParams.mergeParams(partialParams, defaultParams)
+                nodeParams.customSerializers = customSerializers
                 // register RPC connection wrapper bean
                 registerConnectionWrapper(nodeParams, nodeName, beanDefinitionRegistry)
                 // register Node service
@@ -71,6 +87,31 @@ open class NodeServiceBeanFactoryPostProcessor : AbstractBeanFactoryPostProcesso
         // Register a corda network service
         registerNetworkService(beanDefinitionRegistry)
 
+    }
+
+
+    /**
+     * Find [SerializationCustomSerializer] implementations within
+     * [com.github.manosbatsis.corbeans.corda.common.NodesProperties.getCordapPackages]
+     */
+    private fun findCustomSerializerTypes(): Set<Class<out SerializationCustomSerializer<*, *>>> {
+        val scanningProvider = ClassPathScanningCandidateComponentProvider(false)
+        scanningProvider.addIncludeFilter(AssignableTypeFilter(SerializationCustomSerializer::class.java))
+        return this.cordaNodesProperties.cordapPackages
+                .flatMap { scanningProvider.findCandidateComponents(it) }
+                .mapNotNull { beanDef ->
+                    val actualBeanDef = beanDef.let { it. originatingBeanDefinition ?: it}
+                    val beanClassName = actualBeanDef.beanClassName ?: beanDef.beanClassName ?: error("Cannot find serializer classname for $beanDef")
+                    val beanType: Class<out SerializationCustomSerializer<*, *>>? = try {
+                        Class.forName(beanClassName) as Class<out SerializationCustomSerializer<*, *>>
+                    } catch (e: Exception) {
+                        logger.error("findCustomSerializerTypes cannot load class $beanClassName as a SerializationCustomSerializer, ignorig", e)
+                        null
+                    }
+                    logger.debug("findCustomSerializerTypes, beanClassName: ${beanClassName}, type: $beanType")
+                    beanType
+                }
+                .toHashSet()
     }
 
     /** Register Corda network service */
@@ -108,7 +149,11 @@ open class NodeServiceBeanFactoryPostProcessor : AbstractBeanFactoryPostProcesso
     }
 
     /** Register RPC connection wrapper bean */
-    private fun registerConnectionWrapper(nodeParams: NodeParams, nodeName: String, beanDefinitionRegistry: BeanDefinitionRegistry): String {
+    private fun registerConnectionWrapper(
+            nodeParams: NodeParams,
+            nodeName: String,
+            beanDefinitionRegistry: BeanDefinitionRegistry
+    ): String {
         val rpcConnectionBeanName = "${nodeName}RpcConnection"
         val rpcConnectionType = if (nodeParams.eager!!) EagerNodeRpcConnection::class.java else LazyNodeRpcConnection::class.java
         val rpcConnectionBean = BeanDefinitionBuilder

@@ -8,6 +8,15 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+
+## 0.41
+
+- `CorbeansMockNodeParametersConfig` and thus `CorbeansMockNetworkFlowTest` 
+will now ignore `default` and `cordform` node configurations when creating a MockNetwork
+- Corbeans will no longer add an `ObjectMapper` from corda-jackson
+- Added workaround/fix for a Corda `LinkageError` when it's decorated `AttachmentURLStreamHandlerFactory` was applied
+- Bumped Corda to 4.4, Vaultaire to 0.25
+
 ## 0.40
 
 - Bumped Vaultaire to 0.20

@@ -1,9 +1,10 @@
 
+apply plugin: 'java-library'
 apply from: "${rootProject.projectDir}/gradle/published.gradle"
 
 dependencies {
-	compile project(":corbeans-corda-common")
-	compile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+	api project(":corbeans-corda-common")
+	implementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
 	implementation "com.github.manosbatsis.partiture:partiture-test:$partiture_version"
 	implementation "$corda_release_group:corda-node-driver:$corda_release_version"
 	implementation "$corda_release_group:corda-test-common:$corda_release_version"

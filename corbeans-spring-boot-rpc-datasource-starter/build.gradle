@@ -1,19 +1,22 @@
 
+apply plugin: 'java-library'
 apply from: "${rootProject.projectDir}/gradle/published.gradle"
-
 apply plugin: 'kotlin-spring'
 apply plugin: 'kotlin-jpa'
 
 dependencies {
-    compile project(':corbeans-spring-data-corda-rpc')
+    api project(':corbeans-spring-data-corda-rpc')
     //compile("org.springframework.boot:spring-boot-starter")
-	compile ("org.springframework.boot:spring-boot-starter-data-jpa:$spring_boot_version") {
+    implementation ("org.springframework.boot:spring-boot-starter-data-jpa:$spring_boot_version") {
         exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
     }
-    compile("org.springframework.boot:spring-boot-starter-validation:$spring_boot_version"){
+    implementation("org.springframework.boot:spring-boot-starter-validation:$spring_boot_version"){
         exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
     }
-    testCompile project(':corbeans-spring-boot-starter-test')
+    testImplementation project(':corbeans-spring-boot-starter-test')
+    testImplementation ("org.springframework.boot:spring-boot-starter-test:$spring_boot_version") {
+        exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+    }
     // Database Drivers
     //testImplementation("com.h2database:h2:$h2")
 }
