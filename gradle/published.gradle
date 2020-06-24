@@ -29,41 +29,32 @@ uploadArchives {
 			}
 
 			// Add required metadata to POM
-			pom {
-				project {
-					name project.name
-					packaging project.name == rootProject.name ? 'pom' : 'jar'
-					description 'Corda integration for Spring Boot.'
-					url 'https://manosbatsis.github.io/corbeans/'
+			afterEvaluate{
+				pom {
+					project {
+						name project.name
+						packaging project.name == rootProject.name ? 'pom' : 'jar'
+						description 'Corda integration for Spring Boot.'
+						url 'https://manosbatsis.github.io/corbeans/'
 
-					scm {
-						connection 'scm:git:git://github.com/manosbatsis/corbeans.git'
-						developerConnection 'scm:git:ssh://github.com/manosbatsis/corbeans.git'
-						url 'http://github.com/manosbatsis/corbeans/tree/master'
-					}
-
-					licenses {
-						license {
-							name 'GNU Lesser General Public License, Version 3'
-							url 'https://www.gnu.org/licenses/lgpl-3.0.txt'
+						scm {
+							connection 'scm:git:git://github.com/manosbatsis/corbeans.git'
+							developerConnection 'scm:git:ssh://github.com/manosbatsis/corbeans.git'
+							url 'http://github.com/manosbatsis/corbeans/tree/master'
 						}
-					}
 
-					developers {
-						developer {
-							id 'manosbatsis'
-							name 'Manos Batsis'
-							email 'manosbatsis@gmail.com'
+						licenses {
+							license {
+								name 'GNU Lesser General Public License, Version 3'
+								url 'https://www.gnu.org/licenses/lgpl-3.0.txt'
+							}
 						}
-					}
-					dependencies {
-						configurations.compile.allDependencies.each {
-							if(it.group != null && (it.name != null || "unspecified".equals(it.name)) && it.version != null){
-								dependency {
-									group it.group
-									name it.name
-									version it.version
-								}
+
+						developers {
+							developer {
+								id 'manosbatsis'
+								name 'Manos Batsis'
+								email 'manosbatsis@gmail.com'
 							}
 						}
 					}

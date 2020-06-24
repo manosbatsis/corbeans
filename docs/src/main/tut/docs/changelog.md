@@ -9,9 +9,13 @@ The following sections describe major changes per version
 and can be helpful with version upgrades.
 
 
+## 0.42
+
+- Fixed generated POMs
+
 ## 0.41
 
-- `CorbeansMockNodeParametersConfig` and thus `CorbeansMockNetworkFlowTest` 
+- `CorbeansMockNodeParametersConfig` and thus `CorbeansMockNetworkFlowTest`
 will now ignore `default` and `cordform` node configurations when creating a MockNetwork
 - Corbeans will no longer add an `ObjectMapper` from corda-jackson
 - Added workaround/fix for a Corda `LinkageError` when it's decorated `AttachmentURLStreamHandlerFactory` was applied
