@@ -22,17 +22,22 @@ bootJar {
 
 dependencies {
 
-	compile project(":corbeans-spring-boot-starter")
+	implementation project(":corbeans-spring-boot-starter")
 	// Add support for RESTful errors
-	compile ("com.github.manosbatsis.scrudbeans:scrudbeans-error:$scrudbeans_version")
-	compile("org.springframework.boot:spring-boot-starter-actuator:$spring_boot_version"){
+	implementation ("com.github.manosbatsis.scrudbeans:scrudbeans-error:$scrudbeans_version")
+	implementation("org.springframework.boot:spring-boot-starter-actuator:$spring_boot_version"){
 		exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
 	}
-	compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
-	compile("org.springframework.boot:spring-boot-starter-web:$spring_boot_version") {
+	implementation("org.springframework.boot:spring-boot-starter-log4j2:$spring_boot_version")
+	implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
+	implementation("org.springframework.boot:spring-boot-starter-web:$spring_boot_version") {
 		exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
 	}
 	compileOnly("org.springframework.boot:spring-boot-configuration-processor:$spring_boot_version")
-	testCompile project(':corbeans-spring-boot-starter-test')
+	testImplementation project(':corbeans-spring-boot-starter-test')
+
+	implementation ("org.springframework.boot:spring-boot-starter-test:$spring_boot_version") {
+		exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+	}
 	//compile project(":corbeans-spring-boot`-bnms-starter")
 }

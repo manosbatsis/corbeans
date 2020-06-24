@@ -20,15 +20,11 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure
 
 
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.github.manosbatsis.corbeans.spring.boot.corda.actuator.CordaInfoContributor
 import com.github.manosbatsis.corbeans.spring.boot.corda.actuator.CordaInfoEndpoint
-import com.github.manosbatsis.corbeans.spring.boot.corda.bind.CordaX500NameConverter
-import com.github.manosbatsis.corbeans.spring.boot.corda.bind.SecureHashConverter
-import com.github.manosbatsis.corbeans.spring.boot.corda.bind.UniqueIdentifierConverter
+import com.github.manosbatsis.corbeans.spring.boot.corda.bind.*
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
-import net.corda.client.jackson.internal.CordaModule
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -71,23 +67,44 @@ class CordaNodesAutoConfiguration {
 
     /** Add transparent [net.corda.core.crypto.SecureHash] conversion */
     @Bean
-    @ConditionalOnMissingBean
-    fun secureHashConverter(): SecureHashConverter {
-        return SecureHashConverter()
+    @ConditionalOnMissingBean(name = ["stringToSecureHashConverter"])
+    fun stringToSecureHashConverter(): StringToSecureHashConverter {
+        return StringToSecureHashConverter()
+    }
+    @Bean
+    @ConditionalOnMissingBean(name = ["secureHashToStringConverter"])
+    fun secureHashToStringConverter(): SecureHashToStringConverter {
+        return SecureHashToStringConverter()
     }
 
     /** Add transparent [net.corda.core.identity.CordaX500Name] conversion */
     @Bean
-    @ConditionalOnMissingBean
-    fun cordaX500NameConverter(): CordaX500NameConverter {
-        return CordaX500NameConverter()
+    @ConditionalOnMissingBean(name = ["cordaX500NameConverter"])
+    fun cordaX500NameConverter(): StringToCordaX500NameConverter {
+        return StringToCordaX500NameConverter()
     }
+    @Bean
+    @ConditionalOnMissingBean(name = ["cordaX500NameToStringConverter"])
+    fun cordaX500NameToStringConverter(): CordaX500NameToStringConverter {
+        return CordaX500NameToStringConverter()
+    }
+
 
     /** Add transparent [net.corda.core.contracts.UniqueIdentifier] conversion */
     @Bean
-    @ConditionalOnMissingBean
-    fun uniqueIdentifierConverter(): UniqueIdentifierConverter {
-        return UniqueIdentifierConverter()
+    @ConditionalOnMissingBean(name = ["uniqueIdentifierConverter"])
+    fun uniqueIdentifierConverter(): StringToUniqueIdentifierConverter {
+        return StringToUniqueIdentifierConverter()
+    }
+    @Bean
+    @ConditionalOnMissingBean(name = ["uniqueIdentifierToStringConverter"])
+    fun uniqueIdentifierToStringConverter(): UniqueIdentifierToStringConverter {
+        return UniqueIdentifierToStringConverter()
+    }
+    @Bean
+    @ConditionalOnMissingBean(name = ["partyToStringConverter"])
+    fun partyToStringConverter(): PartyToStringConverter {
+        return PartyToStringConverter()
     }
 
     /** Add custom actuator endpoint based on known nodes */
@@ -129,11 +146,13 @@ class CordaNodesAutoConfiguration {
             }
         }
     }
-
+/*
     @Bean
     fun addCordaJacksonModule(): CordaModule {
         return CordaModule()
     }
+
+ */
     /** Force Spring/Jackson to use a Corda ObjectMapper for (de)serialization
     @Bean
     @Primary

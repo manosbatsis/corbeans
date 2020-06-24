@@ -25,6 +25,7 @@ import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.Attachment
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 import com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension
+import com.github.manosbatsis.vaultaire.util.asUniqueIdentifier
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.CordaX500Name
@@ -40,19 +41,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.core.io.ClassPathResource
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
-import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
+import org.springframework.http.*
 import org.springframework.http.client.BufferingClientHttpRequestFactory
 import org.springframework.http.client.SimpleClientHttpRequestFactory
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.util.LinkedMultiValueMap
-import org.springframework.web.client.RestTemplate
-import java.util.UUID
+import java.util.*
 import kotlin.test.assertTrue
 
 /**
@@ -97,7 +91,7 @@ class CorbeansSpringExtensionIntegrationTest {
     }
 
     @Nested
-    inner class `Can access Actuator and Swagger` : InfoIntegrationTests(restTemplate, networkService)
+    inner class `Can access Actuator and Swagger` : InfoIntegrationTests(restTemplateOrig, networkService)
 
     @Test
     fun `Can inject services`() {
@@ -188,17 +182,22 @@ class CorbeansSpringExtensionIntegrationTest {
     @Test
     fun `Can handle object conversions`() {
         // convert to<>from SecureHash
-        val hash = "6D1687C143DF792A011A1E80670A4E4E0C25D0D87A39514409B1ABFC2043581F"
+        val hash = SecureHash.parse("6D1687C143DF792A011A1E80670A4E4E0C25D0D87A39514409B1ABFC2043581F")
         val hashEcho = this.restTemplate.getForEntity("/api/echo/echoSecureHash/${hash}", Any::class.java)
         logger.info("hashEcho body:  ${hashEcho.body}")
-        assertEquals(hash, hashEcho.body)
+        assertEquals(hash, SecureHash.parse(hashEcho.body.toString()))
         // convert to<>from UniqueIdentifier, including external ID with underscore
         val linearId = UniqueIdentifier("foo_bar-baz", UUID.randomUUID())
-        val linearIdEcho = this.restTemplate.getForEntity("/api/echo/echoUniqueIdentifier/${linearId}", UniqueIdentifier::class.java)
+        val linearIdEcho = this.restTemplate.getForEntity("/api/echo/echoUniqueIdentifier/${linearId}", Any::class.java)
         logger.info("linearIdEcho body:  ${linearIdEcho.body}")
-        assertEquals(linearId, linearIdEcho.body)
+        assertEquals(linearId, linearIdEcho.body.toString().asUniqueIdentifier())
         // convert to<>from CordaX500Name
-        val cordaX500Name = CordaX500Name.parse("O=Bank A, L=New York, C=US, OU=Org Unit, CN=Service Name")
+        testEchoX500Name(CordaX500Name.parse("O=Bank A, L=New York, C=US, OU=Org Unit, CN=Service Name"))
+        testEchoX500Name(CordaX500Name.parse("O=PartyA, L=London, C=GB"))
+
+    }
+
+    private fun testEchoX500Name(cordaX500Name: CordaX500Name) {
         val cordaX500NameEcho = this.restTemplate
                 .getForEntity("/api/echo/echoCordaX500Name/$cordaX500Name", Any::class.java)
         logger.info("cordaX500NameEcho body: ${cordaX500NameEcho.body}")

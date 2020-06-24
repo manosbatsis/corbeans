@@ -21,12 +21,8 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.rpc
 
 import com.github.manosbatsis.corbeans.corda.common.NodeParams
 import com.github.manosbatsis.vaultaire.rpc.NodeRpcConnection
-import net.corda.client.rpc.CordaRPCClient
-import net.corda.client.rpc.CordaRPCClientConfiguration
+import net.corda.client.rpc.*
 import net.corda.client.rpc.CordaRPCClientConfiguration.Companion.DEFAULT
-import net.corda.client.rpc.CordaRPCConnection
-import net.corda.client.rpc.GracefulReconnect
-import net.corda.client.rpc.RPCException
 import net.corda.core.messaging.ClientRpcSslOptions
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.utilities.NetworkHostAndPort
@@ -40,7 +36,9 @@ import javax.annotation.PreDestroy
 /**
  * Wraps a Corda Node RPC connection
  */
-abstract class AbstractNodeRpcConnection(private val nodeParams: NodeParams) : NodeRpcConnection {
+abstract class AbstractNodeRpcConnection(
+        private val nodeParams: NodeParams
+) : NodeRpcConnection {
 
     companion object {
         private val logger = LoggerFactory.getLogger(AbstractNodeRpcConnection::class.java)
@@ -64,7 +62,13 @@ abstract class AbstractNodeRpcConnection(private val nodeParams: NodeParams) : N
                         onDisconnect= { this.onDisconnect() },
                         onReconnect = { this.onReconnect() },
                         maxAttempts = nodeParams.maxReconnectAttempts ?: 5)
-                val rpcClient = CordaRPCClient(buildRpcAddress(), buildRpcClientConfig(), clientRpcSslOptions())
+                val rpcClient = CordaRPCClient(
+                        hostAndPort = buildRpcAddress(),
+                        configuration = buildRpcClientConfig(),
+                        sslConfiguration = clientRpcSslOptions()/*,
+                        classLoader = AbstractNodeRpcConnection::class.java.classLoader,
+                        customSerializers = nodeParams.customSerializers*/  )
+
                 rpcConnection = rpcClient.start(
                         username = nodeParams.username!!,
                         password = nodeParams.password!!,

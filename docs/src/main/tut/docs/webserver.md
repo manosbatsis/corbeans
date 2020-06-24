@@ -80,7 +80,6 @@ buildscript {
 }
 // 2: Add Corda v4
 dependencies {
-    cordaCompile "net.corda:corda-jackson:$corda_release_version"
     cordaCompile "net.corda:corda-rpc:$corda_release_version"
     cordaCompile "net.corda:corda-core:$corda_release_version"
     cordaRuntime "net.corda:corda:$corda_release_version"

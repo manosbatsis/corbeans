@@ -20,16 +20,33 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.bind
 
 import net.corda.core.identity.CordaX500Name
+import org.springframework.boot.jackson.JsonComponent
 import org.springframework.core.convert.converter.Converter
 
 /**
  * Custom converter for transparent String<>CordaX500Name binding
  */
-class CordaX500NameConverter : Converter<String, CordaX500Name> {
+class StringToCordaX500NameConverter : Converter<String, CordaX500Name> {
 
     override fun convert(source: String): CordaX500Name {
         return CordaX500Name.parse(source)
     }
+}
+/**
+ * Custom converter for transparent CordaX500Name<>String binding
+ */
+class CordaX500NameToStringConverter : Converter<CordaX500Name, String> {
+    override fun convert(source: CordaX500Name):  String{
+        return source.toString()
+    }
+}
 
+@JsonComponent
+class CordaX500NameJsonSerializer : AbstractToStringSerializer<CordaX500Name>()
 
+@JsonComponent
+class CordaX500NameJsonDeserializer : AbstractFromStringDeserializer<CordaX500Name>(){
+    override fun fromString(value: String): CordaX500Name {
+        return CordaX500Name.parse(value)
+    }
 }

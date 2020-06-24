@@ -23,9 +23,9 @@ import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.Attachment
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentFile
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.toAttachment
-import com.github.manosbatsis.vaultaire.dao.BasicStateService
-import com.github.manosbatsis.vaultaire.dao.StateService
 import com.github.manosbatsis.vaultaire.rpc.NodeRpcConnection
+import com.github.manosbatsis.vaultaire.service.dao.BasicStateService
+import com.github.manosbatsis.vaultaire.service.dao.StateService
 import net.corda.core.contracts.ContractState
 import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.CordaX500Name
@@ -38,7 +38,7 @@ import org.springframework.web.server.ResponseStatusException
 import java.io.InputStream
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.util.Date
+import java.util.*
 
 
 /**

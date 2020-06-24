@@ -1,11 +1,9 @@
 
+apply plugin: 'java-library'
 apply from: "${rootProject.projectDir}/gradle/published.gradle"
-
 apply plugin: 'kotlin-spring'
 
 dependencies {
-    compile project(':corbeans-spring-boot-autoconfigure')
-
-    testCompile project(':corbeans-spring-boot-starter-test')
-    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    api project(':corbeans-spring-boot-autoconfigure')
+    testImplementation project(':corbeans-spring-boot-starter-test')
 }

@@ -20,6 +20,7 @@
 package com.github.manosbatsis.corbeans.corda.common
 
 import net.corda.client.rpc.CordaRPCClientConfiguration
+import net.corda.core.serialization.SerializationCustomSerializer
 import java.time.Duration
 
 /**
@@ -155,6 +156,8 @@ class NodeParams {
     var trackRpcCallSites: Boolean? = null
     /** Whether to skip this node from actuator */
     var skipInfo: Boolean? = null
+
+    var customSerializers: Set<SerializationCustomSerializer<*, *>> = emptySet()
 
     override fun toString(): String {
         return "NodeParams(address=$address, adminAddress=$adminAddress, eager=$eager, primaryServiceType=$primaryServiceType, connectionMaxRetryInterval=$connectionMaxRetryInterval, connectionRetryInterval=$connectionRetryInterval, connectionRetryIntervalMultiplier=$connectionRetryIntervalMultiplier)"

@@ -33,7 +33,7 @@ buildscript {
         dokka_version = '0.9.17'
         jupiter_api = '5.3.2'
         scrudbeans_version = '0.24'
-        vaultaire_version = '0.20'
+        vaultaire_version = '0.25'
         partiture_version = '0.10'
         springdoc_version = '1.2.30'
         quasar_group = 'co.paralleluniverse'
@@ -257,8 +257,8 @@ subprojects {
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
         implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
 
-        testCompile "org.junit.jupiter:junit-jupiter-api:$jupiter_api"
-        testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+        testImplementation "org.junit.jupiter:junit-jupiter-api:$jupiter_api"
+        testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
         testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiter_api")
 
     }

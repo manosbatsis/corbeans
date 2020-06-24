@@ -20,16 +20,34 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.bind
 
 import net.corda.core.crypto.SecureHash
+import org.springframework.boot.jackson.JsonComponent
 import org.springframework.core.convert.converter.Converter
+
 
 /**
  * Custom converter for transparent String<>SecureHash binding
  */
-class SecureHashConverter : Converter<String, SecureHash> {
+class StringToSecureHashConverter : Converter<String, SecureHash> {
 
     override fun convert(source: String): SecureHash {
         return SecureHash.parse(source)
     }
+}
+/**
+ * Custom converter for transparent String<>SecureHash binding
+ */
+class SecureHashToStringConverter : Converter<SecureHash, String> {
 
+    override fun convert(source: SecureHash): String {
+        return source.toString()
+    }
+}
 
+@JsonComponent
+class SecureHashJsonSerializer : AbstractToStringSerializer<SecureHash>()
+@JsonComponent
+class SecureHashJsonDeserializer : AbstractFromStringDeserializer<SecureHash>(){
+    override fun fromString(value: String): SecureHash {
+        return SecureHash.parse(value)
+    }
 }

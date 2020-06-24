@@ -1,21 +1,21 @@
 
+apply plugin: 'java-library'
 apply from: "${rootProject.projectDir}/gradle/published.gradle"
-
 apply plugin: 'kotlin-spring'
 
 dependencies {
 
-	compile project(":corbeans-spring-boot-corda")
-	compile ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_coroutines_version")
+	api project(":corbeans-spring-boot-corda")
+	implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_coroutines_version")
 
 
-	compile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-	compile "org.springframework:spring-test:$spring_version"
-	compile ("org.springframework.boot:spring-boot-starter-test:$spring_boot_version") {
+	//implementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+	//implementation "org.springframework:spring-test:$spring_version"
+	api ("org.springframework.boot:spring-boot-starter-test:$spring_boot_version") {
 		exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
 	}
 
-	compile "org.junit.jupiter:junit-jupiter-api:$jupiter_api"
+	implementation "org.junit.jupiter:junit-jupiter-api:$jupiter_api"
 	runtimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiter_api")
 
 	implementation "$corda_release_group:corda-node-driver:$corda_release_version"

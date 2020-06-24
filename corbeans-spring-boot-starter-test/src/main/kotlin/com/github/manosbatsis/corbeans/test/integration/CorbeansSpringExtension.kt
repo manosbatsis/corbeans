@@ -19,11 +19,13 @@
  */
 package com.github.manosbatsis.corbeans.test.integration
 
+import net.corda.core.serialization.internal.AttachmentURLStreamHandlerFactory
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource
 import org.slf4j.LoggerFactory
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import java.net.URL
 
 
 /**
@@ -81,6 +83,58 @@ class CorbeansSpringExtension: SpringExtension() {
                 .getOrComputeIfAbsent("cordaNetwork", {key -> startNodes(context)})
         logger.debug("Network is up, starting Spring container")
         super.beforeAll(context)
+    }
+
+    /**
+     * Fixes a linkage error when the decorated URLStreamHandlerFactory from
+     * https://github.com/corda/corda/blob/879c3c72e6386069c2c9296d0b7d9b9316e2b588/core/src/main/kotlin/net/corda/core/serialization/internal/AttachmentsClassLoader.kt#L154
+     * is used, resulting in:
+     * ```
+     * java.lang.LinkageError: net/corda/core/serialization/internal/AttachmentURLStreamHandlerFactory
+     *   at net.corda.core.serialization.internal.AttachmentsClassLoader.<init>(AttachmentsClassLoader.kt:454) ~[corda-core-4.5-RC05.jar:?]
+     *   at net.corda.core.serialization.internal.AttachmentsClassLoaderBuilder$withAttachmentsClassloaderContext$serializationContext$1.apply(AttachmentsClassLoader.kt:317) ~[corda-core-4.5-RC05.jar:?]
+     *   at net.corda.core.serialization.internal.AttachmentsClassLoaderBuilder$withAttachmentsClassloaderContext$serializationContext$1.apply(AttachmentsClassLoader.kt:290) ~[corda-core-4.5-RC05.jar:?]
+     *   at java.util.HashMap.computeIfAbsent(HashMap.java:1127) ~[?:1.8.0_181]
+     *   at java.util.Collections$SynchronizedMap.computeIfAbsent(Collections.java:2672) ~[?:1.8.0_181]
+     *   at net.corda.core.serialization.internal.AttachmentsClassLoaderBuilder.withAttachmentsClassloaderContext(AttachmentsClassLoader.kt:315) ~[corda-core-4.5-RC05.jar:?]
+     *   at net.corda.core.serialization.internal.AttachmentsClassLoaderBuilder.withAttachmentsClassloaderContext$default(AttachmentsClassLoader.kt:311) ~[corda-core-4.5-RC05.jar:?]
+     *   at net.corda.core.transactions.LedgerTransaction.internalPrepareVerify$core(LedgerTransaction.kt:217) ~[corda-core-4.5-RC05.jar:?]
+     *   at net.corda.core.transactions.LedgerTransaction.verify(LedgerTransaction.kt:207) ~[corda-core-4.5-RC05.jar:?]
+     *   at net.corda.core.transactions.TransactionBuilder.addMissingDependency(TransactionBuilder.kt:206) ~[corda-core-4.5-RC05.jar:?]\
+     *   at net.corda.core.transactions.TransactionBuilder.toWireTransactionWithContext(TransactionBuilder.kt:186) ~[corda-core-4.5-RC05.jar:?]\\
+     *   at net.corda.core.transactions.TransactionBuilder.toWireTransactionWithContext$core(TransactionBuilder.kt:146) ~[corda-core-4.5-RC05.jar:?]
+     *   at net.corda.core.transactions.TransactionBuilder.toWireTransaction(TransactionBuilder.kt:140) ~[corda-core-4.5-RC05.jar:?]
+     *   at net.corda.core.transactions.TransactionBuilder.toLedgerTransaction(TransactionBuilder.kt:622) ~[corda-core-4.5-RC05.jar:?]
+     *   at net.corda.core.transactions.TransactionBuilder.verify(TransactionBuilder.kt:630) ~[corda-core-4.5-RC05.jar:?]
+     * ```
+     */
+    override fun postProcessTestInstance(testInstance: Any, context: ExtensionContext) {
+        super.postProcessTestInstance(testInstance, context)
+        val lockField = URL::class.java.getDeclaredField("streamHandlerLock")
+        // It is a private field so we need to make it accessible
+        // Note: this will only work as-is in JDK8.
+        lockField.isAccessible = true
+        // Use the same lock to reset the factory
+        synchronized(lockField.get(null)) {
+            // Retrieve the `URL.factory` field
+            val factoryField = URL::class.java.getDeclaredField("factory")
+            // Make it accessible
+            factoryField.isAccessible = true
+            // Reset the value to prevent Error due to a factory already defined
+            factoryField.set(null, null)
+            // Set our custom factory and wrap the current one into it
+            URL.setURLStreamHandlerFactory(AttachmentURLStreamHandlerFactory/*
+                    // Set the factory to a decorator
+                    object : URLStreamHandlerFactory {
+                        // route between our own and the pre-existing factory
+                        override fun createURLStreamHandler(protocol: String): URLStreamHandler? {
+                            return AttachmentURLStreamHandlerFactory.createURLStreamHandler(protocol)
+                                    ?: existingFactory.createURLStreamHandler(protocol)
+                        }
+                    }
+                    */
+            )
+        }
     }
 
     fun startNodes(context: ExtensionContext): CordaNetwork{

@@ -19,32 +19,30 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.bind
 
-import com.github.manosbatsis.vaultaire.util.asUniqueIdentifier
-import net.corda.core.contracts.UniqueIdentifier
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.databind.SerializerProvider
+import net.corda.core.identity.Party
 import org.springframework.boot.jackson.JsonComponent
 import org.springframework.core.convert.converter.Converter
 
 /**
- * Custom converter for transparent String<>UniqueIdentifier binding.
- * External ID conversions are supported for strings following an ${externalId}_${id} format
+ * Custom converter for transparent String<>SecureHash binding
  */
-class StringToUniqueIdentifierConverter : Converter<String, UniqueIdentifier> {
-    override fun convert(source: String): UniqueIdentifier {
-        return source.asUniqueIdentifier()
+class PartyToStringConverter : Converter<Party, String?> {
+    override fun convert(source: Party): String? {
+        return source.name.toString()
     }
 }
-class UniqueIdentifierToStringConverter : Converter<UniqueIdentifier, String> {
-    override fun convert(source: UniqueIdentifier): String {
-        return source.toString()
-    }
-}
-
 @JsonComponent
-class UniqueIdentifierJsonSerializer : AbstractToStringSerializer<UniqueIdentifier>()
-
-@JsonComponent
-class UniqueIdentifierJsonDeserializer : AbstractFromStringDeserializer<UniqueIdentifier>(){
-    override fun fromString(value: String): UniqueIdentifier {
-        return value.asUniqueIdentifier()
+class PartyConverter : AbstractToStringSerializer<Party>(){
+    override fun serialize(
+            obj: Party?, jsonGenerator: JsonGenerator, serializerProvider: SerializerProvider?
+    ) {
+        if(obj == null){
+            jsonGenerator.writeNull()
+        }
+        else {
+            jsonGenerator.writeString(obj.name.toString())
+        }
     }
 }

@@ -21,12 +21,13 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.rpc.test
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.beans.RpcUserRepository
 import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.entities.RpcUser
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest()
@@ -39,8 +40,8 @@ class DataJpaIntegrationTest(@Autowired val repo: RpcUserRepository) {
         val personSet = hashSetOf(p)
         repo.save(p)
         val hashCodeAfter = p.hashCode()
-        assertThat(repo.findAll()).hasSize(1)
-        assertThat(personSet).contains(p)
-        assertThat(hashCodeAfter).isEqualTo(hashCodeBefore)
+        assertEquals(1, repo.findAll().size)
+        assertTrue(personSet.contains(p))
+        assertEquals(hashCodeBefore, hashCodeAfter)
     }
 }
