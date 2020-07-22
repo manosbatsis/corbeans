@@ -19,6 +19,7 @@
  */
 package com.github.manosbatsis.corbeans.corda.common.test
 
+import com.github.manosbatsis.corbeans.corda.common.CorbeansNodesPropertiesWrapper
 import com.github.manosbatsis.corbeans.corda.common.NodesProperties
 import com.github.manosbatsis.corbeans.corda.common.Util
 import com.github.manosbatsis.partiture.test.MockNodeParametersConfig
@@ -42,7 +43,8 @@ open class CorbeansMockNodeParametersConfig(val requireApplicationProperties: Bo
         loadCordaNodesProperties()
     }
 
-    protected open fun loadCordaNodesProperties(): NodesProperties = Util.loadProperties(true)
+    protected open fun loadCordaNodesProperties(): NodesProperties =
+            Util.loadProperties(CorbeansNodesPropertiesWrapper.Config)
 
     override fun getCordappPackages(): List<String> = cordaNodesProperties.cordapPackages
 

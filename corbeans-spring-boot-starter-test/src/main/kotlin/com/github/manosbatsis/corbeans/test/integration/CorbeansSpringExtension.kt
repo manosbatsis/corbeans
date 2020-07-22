@@ -123,7 +123,7 @@ class CorbeansSpringExtension: SpringExtension() {
         init {
             logger.debug("Starting Corda network")
             // Start the network
-            this.nodeDriverHelper = NodeDriverHelper()
+            this.nodeDriverHelper = CorbeansNodeDriverHelper()
             this.nodeDriverHelper.startNetwork()
         }
 

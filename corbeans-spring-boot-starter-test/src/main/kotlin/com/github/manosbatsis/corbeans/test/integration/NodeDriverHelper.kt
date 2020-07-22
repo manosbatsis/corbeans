@@ -19,6 +19,7 @@
  */
 package com.github.manosbatsis.corbeans.test.integration
 
+import com.github.manosbatsis.corbeans.corda.common.CorbeansNodesPropertiesWrapper
 import com.github.manosbatsis.corbeans.corda.common.NodeParams
 import com.github.manosbatsis.corbeans.corda.common.NodesProperties
 import com.github.manosbatsis.corbeans.corda.common.Util
@@ -32,6 +33,7 @@ import net.corda.core.concurrent.CordaFuture
 import net.corda.core.flows.FlowLogic
 import net.corda.core.flows.IllegalFlowLogicException
 import net.corda.core.identity.CordaX500Name
+import net.corda.core.internal.concurrent.doOnComplete
 import net.corda.testing.common.internal.testNetworkParameters
 import net.corda.testing.core.DUMMY_NOTARY_NAME
 import net.corda.testing.driver.DriverDSL
@@ -47,7 +49,9 @@ import net.corda.testing.node.internal.TestCordappImpl
 import net.corda.testing.node.internal.findCordapp
 import org.slf4j.LoggerFactory
 
-
+class CorbeansNodeDriverHelper(): NodeDriverHelper(
+        Util.loadProperties(CorbeansNodesPropertiesWrapper.Config)
+)
 /**
  * Uses Corda's node driver to either:
  *
@@ -56,18 +60,22 @@ import org.slf4j.LoggerFactory
  *
  * This helper class is not threadsafe as concurrent networks would result in port conflicts.
  */
-class NodeDriverHelper(val cordaNodesProperties: NodesProperties = Util.loadProperties()) {
+open class NodeDriverHelper(val cordaNodesProperties: NodesProperties) {
 
     companion object {
         private val logger = LoggerFactory.getLogger(NodeDriverHelper::class.java)
     }
 
-    private var state = State.STOPPED
+    enum class State {
+        STOPPED, STARTING, RUNNING, STOPPING, ERROR
+    }
+
+    protected var state = State.STOPPED
     // Create job and scope
     private val job = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.Default + job)
-    private val nodeHandles: MutableMap<String, NodeHandle> = mutableMapOf()
-    private val driverNotaryHandles = mutableListOf<NotaryHandle>()
+    val nodeHandles: MutableMap<String, NodeHandle> = mutableMapOf()
+    val driverNotaryHandles = mutableListOf<NotaryHandle>()
 
     /**
      * Starts the Corda network
@@ -201,6 +209,10 @@ class NodeDriverHelper(val cordaNodesProperties: NodesProperties = Util.loadProp
         }
     }
 
+    private fun onComlete(s: String) {
+
+    }
+
     private fun DriverDSL.startNodeFutures(): Map<String, CordaFuture<NodeHandle>> {
         // Note addresses to filter out any dupes
         val startedRpcAddresses = mutableSetOf<String>()
@@ -303,6 +315,3 @@ class NodeDriverHelper(val cordaNodesProperties: NodesProperties = Util.loadProp
     }
 }
 
-private enum class State {
-    STOPPED, STARTING, RUNNING, STOPPING, ERROR
-}
