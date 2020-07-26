@@ -81,6 +81,9 @@ class NodeParams {
             nodeParams.trackRpcCallSites = partialParams.trackRpcCallSites ?: defaultParams.trackRpcCallSites ?: DEFAULT.trackRpcCallSites!!
             nodeParams.eager = partialParams.eager ?: defaultParams.eager ?: DEFAULT.eager!!
             nodeParams.skipInfo = partialParams.skipInfo ?: defaultParams.skipInfo ?: DEFAULT.skipInfo!!
+            nodeParams.trustStorePassword = partialParams.trustStorePassword ?: defaultParams.trustStorePassword ?: DEFAULT.trustStorePassword
+            nodeParams.trustStorePath = partialParams.trustStorePath ?: defaultParams.trustStorePath ?: DEFAULT.trustStorePath
+            nodeParams.trustStoreProvider = partialParams.trustStoreProvider
 
             return nodeParams
         }
