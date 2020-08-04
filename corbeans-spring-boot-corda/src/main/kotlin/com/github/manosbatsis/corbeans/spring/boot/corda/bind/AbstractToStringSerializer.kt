@@ -34,21 +34,21 @@ abstract class AbstractToStringSerializer<T> : JsonSerializer<T?>() {
     override fun serialize(
             obj: T?, jsonGenerator: JsonGenerator, serializerProvider: SerializerProvider?
     ) {
-        if(obj == null){
+        if (obj == null) {
             jsonGenerator.writeNull()
-        }
-        else {
+        } else {
             jsonGenerator.writeString(obj.toString())
         }
     }
 }
+
 abstract class AbstractFromStringDeserializer<T> : JsonDeserializer<T?>() {
     @Throws(IOException::class, JsonProcessingException::class)
     override fun deserialize(jsonParser: JsonParser,
                              deserializationContext: DeserializationContext?): T? {
         val value: String? = jsonParser.text
 
-        return if(value == null) null else try {
+        return if (value == null) null else try {
             fromString(value)
         } catch (e: IllegalArgumentException) {
             throw JsonParseException(jsonParser, "Invalid value ${value}: ${e.message}", e)

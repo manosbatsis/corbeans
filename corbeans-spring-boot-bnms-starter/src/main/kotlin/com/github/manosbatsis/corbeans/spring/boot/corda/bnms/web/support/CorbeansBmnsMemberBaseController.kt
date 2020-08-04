@@ -72,5 +72,4 @@ open class CorbeansBmnsMemberBaseController : CorbeansBmnsBaseController() {
                             MembershipsListRequestMessage(bno, networkId.orElse(null), forceRefresh, filterOutMissingFromNetworkMap))
 
 
-
 }

@@ -17,10 +17,9 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda.rpc.beans
+package com.github.manosbatsis.corda.rpc.poolboy.beans
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.entities.RpcPermission
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface RpcPermissionRepository : JpaRepository<RpcPermission, String> {
+interface RpcUserRepository : JpaRepository<com.github.manosbatsis.corda.rpc.poolboy.entities.RpcUser, String> {
 }

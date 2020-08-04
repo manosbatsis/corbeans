@@ -33,6 +33,7 @@ class StringToUniqueIdentifierConverter : Converter<String, UniqueIdentifier> {
         return source.asUniqueIdentifier()
     }
 }
+
 class UniqueIdentifierToStringConverter : Converter<UniqueIdentifier, String> {
     override fun convert(source: UniqueIdentifier): String {
         return source.toString()
@@ -43,7 +44,7 @@ class UniqueIdentifierToStringConverter : Converter<UniqueIdentifier, String> {
 class UniqueIdentifierJsonSerializer : AbstractToStringSerializer<UniqueIdentifier>()
 
 @JsonComponent
-class UniqueIdentifierJsonDeserializer : AbstractFromStringDeserializer<UniqueIdentifier>(){
+class UniqueIdentifierJsonDeserializer : AbstractFromStringDeserializer<UniqueIdentifier>() {
     override fun fromString(value: String): UniqueIdentifier {
         return value.asUniqueIdentifier()
     }

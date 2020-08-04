@@ -29,14 +29,13 @@ import net.corda.core.node.services.vault.QueryCriteria
 import net.corda.core.node.services.vault.builder
 
 /** Find the membership matching the given member and BNO parties */
-fun <T: Any> getMembership(
+fun <T : Any> getMembership(
         member: Party, bno: Party, cordaRpcService: CordaRpcService
 ): StateAndRef<MembershipState<T>>? {
     val criteria = QueryCriteria.VaultQueryCriteria(Vault.StateStatus.UNCONSUMED)
             .and(memberCriteria(member))
             .and(bnoCriteria(bno))
-    val states = cordaRpcService.proxy()
-            .vaultQueryByCriteria(criteria, MembershipState::class.java).states
+    val states = cordaRpcService.queryBy(MembershipState::class.java, criteria).states
     return if (states.isEmpty()) null
     else (states.sortedBy { it.state.data.modified }.last() as StateAndRef<MembershipState<T>>)
 }
@@ -44,6 +43,7 @@ fun <T: Any> getMembership(
 private fun memberCriteria(member: Party) =
         QueryCriteria.VaultCustomQueryCriteria(
                 builder { MembershipStateSchemaV1.PersistentMembershipState::member.equal(member) })
+
 private fun bnoCriteria(bno: Party) =
         QueryCriteria.VaultCustomQueryCriteria(
                 builder { MembershipStateSchemaV1.PersistentMembershipState::bno.equal(bno) })

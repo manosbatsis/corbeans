@@ -33,6 +33,7 @@ class CordaInfoContributor : InfoContributor {
         private val logger = LoggerFactory.getLogger(CordaInfoContributor::class.java)
     }
 
+    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     lateinit var networkService: CordaNetworkService
 
@@ -40,11 +41,9 @@ class CordaInfoContributor : InfoContributor {
     override fun contribute(builder: Info.Builder) {
         try {
             builder.withDetail("corda", networkService.getInfo())
-        }
-        catch (e: RPCException){
+        } catch (e: RPCException) {
             logger.warn("RPC Error contributing to Actuator \"info\" endpoint", e)
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             logger.warn("Error contributing to Actuator \"info\" endpoint", e)
         }
     }

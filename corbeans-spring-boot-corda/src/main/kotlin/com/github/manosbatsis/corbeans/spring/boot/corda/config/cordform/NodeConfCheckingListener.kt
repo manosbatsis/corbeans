@@ -28,7 +28,7 @@ import org.springframework.boot.system.ApplicationHome
 import org.springframework.context.ApplicationListener
 import org.springframework.core.env.PropertiesPropertySource
 import java.io.File
-import java.util.*
+import java.util.Properties
 
 /**
  * Looks for Corda node/web-server.conf files within the same folder
@@ -50,14 +50,13 @@ class NodeConfCheckingListener : ApplicationListener<ApplicationEnvironmentPrepa
         val homeDir: File = ApplicationHome().dir
         // Load node config if it exists
         val nodeConfFile = File(homeDir, "node.conf")
-        if(nodeConfFile.exists()) {
+        if (nodeConfFile.exists()) {
             logger.debug("Found Corda node configuration at {}", nodeConfFile.absolutePath)
             val nodeConfig = buildNodeConfig(nodeConfFile)
             val nodeProperties = buildNodeProperties(nodeConfig)
             // Add node properties to env
             event.environment.propertySources.addFirst(PropertiesPropertySource("node", nodeProperties))
-        }
-        else {
+        } else {
             logger.debug("Not a Corda node directory: {}", homeDir.absolutePath)
         }
     }
@@ -85,7 +84,8 @@ class NodeConfCheckingListener : ApplicationListener<ApplicationEnvironmentPrepa
         // Set RPC connection credentials
         var user: Config = selectRpcUser(finalConfig)
         // either "user" or "username"
-        nodeProperties.put("corbeans.nodes.cordform.username",user.getString("user") ?: getConfigRequiredString(user, "username"))
+        nodeProperties.put("corbeans.nodes.cordform.username", user.getString("user")
+                ?: getConfigRequiredString(user, "username"))
         nodeProperties.put("corbeans.nodes.cordform.password", getConfigRequiredString(user, "password"))
 
         val partyName = getConfigRequiredString(finalConfig, "myLegalName")

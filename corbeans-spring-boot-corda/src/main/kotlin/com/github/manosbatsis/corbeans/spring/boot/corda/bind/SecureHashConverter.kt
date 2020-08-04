@@ -33,6 +33,7 @@ class StringToSecureHashConverter : Converter<String, SecureHash> {
         return SecureHash.parse(source)
     }
 }
+
 /**
  * Custom converter for transparent String<>SecureHash binding
  */
@@ -45,8 +46,9 @@ class SecureHashToStringConverter : Converter<SecureHash, String> {
 
 @JsonComponent
 class SecureHashJsonSerializer : AbstractToStringSerializer<SecureHash>()
+
 @JsonComponent
-class SecureHashJsonDeserializer : AbstractFromStringDeserializer<SecureHash>(){
+class SecureHashJsonDeserializer : AbstractFromStringDeserializer<SecureHash>() {
     override fun fromString(value: String): SecureHash {
         return SecureHash.parse(value)
     }

@@ -19,9 +19,9 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.info.NetworkInfo
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.info.NodeInfo
-import java.util.*
+import com.github.manosbatsis.vaultaire.dto.info.ExtendedNodeInfo
+import com.github.manosbatsis.vaultaire.dto.info.NetworkInfo
+import java.util.Optional
 
 /**
  *  Corda network service
@@ -31,14 +31,14 @@ interface CordaNetworkService {
     /** The default Node name or null */
     val defaultNodeName: String?
 
+    /** Available node names */
+    val nodeNames: Set<String>
+
     /** Organization name to node names */
     val nodeNamesByOrgName: Map<String, String>
 
     /** X500 name to node names */
     val nodeNamesByX500Name: Map<String, String>
-
-    /** Node services by configured name */
-    var nodeServices: Map<String, CordaNodeService>
 
     /**
      * Resolve the given node name
@@ -63,7 +63,29 @@ interface CordaNetworkService {
      * Get a Node service by name. Default is either the only node name if single,
      * or `cordform` based on node.conf otherwise
      */
-    fun getNodeService(nodeName: String?): CordaNodeService
+    fun getNodeService(nodeName: String?): CordaNodeService {
+        return this.getNodeService(Optional.ofNullable(nodeName))
+    }
 
-    fun getNodesInfo(): Map<String, NodeInfo>
+
+    /**
+     * Get a service of the given [serviceType] for the node corresponding
+     * to the input name. Default is either the only node name
+     * if single, or `cordform` based on node.conf otherwise
+     */
+    fun <T> getService(
+            serviceType: Class<T>,
+            optionalNodeName: Optional<String> = Optional.empty()
+    ): T
+
+    /**
+     * Get a service of the given [serviceType] for the node corresponding
+     * to the input name. Default is either the only node name if
+     * single, or `cordform` based on node.conf otherwise
+     */
+    fun <T> getService(serviceType: Class<T>, nodeName: String?): T {
+        return this.getService(serviceType, Optional.ofNullable(nodeName))
+    }
+
+    fun getNodesInfo(): Map<String, ExtendedNodeInfo>
 }

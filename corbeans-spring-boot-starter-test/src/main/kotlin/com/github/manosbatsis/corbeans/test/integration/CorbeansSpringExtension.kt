@@ -63,14 +63,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
  * }
  * ```
  */
-class CorbeansSpringExtension: SpringExtension() {
+class CorbeansSpringExtension : SpringExtension() {
 
     companion object {
         private val logger = LoggerFactory.getLogger(CorbeansSpringExtension::class.java)
     }
 
     private var ownsNetwork = false
-
 
 
     /**
@@ -88,13 +87,13 @@ class CorbeansSpringExtension: SpringExtension() {
             logger.warn("Could not disable TomcatURLStreamHandlerFactory, will ignore. ", e)
         }
         context.getStore(Namespace.create(CorbeansSpringExtension::class))
-                .getOrComputeIfAbsent("cordaNetwork", {key -> startNodes(context)})
+                .getOrComputeIfAbsent("cordaNetwork", { key -> startNodes(context) })
         logger.debug("Network is up, starting Spring container")
         super.beforeAll(context)
     }
 
 
-    fun startNodes(context: ExtensionContext): CordaNetwork{
+    fun startNodes(context: ExtensionContext): CordaNetwork {
         ownsNetwork = true
         return CordaNetwork()
     }
@@ -106,11 +105,11 @@ class CorbeansSpringExtension: SpringExtension() {
     @Throws(Exception::class)
     override fun afterAll(context: ExtensionContext) {
         // Is network owner?
-        if(ownsNetwork){
+        if (ownsNetwork) {
             // Remove/stop network if existing
             val cordaNetwork: CordaNetwork? = context.getStore(Namespace.create(CorbeansSpringExtension::class))
                     .remove("cordaNetwork", CordaNetwork::class.java)
-            if(cordaNetwork != null) cordaNetwork.close()
+            if (cordaNetwork != null) cordaNetwork.close()
         }
         logger.debug("Stopping Spring container...")
         super.afterAll(context)

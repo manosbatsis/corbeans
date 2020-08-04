@@ -66,6 +66,7 @@ interface CordaBnmsService<T : Any> : CordaRpcService {
             networkID: String? = null,
             forceRefresh: Boolean = false,
             filterOutMissingFromNetworkMap: Boolean = true): List<MembershipState<T>>
+
     /**
      * Convert the given JSON node to the target `membershipMetadata` instance.
      * By overriding this method you can constructing a metadata instance using the desired type,

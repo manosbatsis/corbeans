@@ -17,22 +17,9 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda.model.info
+package com.github.manosbatsis.corda.rpc.poolboy.beans
 
-import net.corda.core.identity.Party
-import net.corda.core.utilities.NetworkHostAndPort
+import org.springframework.data.jpa.repository.JpaRepository
 
-data class NodeInfo(
-        val platformVersion: Int,
-
-        val identity: Party,
-        val identities: List<Party>,
-        val notaries: List<Party>,
-
-        val flows: List<String>,
-        val addresses: List<NetworkHostAndPort>
-)
-
-data class NetworkInfo(
-        val nodes: Map<String, NodeInfo>
-)
+interface RpcRoleRepository : JpaRepository<com.github.manosbatsis.corda.rpc.poolboy.entities.RpcRole, String> {
+}

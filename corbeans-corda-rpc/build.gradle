@@ -8,7 +8,6 @@ dependencies {
 
 	// Module  dependencies.
 	api project(":corbeans-corda-common")
-	api project(':corbeans-corda-rpc')
 	api "com.github.manosbatsis.vaultaire:vaultaire:$vaultaire_version"
 	// Corda dependencies.
 	api "$corda_release_group:corda-rpc:$corda_release_version"
@@ -28,7 +27,7 @@ dependencies {
 		exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
 	}
 	// Misc dependencies.
-	implementation group: 'org.apache.commons', name: 'commons-pool2', version: '2.8.0'
+	api group: 'org.apache.commons', name: 'commons-pool2', version: commons_pool2_version
 	implementation "org.apache.commons:commons-compress:1.18"
 	// Logging dependencies.
 	//compile "org.apache.logging.log4j:log4j-slf4j-impl:${log4j_version}"

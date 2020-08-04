@@ -21,7 +21,7 @@ package com.github.manosbatsis.corbeans.corda.webserver.components
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.web.CordaNodeController
 import org.springframework.web.bind.annotation.RestController
-import java.util.*
+import java.util.Optional
 
 @RestController
 class NodeController : CordaNodeController() {

@@ -94,5 +94,4 @@ open class CorbeansBmnsMemberController : CorbeansBmnsMemberBaseController() {
             super.listMemberships(getRequestNodeName(), bno, networkId, forceRefresh, filterOutMissingFromNetworkMap)
 
 
-
 }

@@ -17,10 +17,8 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda.rpc.test
+package com.github.manosbatsis.corda.rpc.poolboy.test
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.beans.RpcUserRepository
-import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.entities.RpcUser
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,11 +29,11 @@ import kotlin.test.assertTrue
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest()
-class DataJpaIntegrationTest(@Autowired val repo: RpcUserRepository) {
+class DataJpaIntegrationTest(@Autowired val repo: com.github.manosbatsis.corda.rpc.poolboy.beans.RpcUserRepository) {
 
     @Test
     fun `basic entity checks`() {
-        val p = RpcUser("user1", "user1", emptyList())
+        val p = com.github.manosbatsis.corda.rpc.poolboy.entities.RpcUser("user1", "user1", emptyList())
         val hashCodeBefore = p.hashCode()
         val personSet = hashSetOf(p)
         repo.save(p)

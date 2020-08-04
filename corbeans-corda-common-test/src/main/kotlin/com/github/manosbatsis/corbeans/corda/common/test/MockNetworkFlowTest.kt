@@ -33,9 +33,9 @@ import net.corda.testing.node.MockNetwork
 import net.corda.testing.node.MockNodeParameters
 import net.corda.testing.node.StartedMockNode
 
-open class CorbeansMockNodeParametersConfig(val requireApplicationProperties: Boolean = false): SimpleMockNodeParametersConfig() {
+open class CorbeansMockNodeParametersConfig(val requireApplicationProperties: Boolean = false) : SimpleMockNodeParametersConfig() {
 
-    companion object{
+    companion object {
         val ignoredNodeNames = listOf("default", "cordform")
     }
 
@@ -57,15 +57,15 @@ open class CorbeansMockNodeParametersConfig(val requireApplicationProperties: Bo
     override fun getNodeParameters(): List<MockNodeParameters> {
 
         return if (this.cordaNodesProperties.nodes.isNotEmpty()) {
-            this.cordaNodesProperties.nodes.filterNot { ignoredNodeNames.contains(it.key) }.map{
+            this.cordaNodesProperties.nodes.filterNot { ignoredNodeNames.contains(it.key) }.map {
                 val nodeName = it.key
-                val testPartyName = it.value.testPartyName
+                val testPartyName = it.value.partyName
                 val x500Name = if (testPartyName != null) CordaX500Name.parse(testPartyName)
                 else CordaX500Name(nodeName, "Athens", "GR")
                 MockNodeParameters(legalName = x500Name)
             }
         } else {
-            if(requireApplicationProperties) throw IllegalArgumentException("Could not find application.properties in source/classpath and requireApplicationProperties as true")
+            if (requireApplicationProperties) throw IllegalArgumentException("Could not find application.properties in source/classpath and requireApplicationProperties as true")
             super.getNodeParameters()
         }
     }
@@ -77,4 +77,4 @@ open class CorbeansMockNodeParametersConfig(val requireApplicationProperties: Bo
  */
 abstract class CorbeansMockNetworkFlowTest(
         config: MockNodeParametersConfig = CorbeansMockNodeParametersConfig()
-): MockNodeParametersConfigFlowTest(config)
+) : MockNodeParametersConfigFlowTest(config)

@@ -1,6 +1,7 @@
 include 'corbeans-corda-common'
 include 'corbeans-corda-common-test'
 include 'corbeans-corda-webserver'
+include 'corbeans-corda-rpc'
 include 'corbeans-spring-boot-autoconfigure'
 include 'corbeans-spring-boot-bnms-starter'
 include 'corbeans-spring-boot-rpc-datasource-starter'

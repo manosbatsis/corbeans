@@ -20,9 +20,9 @@
 package com.github.manosbatsis.corbeans.test.integration
 
 import com.github.manosbatsis.corbeans.corda.common.CorbeansNodesPropertiesWrapper
-import com.github.manosbatsis.corbeans.corda.common.NodeParams
 import com.github.manosbatsis.corbeans.corda.common.NodesProperties
 import com.github.manosbatsis.corbeans.corda.common.Util
+import com.github.manosbatsis.corda.rpc.poolboy.config.NodeParams
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.SupervisorJob
@@ -33,7 +33,6 @@ import net.corda.core.concurrent.CordaFuture
 import net.corda.core.flows.FlowLogic
 import net.corda.core.flows.IllegalFlowLogicException
 import net.corda.core.identity.CordaX500Name
-import net.corda.core.internal.concurrent.doOnComplete
 import net.corda.testing.common.internal.testNetworkParameters
 import net.corda.testing.core.DUMMY_NOTARY_NAME
 import net.corda.testing.driver.DriverDSL
@@ -49,9 +48,10 @@ import net.corda.testing.node.internal.TestCordappImpl
 import net.corda.testing.node.internal.findCordapp
 import org.slf4j.LoggerFactory
 
-class CorbeansNodeDriverHelper(): NodeDriverHelper(
+class CorbeansNodeDriverHelper() : NodeDriverHelper(
         Util.loadProperties(CorbeansNodesPropertiesWrapper.Config)
 )
+
 /**
  * Uses Corda's node driver to either:
  *
@@ -71,6 +71,7 @@ open class NodeDriverHelper(val cordaNodesProperties: NodesProperties) {
     }
 
     protected var state = State.STOPPED
+
     // Create job and scope
     private val job = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.Default + job)
@@ -123,7 +124,7 @@ open class NodeDriverHelper(val cordaNodesProperties: NodesProperties) {
                 logger.error("stopNetwork stopped")
             } else logger.debug("stopNetwork called but network is already stopped")
         } finally {
-            if(!job.isCompleted) job.cancel()
+            if (!job.isCompleted) job.cancel()
         }
     }
 
@@ -220,7 +221,7 @@ open class NodeDriverHelper(val cordaNodesProperties: NodesProperties) {
         return getNodeParams().mapNotNull {
             val nodeName = it.key
             val nodeParams = it.value
-            val testPartyName = nodeParams.testPartyName
+            val testPartyName = nodeParams.partyName
             val x500Name = if (testPartyName != null) CordaX500Name.parse(testPartyName)
             else CordaX500Name(nodeName, "Athens", "GR")
 
@@ -276,10 +277,10 @@ open class NodeDriverHelper(val cordaNodesProperties: NodesProperties) {
         return notarySpecs
     }
 
-    private fun notaryCustomOverrides(): Map<String, Any?>  =
-        if(cordaNodesProperties.notarySpec.address != null)
-            mapOf( "rpcSettings.address" to cordaNodesProperties.notarySpec.address)
-        else emptyMap()
+    private fun notaryCustomOverrides(): Map<String, Any?> =
+            if (cordaNodesProperties.notarySpec.address != null)
+                mapOf("rpcSettings.address" to cordaNodesProperties.notarySpec.address)
+            else emptyMap()
 
     /**
      * Load node config from spring-boot application

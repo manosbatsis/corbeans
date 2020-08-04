@@ -35,6 +35,7 @@ class RequestResponseLoggingInterceptor : ClientHttpRequestInterceptor {
     }
 
     private val log = LoggerFactory.getLogger(this.javaClass)
+
     @Throws(IOException::class)
     override fun intercept(request: HttpRequest, body: ByteArray, execution: ClientHttpRequestExecution): ClientHttpResponse {
         logRequest(request, body)

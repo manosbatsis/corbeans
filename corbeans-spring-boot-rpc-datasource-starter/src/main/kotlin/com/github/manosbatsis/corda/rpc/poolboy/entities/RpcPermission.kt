@@ -17,10 +17,12 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda.rpc.beans
+package com.github.manosbatsis.corda.rpc.poolboy.entities
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.rpc.entities.RpcUser
-import org.springframework.data.jpa.repository.JpaRepository
+import com.github.manosbatsis.corbeans.jpa.rpc.MappedRpcPermission
+import javax.persistence.Entity
+import javax.persistence.Table
 
-interface RpcUserRepository : JpaRepository<RpcUser, String> {
-}
+@Entity
+@Table(name = "permission")
+class RpcPermission(id: String) : MappedRpcPermission(id)

@@ -19,12 +19,12 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support
 
-import com.github.manosbatsis.corbeans.corda.common.NodeParams
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.service.CordaBnmsService
 import com.github.manosbatsis.corbeans.spring.boot.corda.web.CorbeansBaseController
+import com.github.manosbatsis.corda.rpc.poolboy.config.NodeParams
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.*
+import java.util.Optional
 import javax.annotation.PostConstruct
 
 open class CorbeansBmnsBaseController : CorbeansBaseController() {

@@ -19,15 +19,14 @@
  */
 package com.github.manosbatsis.corbeans.corda.webserver.components
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeServiceImpl
-import com.github.manosbatsis.vaultaire.rpc.NodeRpcConnection
+import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNodeService
 
 
-class SampleCustomCordaNodeServiceImpl(
-        nodeRpcConnection: NodeRpcConnection
-) : CordaNodeServiceImpl(nodeRpcConnection) {
+class SampleCustomCordaNodeService(
+        delegate: CordaNodeService
+): CordaNodeService by delegate {
 
-    /** dummy method */
+    /** Custom method */
     fun dummy(): Boolean = true
 
 }

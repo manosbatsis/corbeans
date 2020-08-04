@@ -17,14 +17,15 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda.model.upload
+package com.github.manosbatsis.corda.rpc.poolboy.entities
 
-import java.io.InputStream
+import com.github.manosbatsis.corbeans.jpa.rpc.MappedRpcRole
+import javax.persistence.Entity
+import javax.persistence.Table
 
-/** Data transfer object representing an attachment file to be persisted in the vault */
-data class AttachmentFile(
-        val name: String,
-        val originalFilename: String,
-        val inputStream: InputStream,
-        val size: Long,
-        val contentType: String?)
+@Entity
+@Table(name = "roles")
+class RpcRole(
+        id: String,
+        permissions: List<com.github.manosbatsis.corda.rpc.poolboy.entities.RpcPermission>
+) : MappedRpcRole<com.github.manosbatsis.corda.rpc.poolboy.entities.RpcPermission>(id, permissions)

@@ -1,11 +1,21 @@
 
 apply plugin: 'java-library'
-apply from: "${rootProject.projectDir}/gradle/published.gradle"
+apply plugin: "kotlin-allopen"
+apply plugin: "kotlin-noarg"
+
+allOpen {
+	annotation("com.my.Annotation")
+}
+noArg {
+	annotation("com.my.Annotation")
+	invokeInitializers = true
+}
 
 dependencies {
 	// Jackson
 	implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-properties:$jackson_version"
 	//implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
+	compile("com.github.manosbatsis.corda.rpc.poolboy:corda-rpc-poolboy:$poolboy_version")
 
 	// Corda dependencies.
 	implementation "$corda_release_group:corda-rpc:$corda_release_version"

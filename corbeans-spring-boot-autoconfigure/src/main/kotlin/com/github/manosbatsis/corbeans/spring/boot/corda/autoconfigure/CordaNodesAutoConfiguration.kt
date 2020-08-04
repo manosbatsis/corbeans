@@ -22,9 +22,18 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.autoconfigure
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.actuator.CordaInfoContributor
 import com.github.manosbatsis.corbeans.spring.boot.corda.actuator.CordaInfoEndpoint
-import com.github.manosbatsis.corbeans.spring.boot.corda.bind.*
+import com.github.manosbatsis.corbeans.spring.boot.corda.bind.CordaX500NameToStringConverter
+import com.github.manosbatsis.corbeans.spring.boot.corda.bind.PartyToStringConverter
+import com.github.manosbatsis.corbeans.spring.boot.corda.bind.SecureHashToStringConverter
+import com.github.manosbatsis.corbeans.spring.boot.corda.bind.StringToCordaX500NameConverter
+import com.github.manosbatsis.corbeans.spring.boot.corda.bind.StringToSecureHashConverter
+import com.github.manosbatsis.corbeans.spring.boot.corda.bind.StringToUniqueIdentifierConverter
+import com.github.manosbatsis.corbeans.spring.boot.corda.bind.UniqueIdentifierToStringConverter
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
+import com.github.manosbatsis.corbeans.spring.boot.corda.service.ApplicationPropertiesBasedRpcConfigurationService
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
+import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkServiceImpl
+import com.github.manosbatsis.corda.rpc.poolboy.config.RpcConfigurationService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -47,21 +56,27 @@ class CordaNodesAutoConfiguration {
 
     companion object {
         private val logger = LoggerFactory.getLogger(CordaNodesAutoConfiguration::class.java)
-
-        @Bean
-        @ConditionalOnMissingBean(NodeServiceBeanFactoryPostProcessor::class)
-        @JvmStatic
-        fun nodeServiceBeanFactoryPostProcessor(): NodeServiceBeanFactoryPostProcessor {
-            logger.debug("Creating a NodeServiceBeanFactoryPostProcessor")
-            return NodeServiceBeanFactoryPostProcessor()
-        }
     }
 
+    @Bean
+    @ConditionalOnMissingBean(name = ["rpcConfigurationService"])
+    fun rpcConfigurationService(): RpcConfigurationService {
+        return ApplicationPropertiesBasedRpcConfigurationService()
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = ["cordaNetworkService"])
+    fun cordaNetworkService(): CordaNetworkService {
+        return CordaNetworkServiceImpl()
+    }
 
     @Autowired
     protected lateinit var applicationContext: ApplicationContext
+
     @Autowired
     protected lateinit var cordaNodesProperties: CordaNodesProperties
+
+    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     protected lateinit var networkService: CordaNetworkService
 
@@ -71,6 +86,7 @@ class CordaNodesAutoConfiguration {
     fun stringToSecureHashConverter(): StringToSecureHashConverter {
         return StringToSecureHashConverter()
     }
+
     @Bean
     @ConditionalOnMissingBean(name = ["secureHashToStringConverter"])
     fun secureHashToStringConverter(): SecureHashToStringConverter {
@@ -83,6 +99,7 @@ class CordaNodesAutoConfiguration {
     fun cordaX500NameConverter(): StringToCordaX500NameConverter {
         return StringToCordaX500NameConverter()
     }
+
     @Bean
     @ConditionalOnMissingBean(name = ["cordaX500NameToStringConverter"])
     fun cordaX500NameToStringConverter(): CordaX500NameToStringConverter {
@@ -96,11 +113,13 @@ class CordaNodesAutoConfiguration {
     fun uniqueIdentifierConverter(): StringToUniqueIdentifierConverter {
         return StringToUniqueIdentifierConverter()
     }
+
     @Bean
     @ConditionalOnMissingBean(name = ["uniqueIdentifierToStringConverter"])
     fun uniqueIdentifierToStringConverter(): UniqueIdentifierToStringConverter {
         return UniqueIdentifierToStringConverter()
     }
+
     @Bean
     @ConditionalOnMissingBean(name = ["partyToStringConverter"])
     fun partyToStringConverter(): PartyToStringConverter {
@@ -118,23 +137,12 @@ class CordaNodesAutoConfiguration {
     @ConditionalOnProperty(
             prefix = "corbeans",
             name = arrayOf("actuator.info.disable"),
-            havingValue="false",
+            havingValue = "false",
             matchIfMissing = true)
     fun cordaInfoContributor(): CordaInfoContributor {
         return CordaInfoContributor()
     }
-    /*
-    @Bean
-    fun mappingJackson2HttpMessageConverter(): MappingJackson2HttpMessageConverter {
-        return MappingJackson2HttpMessageConverter().apply {
-            this.objectMapper = ObjectMapper().apply {
-                registerModule(KotlinModule().apply {
-                    setDeserializerModifier(KotlinObjectDeserializerModifier)
-                })
-            }
-        }
-    }
-*/
+
     @Bean
     fun addAutowireInjectionToJackson(): Jackson2ObjectMapperBuilderCustomizer {
         return Jackson2ObjectMapperBuilderCustomizer() {
@@ -146,54 +154,5 @@ class CordaNodesAutoConfiguration {
             }
         }
     }
-/*
-    @Bean
-    fun addCordaJacksonModule(): CordaModule {
-        return CordaModule()
-    }
-
- */
-    /** Force Spring/Jackson to use a Corda ObjectMapper for (de)serialization
-    @Bean
-    @Primary
-    @ConditionalOnProperty(
-            prefix = "corbeans",
-            name = arrayOf("objectmapper.disable"),
-            havingValue = "false",
-            matchIfMissing = true)
-    fun mappingJackson2HttpMessageConverter(
-            @Autowired jsonComponentModule: JsonComponentModule
-    ): MappingJackson2HttpMessageConverter {
-        // Check if a service key has been configured for obtaining the proxy
-        var proxyServiceKey = cordaNodesProperties.objectMapper.proxyServiceKey
-        // Choose a random key if '*', ignoring default config for all nodes
-        if (proxyServiceKey == "*") proxyServiceKey = cordaNodesProperties.nodes.keys.first { it != "default" }
-        // Create a mapper
-        val mapper = if (!cordaNodesProperties.objectMapper.enableRpc
-                || proxyServiceKey == null
-                || proxyServiceKey.isBlank()) {
-            // Warn if possibly missconfigured
-            if (cordaNodesProperties.objectMapper.enableRpc) logger.warn(
-                    "Using an RPC-based ObjectMapper was enabled but no valid proxyServiceKey was given. " +
-                            "Falling back to non-RPC")
-            else logger.debug("Creating non-RPC Corda ObjectMapper")
-            JacksonSupport.createNonRpcMapper(fullParties = cordaNodesProperties.objectMapper.fullParties)
-        } else {
-            logger.debug("Creating RPC Corda ObjectMapper using proxy from: $proxyServiceKey")
-            JacksonSupport.createDefaultMapper(
-                    rpc = networkService.getNodeService(proxyServiceKey).proxy(),
-                    fullParties = cordaNodesProperties.objectMapper.fullParties,
-                    fuzzyIdentityMatch = cordaNodesProperties.objectMapper.fuzzyIdentityMatch
-            )
-        }
-        // This HandlerInstantiator will handle autowiring properties into the custom serializers
-        mapper.setHandlerInstantiator(
-                SpringHandlerInstantiator(this.applicationContext.autowireCapableBeanFactory))
-        // Register the module
-        mapper.registerModule(jsonComponentModule)
-        val converter = MappingJackson2HttpMessageConverter()
-        converter.objectMapper = mapper
-        return converter
-    } */
 
 }

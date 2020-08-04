@@ -17,10 +17,16 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda.rpc
+package com.github.manosbatsis.corda.rpc.poolboy.entities
 
-import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.ResponseStatus
+import com.github.manosbatsis.corbeans.jpa.rpc.MappedRpcUser
+import javax.persistence.Entity
+import javax.persistence.Table
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-class NodeNotFoundException(message: String): IllegalArgumentException(message)
+@Entity
+@Table(name = "users")
+class RpcUser(
+        username: String,
+        password: String,
+        roles: List<com.github.manosbatsis.corda.rpc.poolboy.entities.RpcRole>
+) : MappedRpcUser<com.github.manosbatsis.corda.rpc.poolboy.entities.RpcPermission, com.github.manosbatsis.corda.rpc.poolboy.entities.RpcRole>(username, password, roles)

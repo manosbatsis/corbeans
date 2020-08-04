@@ -32,11 +32,12 @@ class StringToCordaX500NameConverter : Converter<String, CordaX500Name> {
         return CordaX500Name.parse(source)
     }
 }
+
 /**
  * Custom converter for transparent CordaX500Name<>String binding
  */
 class CordaX500NameToStringConverter : Converter<CordaX500Name, String> {
-    override fun convert(source: CordaX500Name):  String{
+    override fun convert(source: CordaX500Name): String {
         return source.toString()
     }
 }
@@ -45,7 +46,7 @@ class CordaX500NameToStringConverter : Converter<CordaX500Name, String> {
 class CordaX500NameJsonSerializer : AbstractToStringSerializer<CordaX500Name>()
 
 @JsonComponent
-class CordaX500NameJsonDeserializer : AbstractFromStringDeserializer<CordaX500Name>(){
+class CordaX500NameJsonDeserializer : AbstractFromStringDeserializer<CordaX500Name>() {
     override fun fromString(value: String): CordaX500Name {
         return CordaX500Name.parse(value)
     }

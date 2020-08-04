@@ -20,9 +20,9 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.web
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.PartyNameModel
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.toAttachment
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
+import com.github.manosbatsis.corbeans.spring.boot.corda.service.toAttachment
+import com.github.manosbatsis.vaultaire.dto.attachment.AttachmentReceipt
 import net.corda.core.crypto.SecureHash
 import net.corda.core.internal.extractFile
 import net.corda.core.utilities.NetworkHostAndPort
@@ -34,7 +34,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.time.LocalDateTime
-import java.util.*
+import java.util.Optional
 import java.util.jar.JarInputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
@@ -60,7 +60,7 @@ abstract class CorbeansBaseController {
     protected lateinit var networkService: CordaNetworkService
 
     @PostConstruct
-    fun postConstructLog(){
+    fun postConstructLog() {
         logger.info("${this.javaClass.name} Corda controller initialized")
     }
 
@@ -89,7 +89,7 @@ abstract class CorbeansBaseController {
 
     /** Get tbe node identities */
     open fun identities(nodeName: Optional<String>): List<PartyNameModel> =
-        getNodeService(nodeName).identities().map { PartyNameModel.fromCordaX500Name(it.name) }
+            getNodeService(nodeName).identities().map { PartyNameModel.fromCordaX500Name(it.name) }
 
     /** Get tbe node's platform version */
     open fun platformVersion(nodeName: Optional<String>): Int = getNodeService(nodeName).platformVersion()

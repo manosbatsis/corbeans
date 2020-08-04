@@ -19,131 +19,41 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.Attachment
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentFile
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.toAttachment
-import com.github.manosbatsis.vaultaire.rpc.NodeRpcConnection
-import com.github.manosbatsis.vaultaire.service.dao.BasicStateService
-import com.github.manosbatsis.vaultaire.service.dao.StateService
-import net.corda.core.contracts.ContractState
-import net.corda.core.crypto.SecureHash
-import net.corda.core.identity.CordaX500Name
+import com.github.manosbatsis.corda.rpc.poolboy.KeyFreePoolBoy
+import com.github.manosbatsis.vaultaire.dto.attachment.AttachmentFile
+import com.github.manosbatsis.vaultaire.dto.attachment.AttachmentReceipt
+import com.github.manosbatsis.vaultaire.service.SimpleServiceDefaults
+import com.github.manosbatsis.vaultaire.service.node.BasicNodeService
+import com.github.manosbatsis.vaultaire.service.node.NodeServiceRpcPoolBoyDelegate
 import net.corda.core.identity.Party
-import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.node.services.vault.QueryCriteria
 import org.slf4j.LoggerFactory
-import org.springframework.http.HttpStatus
-import org.springframework.web.server.ResponseStatusException
-import java.io.InputStream
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.util.*
 
 
 /**
  *  Abstract base implementation for RPC-based node services
  */
-abstract class CordaRpcServiceBase(open val nodeRpcConnection: NodeRpcConnection): CordaRpcService {
+abstract class CordaRpcServiceBase(
+        override val delegate: NodeServiceRpcPoolBoyDelegate
+) : BasicNodeService(delegate), CordaNodeService {
 
     companion object {
         private val logger = LoggerFactory.getLogger(CordaRpcServiceBase::class.java)
     }
+    /** [KeyFreePoolBoy]-based constructor */
+    constructor(
+            poolBoy: KeyFreePoolBoy, defaults: SimpleServiceDefaults = SimpleServiceDefaults()
+    ) : this(NodeServiceRpcPoolBoyDelegate(poolBoy, defaults))
 
-    protected val myLegalName: CordaX500Name by lazy {
-        myIdentity.name
-    }
-    override val myIdentity: Party by lazy {
-        nodeRpcConnection.proxy.nodeInfo().legalIdentities.first()
-
-    }
+    override val myIdentity: Party by lazy { nodeIdentity }
 
     protected val myIdCriteria: QueryCriteria.LinearStateQueryCriteria by lazy {
-        QueryCriteria.LinearStateQueryCriteria(participants = listOf(myIdentity))
+        QueryCriteria.LinearStateQueryCriteria(participants = listOf(nodeIdentity))
 
     }
 
-
-    /** Returns a [CordaRPCOps] proxy for this node. */
-    override fun proxy(): CordaRPCOps = this.nodeRpcConnection.proxy
-
-
-    /** Get a list of nodes in the network, including self and notaries */
-    override fun nodes(): List<Party> =
-        nodeRpcConnection.proxy.networkMapSnapshot().map { it.legalIdentities.first() }
-
-    /** Get a list of network peers, i.e. nodes excluding self and notaries  */
-    override fun peers(): List<Party> {
-        val notaries = this.notaries()
-        return nodeRpcConnection.proxy.networkMapSnapshot()
-                .filter { nodeInfo ->
-                    // Filter out self and notaries
-                    nodeInfo.legalIdentities.find { it == myIdentity || notaries.contains(it) } == null
-                }
-                .map { it.legalIdentities.first() }
-    }
-
-
-    /**
-     * Returns a [Party] match for the given name string, trying exact and if needed fuzzy matching.
-     * @param name The name to convert to a party
-     */
-    override fun findPartyFromName(query: String): Party? =
-            this.partiesFromName(query, true).firstOrNull()
-                    ?: this.partiesFromName(query, true).firstOrNull()
-
-
-    /**
-     * Returns a [Party] match for the given name string, trying exact and if needed fuzzy matching.
-     * If not exactly one match is found an error will be thrown.
-     * @param name The name to convert to a party
-     */
-    override fun getPartyFromName(query: String): Party =
-            if(query.contains("O=")) this.nodeRpcConnection.proxy.wellKnownPartyFromX500Name(CordaX500Name.parse(query))
-                    ?: throw IllegalArgumentException("No party found for query treated as an x500 name: ${query}")
-            else this.partiesFromName(query, true).firstOrNull()
-                    ?: this.partiesFromName(query, false).single()
-
-
-    /**
-     * Returns a list of candidate matches for a given string, with optional fuzzy(ish) matching. Fuzzy matching may
-     * get smarter with time e.g. to correct spelling errors, so you should not hard-code indexes into the results
-     * but rather show them via a user interface and let the user pick the one they wanted.
-     *
-     * @param query The string to check against the X.500 name components
-     * @param exactMatch If true, a case sensitive match is done against each component of each X.500 name.
-     */
-    override fun partiesFromName(query: String, exactMatch: Boolean): Set<Party> =
-            this.nodeRpcConnection.proxy.partiesFromName(query, exactMatch)
-
-    override fun serverTime(): LocalDateTime {
-        return LocalDateTime.ofInstant(nodeRpcConnection.proxy.currentNodeTime(), ZoneId.of("UTC"))
-    }
-
-    override fun addresses() = nodeRpcConnection.proxy.nodeInfo().addresses
-
-    override fun identities() = nodeRpcConnection.proxy.nodeInfo().legalIdentities
-
-    override fun platformVersion() = nodeRpcConnection.proxy.nodeInfo().platformVersion
-
-    override fun notaries() = nodeRpcConnection.proxy.notaryIdentities()
-
-    override fun flows() = nodeRpcConnection.proxy.registeredFlows()
-
-    override fun refreshNetworkMapCache() = nodeRpcConnection.proxy.refreshNetworkMapCache()
-
-    /** Get a state service targeting [contractStateType] */
-    override fun <T : ContractState> createStateService(contractStateType: Class<T>): StateService<T> {
-        return BasicStateService(this.proxy(), contractStateType)
-    }
-
-    /** Retrieve the attachment matching the given hash string from the vault  */
-    override fun openAttachment(hash: String): InputStream = this.openAttachment(SecureHash.parse(hash))
-
-    /** Retrieve the attachment matching the given secure hash from the vault  */
-    override fun openAttachment(hash: SecureHash): InputStream {
-        return if(nodeRpcConnection.proxy.attachmentExists(hash)) nodeRpcConnection.proxy.openAttachment(hash)
-        else throw ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find attachment ${hash}")
+    override fun refreshNetworkMapCache() = delegate.poolBoy.withConnection {
+        it.proxy.refreshNetworkMapCache()
     }
 
     /** Persist the given file(s) as a single attachment in the vault  */
@@ -156,24 +66,7 @@ abstract class CordaRpcServiceBase(open val nodeRpcConnection: NodeRpcConnection
         return this.saveAttachment(toAttachment(attachmentFiles))
     }
 
-    /** Persist the given attachment to the vault  */
-    override fun saveAttachment(attachment: Attachment): AttachmentReceipt {
-        // Upload to vault
-        val hash = attachment.use {
-            it.inputStream.use {
-                this.proxy().uploadAttachment(it).toString()
-            }
-        }
-        // Return receipt
-        return AttachmentReceipt(
-                date = Date(),
-                hash = hash,
-                files = attachment.filenames,
-                author = this.myIdentity.name.organisation,
-                savedOriginal = attachment.original
-        )
-    }
+    override fun skipInfo(): Boolean = delegate.poolBoy.withConnection { it.skipInfo() }
 
-    /** Whether this service should be skipped from actuator */
-    override fun skipInfo(): Boolean = this.nodeRpcConnection.skipInfo()
+
 }

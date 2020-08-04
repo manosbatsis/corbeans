@@ -19,96 +19,135 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
-//import org.springframework.messaging.simp.SimpMessagingTemplate
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.info.NetworkInfo
+import com.github.manosbatsis.corda.rpc.poolboy.PoolBoy
+import com.github.manosbatsis.corda.rpc.poolboy.PoolKey
+import com.github.manosbatsis.corda.rpc.poolboy.config.RpcConfigurationService
+import com.github.manosbatsis.vaultaire.dto.info.NetworkInfo
+import com.github.manosbatsis.vaultaire.service.node.NodeServiceRpcPoolBoyDelegate
+import net.corda.core.identity.CordaX500Name
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.*
-import javax.annotation.PostConstruct
+import java.lang.reflect.Constructor
+import java.util.Optional
 
 
 /**
  * Default Corda network service
  */
-open class CordaNetworkServiceImpl : CordaNetworkService {
+open class CordaNetworkServiceImpl :
+        CordaNetworkService,
+        InitializingBean{
 
     companion object {
         private val logger = LoggerFactory.getLogger(CordaNetworkServiceImpl::class.java)
         private val SERVICE_NAME_SUFFIX = "NodeService"
     }
 
-    override val defaultNodeName: String? by lazy {
-        if (nodeServices.keys.size == 1)
-            nodeServices.keys.single().replace(SERVICE_NAME_SUFFIX, "")
-        else null
-    }
+    /** Maintain an RPC client/ops pool */
+    lateinit var rpcConnectionPool: PoolBoy
+
+    @Autowired
+    lateinit var rpcConfigurationService: RpcConfigurationService
+
+    override val nodeNames: Set<String>
+        get() = with(rpcConfigurationService) {
+            getAllRpcNodeParams().keys
+        }
+
+    override val defaultNodeName: String?
+        get() = with(rpcConfigurationService) {
+            if (getAllRpcNodeParams().keys.size == 1)
+                getAllRpcNodeParams().keys.single()
+            else null
+        }
 
     override val nodeNamesByOrgName by lazy {
-        nodeServices.map {
-            it.value.myIdentity.name.organisation to it.key.replace(SERVICE_NAME_SUFFIX, "")
-        }.toMap()
+        with(rpcConfigurationService) {
+            getAllRpcNodeParams().map {
+                val x500Name = it.value.partyName
+                        ?: error("Missing property testPartyName")
+                CordaX500Name.parse(x500Name).organisation to it.key
+            }.toMap()
+        }
     }
 
     override val nodeNamesByX500Name by lazy {
-        nodeServices.map {
-            it.value.myIdentity.name.toString() to it.key.replace(SERVICE_NAME_SUFFIX, "")
-        }.toMap()
+        with(rpcConfigurationService) {
+            getAllRpcNodeParams().map {
+                val x500Name = it.value.partyName
+                        ?: error("Missing property testPartyName")
+                CordaX500Name.parse(x500Name).toString() to it.key
+            }.toMap()
+        }
     }
 
-    /** Node services by configured name */
-    @Autowired
-    override lateinit var nodeServices: Map<String, CordaNodeService>
-
-
-    @PostConstruct
-    fun postConstruct() {
-        logger.debug("Auto-configured RESTful services for Corda nodes:: {}, default node: {}",
-                nodeServices.keys, defaultNodeName)
+    override fun afterPropertiesSet() {
+        this.rpcConnectionPool = PoolBoy(rpcConfigurationService)
     }
 
     override fun getInfo(): NetworkInfo {
         return NetworkInfo(getNodesInfo())
     }
 
-    override fun getNodesInfo() = this.nodeServices
-            .filterNot { it.value.skipInfo() } // skip?
-            .map { it.key.substring(0, it.key.length - SERVICE_NAME_SUFFIX.length) to it.value.getInfo() }
+    override fun getNodesInfo() = this.rpcConfigurationService
+            .getAllRpcNodeParams().mapNotNull {
+                val nodeKey = PoolKey(it.key)
+                val rpcConnection = this.rpcConnectionPool.borrowConnection(nodeKey)
+                val nodeInfoEntry = if (!rpcConnection.skipInfo()) {
+                    it.key to CordaNodeServiceImpl(rpcConnectionPool.forKey(nodeKey))
+                            .getExtendedInfo()
+                } else null
+                this.rpcConnectionPool.returnConnection(nodeKey, rpcConnection)
+                nodeInfoEntry
+            }
             .toMap()
 
     override fun getNodeService(optionalNodeName: Optional<String>): CordaNodeService {
         val nodeName = resolveNodeName(optionalNodeName)
-        logger.debug("getNodeService nodeName: ${nodeName}, node names: ${this.nodeServices}, org names: ${this.nodeNamesByOrgName}")
-        return this.nodeServices.get("${nodeName}NodeService")
-                ?: throw IllegalArgumentException("Node not found for name: ${optionalNodeName.orElse(null)}, resolved: $nodeName")
+        val poolKey = PoolKey(nodeName)
+        return CordaNodeServiceImpl(rpcConnectionPool.forKey(poolKey))
     }
 
-    override fun getNodeService(nodeName: String?): CordaNodeService {
-        return this.getNodeService(Optional.ofNullable(nodeName))
+    val serviceConstructors = mutableMapOf<String, Constructor<*>>()
+
+    override fun <T> getService(serviceType: Class<T>, optionalNodeName: Optional<String>): T {
+        val nodeName = resolveNodeName(optionalNodeName)
+        val poolKey = PoolKey(nodeName)
+        val constructor = serviceConstructors.getOrPut(serviceType.canonicalName){
+            serviceType.constructors.find {
+                it.parameterTypes.size == 1
+                        && it.parameterTypes.single()
+                        .isAssignableFrom(NodeServiceRpcPoolBoyDelegate::class.java)
+            } ?: error("No constructor found with single NodeServiceRpcPoolBoyDelegate param for class ${serviceType.canonicalName}")
+        }
+        return constructor.newInstance(rpcConnectionPool.forKey(poolKey)) as T
     }
+
 
     override fun resolveNodeName(optionalNodeName: Optional<String>): String {
-        var nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName ?: throw IllegalArgumentException("No nodeName was given and a default one is not available")
+        var nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName
+                ?: throw IllegalArgumentException("No nodeName was given and a default one is not available")
         if (nodeName.isBlank()) throw IllegalArgumentException("nodeName cannot be an empty or blank string")
         // If organization name match
-        val resolved = if (nodeServices.containsKey("${nodeName}${SERVICE_NAME_SUFFIX}")) nodeName
+        val resolved = if (nodeNames.contains(nodeName)) nodeName
         else if (nodeNamesByOrgName.containsKey(nodeName)) nodeNamesByOrgName.getValue(nodeName)
         else if (nodeNamesByX500Name.containsKey(nodeName)) nodeNamesByX500Name.getValue(nodeName)
-        else if (nodeServices.containsKey("${lowcaseFirst(nodeName)}${SERVICE_NAME_SUFFIX}")) lowcaseFirst(nodeName)
         else throw IllegalArgumentException("Failed resolving node name: ${nodeName}, " +
-                "available node names: ${this.nodeServices}, " +
+                "available node names: ${this.nodeNames}, " +
                 "available org names: ${this.nodeNamesByOrgName}, " +
                 "available X500 names: ${this.nodeNamesByX500Name}")
         logger.debug("resolveNodeName, nodeName: $nodeName, resolved: $resolved")
         return resolved
     }
 
-    override fun refreshNetworkMapCaches() = nodeServices.values.forEach{
-        it.refreshNetworkMapCache()
+    override fun refreshNetworkMapCaches() {
+        rpcConfigurationService
+                .getAllRpcNodeParams()
+                .forEach {
+                    CordaNodeServiceImpl(rpcConnectionPool.forKey(PoolKey(it.key)))
+                            .refreshNetworkMapCache()
+                }
     }
 
-    private fun lowcaseFirst(s: String): String {
-        val c = s.toCharArray()
-        c[0] = Character.toLowerCase(c[0])
-        return String(c)
-    }
 }

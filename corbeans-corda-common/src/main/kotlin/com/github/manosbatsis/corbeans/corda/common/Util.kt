@@ -21,14 +21,16 @@ package com.github.manosbatsis.corbeans.corda.common
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper
-import java.util.*
+import com.github.manosbatsis.corda.rpc.poolboy.config.NodeParams
+import com.github.manosbatsis.corda.rpc.poolboy.config.PoolParams
+import java.util.Properties
 
 object Util {
 
 
     fun loadProperties(
             config: NodesPropertiesLoadingConfig
-    ): NodesProperties{
+    ): NodesProperties {
         var cordaNodesProperties: NodesProperties? = null
         try {
             val inputStream = this::class.java.getResourceAsStream(config.resourcePath)
@@ -38,48 +40,49 @@ object Util {
             mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             cordaNodesProperties = mapper
-                    .readPropertiesAs(properties, config.wrappingClass).toNodesProperties()!!
+                    .readPropertiesAs(properties, config.wrappingClass).toNodesProperties()
             // Fix parsing
             if (cordaNodesProperties.cordapPackages.size == 1) {
                 cordaNodesProperties.cordapPackages = cordaNodesProperties.cordapPackages.first()
                         .replace(',', ' ').split(' ')
             }
-        }
-        catch (e: Throwable){
-            if(config.ignoreError) e.printStackTrace() else throw e
+        } catch (e: Throwable) {
+            if (config.ignoreError) e.printStackTrace() else throw e
         }
         return cordaNodesProperties ?: NodesProperties()
 
     }
 }
 
-interface NodesPropertiesLoadingConfig{
-    companion object{
+interface NodesPropertiesLoadingConfig {
+    companion object {
         fun create(
                 resourcePath: String,
                 wrappingClass: Class<out NodesPropertiesWrapper> =
-                    NodesProperties::class.java,
+                        NodesProperties::class.java,
                 ignoreError: Boolean = false
         ) = NodesPropertiesLoadingConfigData(
                 resourcePath, wrappingClass, ignoreError)
     }
+
     val resourcePath: String
     val wrappingClass: Class<out NodesPropertiesWrapper>
     val ignoreError: Boolean
 }
+
 class NodesPropertiesLoadingConfigData(
         override val resourcePath: String,
         override val wrappingClass: Class<out NodesPropertiesWrapper>,
         override val ignoreError: Boolean
-): NodesPropertiesLoadingConfig
+) : NodesPropertiesLoadingConfig
 
-open class NodesProperties: NodesPropertiesWrapper {
+open class NodesProperties : NodesPropertiesWrapper {
     var cordapPackages: List<String> = mutableListOf()
     var nodes: Map<String, NodeParams> = mutableMapOf()
-    var objectMapper: ObjectMapperProperties = ObjectMapperProperties()
     var primaryControllerType: String? = "com.github.manosbatsis.corbeans.spring.boot.corda.web.CordaSingleNodeController"
     var notarySpec: TestNotaryProperties = TestNotaryProperties()
     var flowOverrides: List<String> = mutableListOf()
+    var poolParams: PoolParams = PoolParams()
     override fun toNodesProperties(): NodesProperties = this
 
     override fun toString(): String {
@@ -88,13 +91,12 @@ open class NodesProperties: NodesPropertiesWrapper {
                 "notarySpec=$notarySpec, " +
                 "flowOverrides=${flowOverrides}), " +
                 "primaryControllerType=${primaryControllerType}, " +
-                "objectMapper=${objectMapper}"
+                "poolParams=${poolParams}"
     }
-
 }
 
 
-interface NodesPropertiesWrapper{
+interface NodesPropertiesWrapper {
     fun toNodesProperties(): NodesProperties
 }
 
@@ -102,8 +104,8 @@ interface NodesPropertiesWrapper{
  * Used to wrap a [NodesProperties] for easier parsing via jackson-dataformats-text,
  * as a temporary workaround to https://github.com/FasterXML/jackson-dataformats-text/issues/100
  */
-class CorbeansNodesPropertiesWrapper: NodesPropertiesWrapper{
-    companion object Config: NodesPropertiesLoadingConfig{
+class CorbeansNodesPropertiesWrapper : NodesPropertiesWrapper {
+    companion object Config : NodesPropertiesLoadingConfig {
         override val resourcePath = "/application.properties"
         override val wrappingClass = CorbeansNodesPropertiesWrapper::class.java
         override val ignoreError = true

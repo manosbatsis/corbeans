@@ -17,8 +17,10 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda.model.upload
+package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
+import com.github.manosbatsis.vaultaire.dto.attachment.Attachment
+import com.github.manosbatsis.vaultaire.dto.attachment.AttachmentFile
 import org.apache.commons.compress.archivers.ArchiveStreamFactory
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import org.springframework.web.multipart.MultipartFile
@@ -26,15 +28,15 @@ import java.io.File
 
 
 val TMP_FILE_PREFIX: String = "corbeans-uploaded-attachment-"
-val TMP_FILE_SUFFIX: String =  "-tmp.zip"
-val ACCEPTED_TYPES= arrayOf("application/zip", "application/java-archive")
+val TMP_FILE_SUFFIX: String = "-tmp.zip"
+val ACCEPTED_TYPES = arrayOf("application/zip", "application/java-archive")
 
 /** Converts [MultipartFile]`s to [AttachmentFile]`s */
 fun toAttachmentFiles(uploadedFiles: Array<MultipartFile>): List<AttachmentFile> =
         uploadedFiles.map {
             AttachmentFile(
                     name = it.name,
-                    originalFilename = it.originalFilename?:"unknown-filename",
+                    originalFilename = it.originalFilename ?: "unknown-filename",
                     inputStream = it.inputStream,
                     size = it.size,
                     contentType = it.contentType
@@ -61,7 +63,7 @@ fun toAttachment(attachmentFiles: List<AttachmentFile>): Attachment {
         Attachment(null, archive.inputStream, listOf(archive.originalFilename), true)
     }
     // Ensure we don't have an empty file list
-    else if(attachmentFiles.isEmpty()){
+    else if (attachmentFiles.isEmpty()) {
         throw IllegalArgumentException("Cannot create an empty attachment")
     }
     // Else make a new archive of input files

@@ -61,4 +61,4 @@ import org.springframework.stereotype.Component
  */
 @Component("cordaNodesProperties")
 @ConfigurationProperties(prefix = "corbeans")
-class CordaNodesProperties: NodesProperties()
+class CordaNodesProperties : NodesProperties()

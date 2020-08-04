@@ -17,17 +17,9 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda.rpc
+package com.github.manosbatsis.corda.rpc.poolboy.beans
 
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
-import org.springframework.boot.runApplication
+import org.springframework.data.jpa.repository.JpaRepository
 
-@SpringBootApplication(
-        exclude = arrayOf(SecurityAutoConfiguration::class),
-        excludeName = ["org.springframework.boot.autoconfigure.jms.artemis.ArtemisAutoConfiguration"])
-class Application
-
-fun main(args: Array<String>) {
-    runApplication<Application>(*args)
+interface RpcPermissionRepository : JpaRepository<com.github.manosbatsis.corda.rpc.poolboy.entities.RpcPermission, String> {
 }

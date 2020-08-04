@@ -70,8 +70,6 @@ open class InfoIntegrationTests(
     @Test
     fun `Can access Corda custom Actuator endpoint`() {
         logger.info("testCordaEndpoint, called")
-        val serviceKeys = this.networkService.nodeServices.keys
-        logger.info("testCordaEndpoint, serviceKeys: {}", serviceKeys)
         val entity = this.restTemplate
                 .getForEntity("/actuator/corda", Map::class.java)
         // Ensure a 200 OK

@@ -19,13 +19,12 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.service
 
-//import org.springframework.messaging.simp.SimpMessagingTemplate
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipPartiesMessage
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipRequestMessage
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipsListRequestMessage
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.util.getMembership
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaRpcServiceBase
-import com.github.manosbatsis.vaultaire.rpc.NodeRpcConnection
+import com.github.manosbatsis.vaultaire.service.node.NodeServiceRpcPoolBoyDelegate
 import com.r3.businessnetworks.membership.flows.bno.ActivateMembershipFlow
 import com.r3.businessnetworks.membership.flows.bno.SuspendMembershipFlow
 import com.r3.businessnetworks.membership.flows.member.AmendMembershipMetadataFlow
@@ -41,18 +40,11 @@ import org.slf4j.LoggerFactory
 
 
 /**
- *  Basic BNMS service implementation, extend to create your own.
- *  You will need to register your custom implementation in _application.properties_ e.g.
- *
- *  ```
- *  corbeans.nodes.myParty.bnmsServiceType=my.custom.CordaBnmsServiceImpl
- *  ```
- *
- *  for Corbeans to create and register the corresponding service beans for you.
+ *  Basic BNMS service implementation
  */
 abstract class CordaBnmsServiceBase<T : Any>(
-        nodeRpcConnection: NodeRpcConnection
-) : CordaRpcServiceBase(nodeRpcConnection), CordaBnmsService<T> {
+        override val delegate: NodeServiceRpcPoolBoyDelegate
+) : CordaRpcServiceBase(delegate), CordaBnmsService<T> {
 
     companion object {
         private val logger = LoggerFactory.getLogger(CordaBnmsServiceBase::class.java)
@@ -71,11 +63,13 @@ abstract class CordaBnmsServiceBase<T : Any>(
 
     /** Request the BNO to kick-off the on-boarding procedure. */
     override fun createMembershipRequest(bno: Party, membershipMetadata: T, networkId: String?): MembershipState<T> {
-        // Create the state and return
-        val flowHandle: FlowHandle<SignedTransaction> = proxy()
-                .startFlowDynamic(RequestMembershipFlow::class.java, bno, membershipMetadata, networkId)
-        return flowHandle.use { it.returnValue.getOrThrow() }
-                .tx.outputStates.single() as MembershipState<T>
+        return delegate.poolBoy.withConnection { connection ->
+            // Create the state and return
+            val flowHandle: FlowHandle<SignedTransaction> =
+                    connection.proxy.startFlowDynamic(RequestMembershipFlow::class.java, bno, membershipMetadata, networkId)
+             flowHandle.use { it.returnValue.getOrThrow() }
+                    .tx.outputStates.single() as MembershipState<T>
+        }
     }
 
     /** Propose a change to the membership metadata. */
@@ -87,11 +81,13 @@ abstract class CordaBnmsServiceBase<T : Any>(
 
     /** Propose a change to the membership metadata. */
     override fun ammendMembershipRequest(bno: Party, membershipMetadata: T, networkId: String?): MembershipState<T> {
-        // Create the state
-        val flowHandle: FlowHandle<SignedTransaction> = proxy()
-                .startFlowDynamic(AmendMembershipMetadataFlow::class.java, bno, membershipMetadata)
-        val tx = flowHandle.use { it.returnValue.getOrThrow() }
-        return tx.tx.outputStates.single() as MembershipState<T>
+        return delegate.poolBoy.withConnection { connection ->
+            // Create the state
+            val flowHandle: FlowHandle<SignedTransaction> =
+                    connection.proxy.startFlowDynamic(AmendMembershipMetadataFlow::class.java, bno, membershipMetadata)
+            val tx = flowHandle.use { it.returnValue.getOrThrow() }
+            tx.tx.outputStates.single() as MembershipState<T>
+        }
     }
 
     /**
@@ -117,55 +113,62 @@ abstract class CordaBnmsServiceBase<T : Any>(
             bno: Party,
             networkID: String?,
             forceRefresh: Boolean,
-            filterOutMissingFromNetworkMap: Boolean): List<MembershipState<T>> {
-        proxy()
-        // Load memberships
-        val flowHandle: FlowHandle<Map<Party, StateAndRef<MembershipState<Any>>>> = proxy()
-                .startFlowDynamic(
-                        GetMembershipsFlow::class.java,
-                        bno,
-                        networkID,
-                        forceRefresh,
-                        filterOutMissingFromNetworkMap)
+            filterOutMissingFromNetworkMap: Boolean
+    ): List<MembershipState<T>> {
+        return delegate.poolBoy.withConnection { connection ->
+            // Load memberships
+            val flowHandle: FlowHandle<Map<Party, StateAndRef<MembershipState<Any>>>> =
+                    connection.proxy.startFlowDynamic(
+                            GetMembershipsFlow::class.java,
+                            bno,
+                            networkID,
+                            forceRefresh,
+                            filterOutMissingFromNetworkMap)
 
-        // Map to a list and return
-        return flowHandle.use { it.returnValue.getOrThrow() }
-                .values.map { it.state.data as MembershipState<T>}
+            // Map to a list and return
+            flowHandle.use { it.returnValue.getOrThrow() }
+                    .values.map { it.state.data as MembershipState<T> }
+        }
     }
 
     /** Activate a pending membership. */
     override fun activateMembership(input: MembershipPartiesMessage): MembershipState<T> =
             activateMembership(
                     getPartyFromName(input.member),
-                    if(input.bno != null) getPartyFromName(input.bno!!) else myIdentity)
+                    if (input.bno != null) getPartyFromName(input.bno!!) else myIdentity)
 
     /** Activate a pending membership. */
     override fun activateMembership(member: Party, bno: Party): MembershipState<T> {
-        // Load the specified membership state
-        val membership = getMembership(member, bno)
-        logger.debug("activateMembership, membership: $membership")
-        // Activate the membership and return
-        val flowHandle: FlowHandle<SignedTransaction> = proxy()
-                .startFlowDynamic(ActivateMembershipFlow::class.java, membership)
-        val tx = flowHandle.use { it.returnValue.getOrThrow() }
-        return tx.tx.outputStates.single() as MembershipState<T>
+
+        return delegate.poolBoy.withConnection { connection ->
+            // Load the specified membership state
+            val membership = getMembership(member, bno)
+            logger.debug("activateMembership, membership: $membership")
+            // Activate the membership and return
+            val flowHandle: FlowHandle<SignedTransaction> =
+                    connection.proxy.startFlowDynamic(ActivateMembershipFlow::class.java, membership)
+            val tx = flowHandle.use { it.returnValue.getOrThrow() }
+            tx.tx.outputStates.single() as MembershipState<T>
+        }
     }
 
     /** Suspend an active membership.*/
     override fun suspendMembership(input: MembershipPartiesMessage): MembershipState<T> =
             suspendMembership(
                     getPartyFromName(input.member),
-                    if(input.bno != null) getPartyFromName(input.bno!!) else myIdentity)
+                    if (input.bno != null) getPartyFromName(input.bno!!) else myIdentity)
 
     /** Suspend an active membership.*/
     override fun suspendMembership(member: Party, bno: Party): MembershipState<T> {
-        // Load the specified membership state
-        val membership = getMembership(member, bno)
-        // Suspend the membership and return
-        val flowHandle: FlowHandle<SignedTransaction> = proxy()
-                .startFlowDynamic(SuspendMembershipFlow::class.java, membership)
-        val tx = flowHandle.use { it.returnValue.getOrThrow() }
-        return tx.tx.outputStates.single() as MembershipState<T>
+        return delegate.poolBoy.withConnection { connection ->
+            // Load the specified membership state
+            val membership = getMembership(member, bno)
+            // Suspend the membership and return
+            val flowHandle: FlowHandle<SignedTransaction> =
+                    connection.proxy.startFlowDynamic(SuspendMembershipFlow::class.java, membership)
+            val tx = flowHandle.use { it.returnValue.getOrThrow() }
+            tx.tx.outputStates.single() as MembershipState<T>
+        }
     }
 
 }

@@ -19,10 +19,14 @@
  */
 package com.github.manosbatsis.corbeans.jpa.rpc
 
-import javax.persistence.*
+import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.JoinTable
+import javax.persistence.ManyToMany
+import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
-open class MappedRpcRole<T: MappedRpcPermission>(
+open class MappedRpcRole<T : MappedRpcPermission>(
         @Id
         val id: String,
 

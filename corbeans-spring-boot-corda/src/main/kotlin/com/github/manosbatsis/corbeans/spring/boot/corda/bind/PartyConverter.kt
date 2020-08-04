@@ -33,15 +33,15 @@ class PartyToStringConverter : Converter<Party, String?> {
         return source.name.toString()
     }
 }
+
 @JsonComponent
-class PartyConverter : AbstractToStringSerializer<Party>(){
+class PartyConverter : AbstractToStringSerializer<Party>() {
     override fun serialize(
             obj: Party?, jsonGenerator: JsonGenerator, serializerProvider: SerializerProvider?
     ) {
-        if(obj == null){
+        if (obj == null) {
             jsonGenerator.writeNull()
-        }
-        else {
+        } else {
             jsonGenerator.writeString(obj.name.toString())
         }
     }

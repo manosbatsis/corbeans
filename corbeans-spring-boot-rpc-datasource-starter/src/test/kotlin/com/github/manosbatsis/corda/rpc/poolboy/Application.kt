@@ -17,26 +17,17 @@
  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *     USA
  */
-package com.github.manosbatsis.corbeans.spring.boot.corda.rpc
+package com.github.manosbatsis.corda.rpc.poolboy
 
-import com.github.manosbatsis.corbeans.corda.common.NodeParams
-import net.corda.core.messaging.CordaRPCOps
-import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+import org.springframework.boot.runApplication
 
-/**
- * Eagerly initialised wrapper of a Node RPC connection proxy.
- *
- * @param nodeParams the RPC connection params
- * @property proxy The RPC proxy.
- */
-open class EagerNodeRpcConnection(
-        nodeParams: NodeParams
-): AbstractNodeRpcConnection(nodeParams) {
+@SpringBootApplication(
+        exclude = arrayOf(SecurityAutoConfiguration::class),
+        excludeName = ["org.springframework.boot.autoconfigure.jms.artemis.ArtemisAutoConfiguration"])
+class Application
 
-    companion object {
-        private val logger = LoggerFactory.getLogger(EagerNodeRpcConnection::class.java)
-    }
-
-    /** Provides eager access to a [CordaRPCOps] RPC proxy */
-    override val proxy: CordaRPCOps = createProxy()
+fun main(args: Array<String>) {
+    runApplication<Application>(*args)
 }

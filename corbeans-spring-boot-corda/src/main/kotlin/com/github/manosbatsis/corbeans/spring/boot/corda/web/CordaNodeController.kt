@@ -20,7 +20,7 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.web
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.model.PartyNameModel
-import com.github.manosbatsis.corbeans.spring.boot.corda.model.upload.AttachmentReceipt
+import com.github.manosbatsis.vaultaire.dto.attachment.AttachmentReceipt
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import net.corda.core.crypto.SecureHash
@@ -62,7 +62,7 @@ open class CordaNodeController : CorbeansBaseController() {
 
     /** Override to control how the the node name is resolved based on the request by e.g. parsing headers */
     open fun getRequestNodeName(): Optional<String> = Optional.empty()
-    
+
     @GetMapping("nodeNamesByOrgName")
     @Operation(summary = "Get the configured node names by org name.")
     fun nodeNamesByOrgName() = networkService.nodeNamesByOrgName

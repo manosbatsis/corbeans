@@ -19,21 +19,26 @@
  */
 package com.github.manosbatsis.corbeans.jpa.rpc
 
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.JoinTable
+import javax.persistence.ManyToMany
+import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
-open class MappedRpcUser<TR: MappedRpcPermission, T: MappedRpcRole<TR>>(
-    @Id
-    val username: String,
+open class MappedRpcUser<TR : MappedRpcPermission, T : MappedRpcRole<TR>>(
+        @Id
+        val username: String,
 
-    @Column(nullable = false)
-    val password: String,
+        @Column(nullable = false)
+        val password: String,
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = arrayOf(JoinColumn(name = "username", referencedColumnName = "username")),
-            inverseJoinColumns = arrayOf(JoinColumn(name = "role_name", referencedColumnName = "id"))
-    )
-    val roles: List<T> = emptyList()
+        @ManyToMany
+        @JoinTable(
+                name = "user_roles",
+                joinColumns = arrayOf(JoinColumn(name = "username", referencedColumnName = "username")),
+                inverseJoinColumns = arrayOf(JoinColumn(name = "role_name", referencedColumnName = "id"))
+        )
+        val roles: List<T> = emptyList()
 )
