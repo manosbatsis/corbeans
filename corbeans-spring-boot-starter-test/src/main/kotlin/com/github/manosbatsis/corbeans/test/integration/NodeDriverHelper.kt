@@ -112,7 +112,7 @@ open class NodeDriverHelper(val cordaNodesProperties: NodesProperties) {
             if (state != State.STOPPED) {
                 logger.debug("stopNetwork called, nodes: {}", cordaNodesProperties.nodes.keys)
                 state = State.STOPPING
-                this.nodeHandles.forEach { name, nodeHandle ->
+                this.nodeHandles.forEach { (_, nodeHandle) ->
                     nodeHandle.ensureClosed()
                 }
                 this.nodeHandles.clear()
@@ -210,6 +210,7 @@ open class NodeDriverHelper(val cordaNodesProperties: NodesProperties) {
         }
     }
 
+    @Suppress("unused")
     private fun onComlete(s: String) {
 
     }
@@ -285,6 +286,7 @@ open class NodeDriverHelper(val cordaNodesProperties: NodesProperties) {
     /**
      * Load node config from spring-boot application
      */
+    @Suppress("MemberVisibilityCanBePrivate")
     fun getNodeParams(): Map<String, NodeParams> {
         logger.debug("getNodeParams called")
         return if (this.cordaNodesProperties.nodes.isNotEmpty()) {
@@ -294,6 +296,7 @@ open class NodeDriverHelper(val cordaNodesProperties: NodesProperties) {
         }
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun getFlowOverrides(): Map<out Class<out FlowLogic<*>>, out Class<out FlowLogic<*>>> {
         return this.cordaNodesProperties.flowOverrides.flatMap {
             it.replace(',', ' ').split(' ')

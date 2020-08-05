@@ -19,9 +19,17 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
+import com.github.manosbatsis.corda.rpc.poolboy.connection.NodeRpcConnection
+
 /**
  *  RPC-based,  node-specific service
  */
 interface CordaNodeService : CordaRpcService {
 
+    /**
+     * Run some code with a [NodeRpcConnection] from the pool in-context
+     */
+    fun <A> withNodeRpcConnection(block: (NodeRpcConnection) -> A): A {
+        return delegate.poolBoy.withConnection(block)
+    }
 }

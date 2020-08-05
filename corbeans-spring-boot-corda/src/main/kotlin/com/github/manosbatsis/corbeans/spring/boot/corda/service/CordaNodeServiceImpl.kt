@@ -19,14 +19,15 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
-import com.github.manosbatsis.corda.rpc.poolboy.KeyFreePoolBoy
+import com.github.manosbatsis.corda.rpc.poolboy.PoolBoyConnection
 import com.github.manosbatsis.vaultaire.service.SimpleServiceDefaults
 import com.github.manosbatsis.vaultaire.service.node.NodeServiceRpcPoolBoyDelegate
 import org.slf4j.LoggerFactory
 
 
 /**
- *  Basic RPC-based node service implementation
+ *  Basic RPC-based node service implementation.
+ *
  */
 open class CordaNodeServiceImpl(
         override val delegate: NodeServiceRpcPoolBoyDelegate
@@ -36,9 +37,9 @@ open class CordaNodeServiceImpl(
         private val logger = LoggerFactory.getLogger(CordaNodeServiceImpl::class.java)
     }
 
-    /** [KeyFreePoolBoy]-based constructor */
+    /** [PoolBoyConnection]-based constructor */
     constructor(
-            poolBoy: KeyFreePoolBoy, defaults: SimpleServiceDefaults = SimpleServiceDefaults()
+            poolBoy: PoolBoyConnection, defaults: SimpleServiceDefaults = SimpleServiceDefaults()
     ) : this(NodeServiceRpcPoolBoyDelegate(poolBoy, defaults))
 
 }

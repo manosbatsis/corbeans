@@ -33,10 +33,10 @@ buildscript {
         dokka_version = '0.9.17'
         jupiter_api = '5.3.2'
         commons_pool2_version = '2.8.0'
-        scrudbeans_version = '0.25'
-        vaultaire_version = '0.26-SNAPSHOT'
-        poolboy_version = '0.1-SNAPSHOT'
-        partiture_version = '0.11-SNAPSHOT'
+        scrudbeans_version = '0.26'
+        vaultaire_version = '0.26'
+        poolboy_version = '0.1'
+        partiture_version = '0.11'
         springdoc_version = '1.2.30'
         quasar_group = 'co.paralleluniverse'
         quasar_version = constants.getProperty("quasarVersion")
@@ -132,14 +132,6 @@ nexusStaging {
 
 allprojects {
     apply from: "${rootProject.projectDir}/repositories.gradle"
-
-    repositories {
-        mavenLocal()
-        jcenter()
-        mavenCentral()
-        maven { url 'https://software.r3.com/artifactory/corda' }
-        maven { url 'https://jitpack.io' }
-    }
 
     apply plugin: 'project-report'
     apply plugin: "com.dorongold.task-tree"

@@ -92,7 +92,7 @@ open class ApplicationPropertiesBasedRpcConfigurationService :
                 // Ignore "default" overrides
                 .filter { it.key != NodeParams.NODENAME_DEFAULT }
                 .forEach { (nodeName, partialParams) ->
-                    logger.debug("Registering, node name: {}, address: {}", nodeName, partialParams.address)
+                    logger.debug("Registering, node name: {}, params: {}", nodeName, partialParams)
                     // Merge params to complete config
                     val nodeParams = NodeParams.mergeParams(partialParams, defaultParams)
                     // Update custom serializers if not already set

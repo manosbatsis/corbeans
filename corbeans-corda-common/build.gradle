@@ -2,6 +2,7 @@
 apply plugin: 'java-library'
 apply plugin: "kotlin-allopen"
 apply plugin: "kotlin-noarg"
+apply from: "${rootProject.projectDir}/gradle/published.gradle"
 
 allOpen {
 	annotation("com.my.Annotation")

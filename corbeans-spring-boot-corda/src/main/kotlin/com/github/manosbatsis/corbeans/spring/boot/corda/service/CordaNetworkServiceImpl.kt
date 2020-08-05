@@ -20,10 +20,13 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
 import com.github.manosbatsis.corda.rpc.poolboy.PoolBoy
+import com.github.manosbatsis.corda.rpc.poolboy.PoolBoyConnection
+import com.github.manosbatsis.corda.rpc.poolboy.PoolBoyPooledConnection
 import com.github.manosbatsis.corda.rpc.poolboy.PoolKey
 import com.github.manosbatsis.corda.rpc.poolboy.config.RpcConfigurationService
 import com.github.manosbatsis.vaultaire.dto.info.NetworkInfo
-import com.github.manosbatsis.vaultaire.service.node.NodeServiceRpcPoolBoyDelegate
+import com.github.manosbatsis.vaultaire.service.ServiceDefaults
+import com.github.manosbatsis.vaultaire.service.SimpleServiceDefaults
 import net.corda.core.identity.CordaX500Name
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
@@ -103,10 +106,14 @@ open class CordaNetworkServiceImpl :
             }
             .toMap()
 
-    override fun getNodeService(optionalNodeName: Optional<String>): CordaNodeService {
+    override fun getNodeRpcPool(optionalNodeName: Optional<String>): PoolBoyPooledConnection {
         val nodeName = resolveNodeName(optionalNodeName)
         val poolKey = PoolKey(nodeName)
-        return CordaNodeServiceImpl(rpcConnectionPool.forKey(poolKey))
+        return rpcConnectionPool.forKey(poolKey)
+    }
+
+    override fun getNodeService(optionalNodeName: Optional<String>): CordaNodeService {
+        return CordaNodeServiceImpl(getNodeRpcPool(optionalNodeName))
     }
 
     val serviceConstructors = mutableMapOf<String, Constructor<*>>()
@@ -116,13 +123,30 @@ open class CordaNetworkServiceImpl :
         val poolKey = PoolKey(nodeName)
         val constructor = serviceConstructors.getOrPut(serviceType.canonicalName){
             serviceType.constructors.find {
-                it.parameterTypes.size == 1
-                        && it.parameterTypes.single()
-                        .isAssignableFrom(NodeServiceRpcPoolBoyDelegate::class.java)
-            } ?: error("No constructor found with single NodeServiceRpcPoolBoyDelegate param for class ${serviceType.canonicalName}")
+                logger.debug("constructor parameter types: ${it.parameterTypes.joinToString(",") { it.canonicalName }}")
+                if(it.parameterTypes.size == 1){
+                    hasPoolBoyFirstParam(it)
+                }
+                else if(it.parameterTypes.size == 2){
+                    hasPoolBoyFirstParam(it) && hasServiceDefaultsLastParam(it)
+                }
+                else false
+            } ?: error("No constructor found with appropriate parameters " +
+                    "(${PoolBoyPooledConnection::class.java.simpleName}, " +
+                    "optional ${ServiceDefaults::class.java.simpleName}) " +
+                    "for class ${serviceType.canonicalName}")
         }
-        return constructor.newInstance(rpcConnectionPool.forKey(poolKey)) as T
+        return with(constructor){
+            if(parameterTypes.size == 1) newInstance(rpcConnectionPool.forKey(poolKey)) as T
+            else newInstance(rpcConnectionPool.forKey(poolKey), SimpleServiceDefaults()) as T
+        }
     }
+
+    private fun hasPoolBoyFirstParam(it: Constructor<*>) =
+            it.parameterTypes.first().isAssignableFrom(PoolBoyConnection::class.java)
+
+    private fun hasServiceDefaultsLastParam(it: Constructor<*>) =
+            it.parameterTypes.last().isAssignableFrom(SimpleServiceDefaults::class.java)
 
 
     override fun resolveNodeName(optionalNodeName: Optional<String>): String {

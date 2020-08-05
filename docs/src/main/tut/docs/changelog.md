@@ -8,6 +8,27 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.43
+
+- Corbeans no longer requires a fixed number of nodes.
+Nodes (and their RPC connection config) are now completely dynamic, 
+so no `CordaNodeService` beans will be registered anymore. 
+Instead, you must use `CordaNetworkService.getNodeService(nodeName)` 
+to obtain a node service for the target node.
+- All services now use RPC connection pooling based on  
+(Corda RPC PoolBoy)[https://github.com/manosbatsis/corda-rpc-poolboy] 
+under the hood.
+- You should no longer use a `CordaRPCOps` directly. Instead, 
+use `CordaNetworkService.withNodeRpcConnection` or 
+`CordaNodeService.withNodeRpcConnection` to enclose blocks 
+that call flows etc.
+- Removed the `corbeans.nodes.default.primaryServiceType` property. 
+If you want to customize the `CordaNodeService` implementastion 
+used, you will need to override/use your own `CordaNetworkService`
+bean, or use a regular node service as a Kotlin delegate.
+- Removed `corbeans.nodes.default.bnmsServiceType`. You must now 
+use `corbeans.bnmsServiceType` to specify a `CordaBnmsService`  
+implementation class. 
 
 ## 0.42
 

@@ -62,11 +62,11 @@ abstract class CordaBnmsServiceBase<T : Any>(
                     input.networkId)
 
     /** Request the BNO to kick-off the on-boarding procedure. */
-    override fun createMembershipRequest(bno: Party, membershipMetadata: T, networkId: String?): MembershipState<T> {
+    override fun createMembershipRequest(bno: Party, metadata: T, networkId: String?): MembershipState<T> {
         return delegate.poolBoy.withConnection { connection ->
             // Create the state and return
             val flowHandle: FlowHandle<SignedTransaction> =
-                    connection.proxy.startFlowDynamic(RequestMembershipFlow::class.java, bno, membershipMetadata, networkId)
+                    connection.proxy.startFlowDynamic(RequestMembershipFlow::class.java, bno, metadata, networkId)
              flowHandle.use { it.returnValue.getOrThrow() }
                     .tx.outputStates.single() as MembershipState<T>
         }

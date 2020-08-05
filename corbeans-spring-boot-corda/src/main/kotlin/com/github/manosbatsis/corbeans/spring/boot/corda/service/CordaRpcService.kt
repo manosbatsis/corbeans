@@ -22,7 +22,7 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.service
 import com.github.manosbatsis.vaultaire.dto.attachment.AttachmentFile
 import com.github.manosbatsis.vaultaire.dto.attachment.AttachmentReceipt
 import com.github.manosbatsis.vaultaire.service.node.NodeService
-import com.github.manosbatsis.vaultaire.service.node.NodeServiceDelegate
+import com.github.manosbatsis.vaultaire.service.node.NodeServiceRpcPoolBoyDelegate
 import net.corda.core.identity.Party
 
 /**
@@ -30,7 +30,7 @@ import net.corda.core.identity.Party
  */
 interface CordaRpcService : NodeService {
 
-    val delegate: NodeServiceDelegate
+    val delegate: NodeServiceRpcPoolBoyDelegate
 
     /** Get the node identity */
     @Deprecated(

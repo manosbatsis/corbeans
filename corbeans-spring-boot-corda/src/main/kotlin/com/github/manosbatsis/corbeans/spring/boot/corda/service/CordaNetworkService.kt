@@ -19,6 +19,8 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
+import com.github.manosbatsis.corda.rpc.poolboy.PoolBoyPooledConnection
+import com.github.manosbatsis.corda.rpc.poolboy.connection.NodeRpcConnection
 import com.github.manosbatsis.vaultaire.dto.info.ExtendedNodeInfo
 import com.github.manosbatsis.vaultaire.dto.info.NetworkInfo
 import java.util.Optional
@@ -52,6 +54,29 @@ interface CordaNetworkService {
 
     /** Refresh the network map cache of every node registered in corbeans configuration */
     fun refreshNetworkMapCaches()
+
+    /** Get RPC connection pool for the input node name */
+    fun getNodeRpcPool(optionalNodeName: Optional<String>): PoolBoyPooledConnection
+
+    /** Get RPC connection pool for the input node name */
+    fun getNodeRpcPool(nodeName: String?): PoolBoyPooledConnection =
+            getNodeRpcPool(Optional.ofNullable(nodeName))
+
+    /**
+     * Run some code with a [NodeRpcConnection] from the pool in-context
+     */
+    fun <A> withNodeRpcConnection(optionalNodeName: Optional<String>, block: (NodeRpcConnection) -> A): A {
+        val nodeRpcPool = getNodeRpcPool(optionalNodeName)
+        return nodeRpcPool.withConnection(block)
+    }
+
+    /**
+     * Run some code with a [NodeRpcConnection] from the pool in-context
+     */
+    fun <A> withNodeRpcConnection(nodeName: String?, block: (NodeRpcConnection) -> A): A {
+        val nodeRpcPool = getNodeRpcPool(nodeName)
+        return nodeRpcPool.withConnection(block)
+    }
 
     /**
      * Get a Node service by name. Default is either the only node name if single,
