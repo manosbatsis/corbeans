@@ -8,7 +8,7 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
-## 0.43
+## 0.43-44
 
 - Corbeans no longer requires a fixed number of nodes.
 Nodes (and their RPC connection config) are now completely dynamic, 

@@ -60,6 +60,15 @@ create node service instances:
 val nodeService =  networkService.getNodeService("optional name")
 ```
 
+You can also use the network service to run some code using a pooled 
+RPC connection to a target node:
+
+```kotlin
+networkService.withNodeRpcConnection(nodeName){
+    it.proxy.startFlow(MyFlow::class.java, foo, bar, baz)
+}
+```
+
 #### Node Service
 
 Node services are useful in two main ways:
@@ -75,6 +84,13 @@ flows and so on.
 	```kotlin
 	val stateService = nodeService.createStateService(MyContractState::class.java)
 	```
+3. They provide a `withNodeRpcConnection` function to run to run some code 
+using a pooled RPC connection to their target node: 
+    ```kotlin
+    stateService.withNodeRpcConnection {
+        it.proxy.startFlow(MyFlow::class.java, foo, bar, baz)
+    }
+    ```
 	
 #### State Service
 

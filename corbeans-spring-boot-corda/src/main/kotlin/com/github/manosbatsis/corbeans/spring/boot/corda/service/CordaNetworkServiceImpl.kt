@@ -48,7 +48,7 @@ open class CordaNetworkServiceImpl :
     }
 
     /** Maintain an RPC client/ops pool */
-    lateinit var rpcConnectionPool: PoolBoy
+    lateinit var poolBoy: PoolBoy
 
     @Autowired
     lateinit var rpcConfigurationService: RpcConfigurationService
@@ -86,7 +86,7 @@ open class CordaNetworkServiceImpl :
     }
 
     override fun afterPropertiesSet() {
-        this.rpcConnectionPool = PoolBoy(rpcConfigurationService)
+        this.poolBoy = PoolBoy(rpcConfigurationService)
     }
 
     override fun getInfo(): NetworkInfo {
@@ -96,20 +96,20 @@ open class CordaNetworkServiceImpl :
     override fun getNodesInfo() = this.rpcConfigurationService
             .getAllRpcNodeParams().mapNotNull {
                 val nodeKey = PoolKey(it.key)
-                val rpcConnection = this.rpcConnectionPool.borrowConnection(nodeKey)
+                val rpcConnection = this.poolBoy.borrowConnection(nodeKey)
                 val nodeInfoEntry = if (!rpcConnection.skipInfo()) {
-                    it.key to CordaNodeServiceImpl(rpcConnectionPool.forKey(nodeKey))
+                    it.key to CordaNodeServiceImpl(poolBoy.forKey(nodeKey))
                             .getExtendedInfo()
                 } else null
-                this.rpcConnectionPool.returnConnection(nodeKey, rpcConnection)
+                this.poolBoy.returnConnection(nodeKey, rpcConnection)
                 nodeInfoEntry
             }
             .toMap()
 
-    override fun getNodeRpcPool(optionalNodeName: Optional<String>): PoolBoyPooledConnection {
+    override fun getNodeRpcPool(optionalNodeName: Optional<String>): PoolBoyConnection {
         val nodeName = resolveNodeName(optionalNodeName)
-        val poolKey = PoolKey(nodeName)
-        return rpcConnectionPool.forKey(poolKey)
+        val poolKey = rpcConfigurationService.buildPoolKey(nodeName)
+        return poolBoy.forKey(poolKey)
     }
 
     override fun getNodeService(optionalNodeName: Optional<String>): CordaNodeService {
@@ -137,8 +137,8 @@ open class CordaNetworkServiceImpl :
                     "for class ${serviceType.canonicalName}")
         }
         return with(constructor){
-            if(parameterTypes.size == 1) newInstance(rpcConnectionPool.forKey(poolKey)) as T
-            else newInstance(rpcConnectionPool.forKey(poolKey), SimpleServiceDefaults()) as T
+            if(parameterTypes.size == 1) newInstance(poolBoy.forKey(poolKey)) as T
+            else newInstance(poolBoy.forKey(poolKey), SimpleServiceDefaults()) as T
         }
     }
 
@@ -169,7 +169,7 @@ open class CordaNetworkServiceImpl :
         rpcConfigurationService
                 .getAllRpcNodeParams()
                 .forEach {
-                    CordaNodeServiceImpl(rpcConnectionPool.forKey(PoolKey(it.key)))
+                    CordaNodeServiceImpl(poolBoy.forKey(PoolKey(it.key)))
                             .refreshNetworkMapCache()
                 }
     }

@@ -19,7 +19,7 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
-import com.github.manosbatsis.corda.rpc.poolboy.PoolBoyPooledConnection
+import com.github.manosbatsis.corda.rpc.poolboy.PoolBoyConnection
 import com.github.manosbatsis.corda.rpc.poolboy.connection.NodeRpcConnection
 import com.github.manosbatsis.vaultaire.dto.info.ExtendedNodeInfo
 import com.github.manosbatsis.vaultaire.dto.info.NetworkInfo
@@ -56,16 +56,19 @@ interface CordaNetworkService {
     fun refreshNetworkMapCaches()
 
     /** Get RPC connection pool for the input node name */
-    fun getNodeRpcPool(optionalNodeName: Optional<String>): PoolBoyPooledConnection
+    fun getNodeRpcPool(optionalNodeName: Optional<String>): PoolBoyConnection
 
     /** Get RPC connection pool for the input node name */
-    fun getNodeRpcPool(nodeName: String?): PoolBoyPooledConnection =
+    fun getNodeRpcPool(nodeName: String?): PoolBoyConnection =
             getNodeRpcPool(Optional.ofNullable(nodeName))
 
     /**
      * Run some code with a [NodeRpcConnection] from the pool in-context
      */
-    fun <A> withNodeRpcConnection(optionalNodeName: Optional<String>, block: (NodeRpcConnection) -> A): A {
+    fun <A> withNodeRpcConnection(
+            optionalNodeName: Optional<String>,
+            block: (NodeRpcConnection) -> A
+    ): A {
         val nodeRpcPool = getNodeRpcPool(optionalNodeName)
         return nodeRpcPool.withConnection(block)
     }
@@ -73,7 +76,9 @@ interface CordaNetworkService {
     /**
      * Run some code with a [NodeRpcConnection] from the pool in-context
      */
-    fun <A> withNodeRpcConnection(nodeName: String?, block: (NodeRpcConnection) -> A): A {
+    fun <A> withNodeRpcConnection(
+            nodeName: String?, block: (NodeRpcConnection) -> A
+    ): A {
         val nodeRpcPool = getNodeRpcPool(nodeName)
         return nodeRpcPool.withConnection(block)
     }

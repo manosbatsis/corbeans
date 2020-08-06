@@ -117,7 +117,6 @@ based on the above `application.properties`:
 
 Bean Type          | Name                     | Description
 ------------------ | ------------------------ | -------------------
-NodeRpcConnection  | {nodeName}RpcConnection  | Node RPC connection and operations proxy
 CordaNodeService   | {nodeName}NodeService    | A node-specific service component
 
 It will also register the following network-level beans
