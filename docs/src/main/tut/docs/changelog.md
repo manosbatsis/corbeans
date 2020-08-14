@@ -8,6 +8,10 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.45
+
+- Improved support for Corda Accounts
+
 ## 0.43-44
 
 - Corbeans no longer requires a fixed number of nodes.

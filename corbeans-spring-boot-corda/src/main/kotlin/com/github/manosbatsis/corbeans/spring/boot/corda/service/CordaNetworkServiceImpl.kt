@@ -19,18 +19,27 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
+import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
 import com.github.manosbatsis.corda.rpc.poolboy.PoolBoy
 import com.github.manosbatsis.corda.rpc.poolboy.PoolBoyConnection
 import com.github.manosbatsis.corda.rpc.poolboy.PoolBoyPooledConnection
 import com.github.manosbatsis.corda.rpc.poolboy.PoolKey
 import com.github.manosbatsis.corda.rpc.poolboy.config.RpcConfigurationService
+import com.github.manosbatsis.vaultaire.annotation.ExtendedStateServiceBean
 import com.github.manosbatsis.vaultaire.dto.info.NetworkInfo
+import com.github.manosbatsis.vaultaire.plugin.accounts.service.dao.ExtendedAccountsAwareStateService
+import com.github.manosbatsis.vaultaire.registry.Registry
 import com.github.manosbatsis.vaultaire.service.ServiceDefaults
 import com.github.manosbatsis.vaultaire.service.SimpleServiceDefaults
+import com.github.manosbatsis.vaultaire.service.dao.ExtendedStateService
+import net.corda.core.contracts.ContractState
 import net.corda.core.identity.CordaX500Name
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider
+import org.springframework.core.GenericTypeResolver
+import org.springframework.core.type.filter.AnnotationTypeFilter
 import java.lang.reflect.Constructor
 import java.util.Optional
 
@@ -47,8 +56,15 @@ open class CordaNetworkServiceImpl :
         private val SERVICE_NAME_SUFFIX = "NodeService"
     }
 
+    protected open val stateServiceInterface: Class<out ExtendedStateService<*, *, *, *>> =
+            ExtendedStateService::class.java
+
     /** Maintain an RPC client/ops pool */
     lateinit var poolBoy: PoolBoy
+
+    /** Load config from application.properties */
+    @Autowired
+    lateinit private var cordaNodesProperties: CordaNodesProperties
 
     @Autowired
     lateinit var rpcConfigurationService: RpcConfigurationService
@@ -86,7 +102,27 @@ open class CordaNetworkServiceImpl :
     }
 
     override fun afterPropertiesSet() {
+        // Init poolboy
         this.poolBoy = PoolBoy(rpcConfigurationService)
+
+        // Init state service registry
+        val scanner = ClassPathScanningCandidateComponentProvider(false)
+        scanner.addIncludeFilter(AnnotationTypeFilter(ExtendedStateServiceBean::class.java))
+        cordaNodesProperties.cordapPackages.forEach{packageName ->
+            for (beanDefinition in scanner.findCandidateComponents(packageName)) {
+                try {
+                    val serviceClass = Class.forName(beanDefinition.beanClassName)
+                            as Class<out ExtendedStateService<*, *, *, *>>
+                    val stateType = GenericTypeResolver
+                            .resolveTypeArgument(serviceClass, stateServiceInterface)
+                            as Class<out ContractState>
+                    Registry.registerService(stateType, serviceClass)
+                } catch (e: ClassNotFoundException) {
+                    logger.warn(
+                            "Could not resolve class object for state service type", e)
+                }
+            }
+        }
     }
 
     override fun getInfo(): NetworkInfo {
@@ -116,7 +152,7 @@ open class CordaNetworkServiceImpl :
         return CordaNodeServiceImpl(getNodeRpcPool(optionalNodeName))
     }
 
-    val serviceConstructors = mutableMapOf<String, Constructor<*>>()
+    private val serviceConstructors = mutableMapOf<String, Constructor<*>>()
 
     override fun <T> getService(serviceType: Class<T>, optionalNodeName: Optional<String>): T {
         val nodeName = resolveNodeName(optionalNodeName)
@@ -173,5 +209,17 @@ open class CordaNetworkServiceImpl :
                             .refreshNetworkMapCache()
                 }
     }
+}
 
+
+
+/**
+ * Accounts-aware Corda network service
+ */
+class CordaAccountsAwareNetworkServiceImpl : CordaNetworkServiceImpl(){
+    override val stateServiceInterface: Class<out ExtendedStateService<*, *, *, *>> = ExtendedAccountsAwareStateService::class.java
+
+    override fun getNodeService(optionalNodeName: Optional<String>): CordaNodeService {
+        return CordaAccountsAwareNodeServiceImpl(getNodeRpcPool(optionalNodeName))
+    }
 }

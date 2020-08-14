@@ -38,7 +38,6 @@ open class InfoIntegrationTests(
 
     }
 
-
     @Test
     fun `Can access swagger UI`() {
         // Check swagger endpoint

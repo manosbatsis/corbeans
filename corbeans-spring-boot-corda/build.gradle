@@ -10,6 +10,7 @@ dependencies {
 	api project(":corbeans-corda-common")
 	api project(':corbeans-corda-rpc')
 	api "com.github.manosbatsis.vaultaire:vaultaire:$vaultaire_version"
+	compileOnly "com.github.manosbatsis.vaultaire:vaultaire-plugin-accounts:$vaultaire_version"
 	// Corda dependencies.
 	api "$corda_release_group:corda-rpc:$corda_release_version"
 

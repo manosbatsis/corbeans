@@ -68,12 +68,6 @@ class CorbeansSpringExtensionIntegrationTest {
     @Autowired
     lateinit var networkService: CordaNetworkService
 
-    // TODO:
-    // autowire a unique custom service
-    //@Autowired
-    //@Qualifier("partyBNodeService")
-    //lateinit var customCervice: SampleCustomCordaNodeServiceImpl
-
     @Autowired
     lateinit var restTemplateOrig: TestRestTemplate
 
@@ -228,7 +222,7 @@ class CorbeansSpringExtensionIntegrationTest {
         assertTrue(paths.containsAll(listOf("test.txt", "test.png")))
     }
 
-    //@Test
+    @Test
     @Throws(Exception::class)
     fun `Can save and retrieve single zip and jar files as attachments`() {
         testArchiveUploadAndDownload("test.zip", "application/zip")

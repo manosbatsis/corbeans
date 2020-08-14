@@ -20,9 +20,10 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
 import com.github.manosbatsis.corda.rpc.poolboy.PoolBoyConnection
+import com.github.manosbatsis.vaultaire.plugin.accounts.service.node.AccountsAwareNodeServicePoolBoyDelegate
+import com.github.manosbatsis.vaultaire.service.ServiceDefaults
 import com.github.manosbatsis.vaultaire.service.SimpleServiceDefaults
 import com.github.manosbatsis.vaultaire.service.node.NodeServiceRpcPoolBoyDelegate
-import org.slf4j.LoggerFactory
 
 
 /**
@@ -33,13 +34,24 @@ open class CordaNodeServiceImpl(
         override val delegate: NodeServiceRpcPoolBoyDelegate
 ) : CordaRpcServiceBase(delegate), CordaNodeService {
 
-    companion object {
-        private val logger = LoggerFactory.getLogger(CordaNodeServiceImpl::class.java)
-    }
+    /** [PoolBoyConnection]-based constructor */
+    constructor(
+            poolBoy: PoolBoyConnection, defaults: ServiceDefaults = SimpleServiceDefaults()
+    ) : this(NodeServiceRpcPoolBoyDelegate(poolBoy, defaults))
+
+}
+
+/**
+ *  Basic accounts-aware  RPC-based node service implementation.
+ *
+ */
+open class CordaAccountsAwareNodeServiceImpl(
+        override val delegate: AccountsAwareNodeServicePoolBoyDelegate
+) : CordaAccountsAwareRpcServiceBase(delegate), CordaAccountsAwareNodeService {
 
     /** [PoolBoyConnection]-based constructor */
     constructor(
-            poolBoy: PoolBoyConnection, defaults: SimpleServiceDefaults = SimpleServiceDefaults()
-    ) : this(NodeServiceRpcPoolBoyDelegate(poolBoy, defaults))
+            poolBoy: PoolBoyConnection, defaults: ServiceDefaults = SimpleServiceDefaults()
+    ) : this(AccountsAwareNodeServicePoolBoyDelegate(poolBoy, defaults))
 
 }

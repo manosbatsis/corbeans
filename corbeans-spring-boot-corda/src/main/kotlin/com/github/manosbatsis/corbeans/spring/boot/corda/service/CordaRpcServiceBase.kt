@@ -20,8 +20,9 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
 import com.github.manosbatsis.corda.rpc.poolboy.PoolBoyConnection
-import com.github.manosbatsis.vaultaire.dto.attachment.AttachmentFile
-import com.github.manosbatsis.vaultaire.dto.attachment.AttachmentReceipt
+import com.github.manosbatsis.vaultaire.plugin.accounts.service.node.AccountsAwareNodeServicePoolBoyDelegate
+import com.github.manosbatsis.vaultaire.plugin.accounts.service.node.BasicAccountsAwareNodeService
+import com.github.manosbatsis.vaultaire.service.ServiceDefaults
 import com.github.manosbatsis.vaultaire.service.SimpleServiceDefaults
 import com.github.manosbatsis.vaultaire.service.node.BasicNodeService
 import com.github.manosbatsis.vaultaire.service.node.NodeServiceRpcPoolBoyDelegate
@@ -43,7 +44,7 @@ abstract class CordaRpcServiceBase(
     }
     /** [PoolBoyConnection]-based constructor */
     constructor(
-            poolBoy: PoolBoyConnection, defaults: SimpleServiceDefaults = SimpleServiceDefaults()
+            poolBoy: PoolBoyConnection, defaults: ServiceDefaults = SimpleServiceDefaults()
     ) : this(NodeServiceRpcPoolBoyDelegate(poolBoy, defaults))
 
     override val myIdentity: Party by lazy { nodeIdentity }
@@ -52,22 +53,28 @@ abstract class CordaRpcServiceBase(
         QueryCriteria.LinearStateQueryCriteria(participants = listOf(nodeIdentity))
 
     }
+}
 
-    override fun refreshNetworkMapCache() = delegate.poolBoy.withConnection {
-        it.proxy.refreshNetworkMapCache()
+/**
+ *  Abstract accounts-aware base implementation for RPC-based node services.
+ *
+ */
+abstract class CordaAccountsAwareRpcServiceBase(
+        override val delegate: AccountsAwareNodeServicePoolBoyDelegate
+) : BasicAccountsAwareNodeService(delegate), CordaNodeService {
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(CordaRpcServiceBase::class.java)
     }
+    /** [PoolBoyConnection]-based constructor */
+    constructor(
+            poolBoy: PoolBoyConnection, defaults: ServiceDefaults = SimpleServiceDefaults()
+    ) : this(AccountsAwareNodeServicePoolBoyDelegate(poolBoy, defaults))
 
-    /** Persist the given file(s) as a single attachment in the vault  */
-    override fun saveAttachment(attachmentFile: AttachmentFile): AttachmentReceipt {
-        return this.saveAttachment(listOf(attachmentFile))
+    override val myIdentity: Party by lazy { nodeIdentity }
+
+    protected val myIdCriteria: QueryCriteria.LinearStateQueryCriteria by lazy {
+        QueryCriteria.LinearStateQueryCriteria(participants = listOf(nodeIdentity))
+
     }
-
-    /** Persist the given file(s) as a single attachment in the vault  */
-    override fun saveAttachment(attachmentFiles: List<AttachmentFile>): AttachmentReceipt {
-        return this.saveAttachment(toAttachment(attachmentFiles))
-    }
-
-    override fun skipInfo(): Boolean = delegate.poolBoy.withConnection { it.skipInfo() }
-
-
 }

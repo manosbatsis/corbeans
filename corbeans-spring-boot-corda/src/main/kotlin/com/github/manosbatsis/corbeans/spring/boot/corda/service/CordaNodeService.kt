@@ -22,7 +22,7 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.service
 import com.github.manosbatsis.corda.rpc.poolboy.connection.NodeRpcConnection
 
 /**
- *  RPC-based,  node-specific service
+ *  RPC-based, node-specific service
  */
 interface CordaNodeService : CordaRpcService {
 
@@ -32,4 +32,11 @@ interface CordaNodeService : CordaRpcService {
     fun <A> withNodeRpcConnection(block: (NodeRpcConnection) -> A): A {
         return delegate.poolBoy.withConnection(block)
     }
+}
+
+/**
+ *  RPC-based, accounts-aware node-specific service
+ */
+interface CordaAccountsAwareNodeService : CordaNodeService, CordaAccountsAwareRpcService {
+
 }

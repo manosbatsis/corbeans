@@ -21,6 +21,7 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.service
 
 import com.github.manosbatsis.vaultaire.dto.attachment.AttachmentFile
 import com.github.manosbatsis.vaultaire.dto.attachment.AttachmentReceipt
+import com.github.manosbatsis.vaultaire.plugin.accounts.service.node.AccountsAwareNodeService
 import com.github.manosbatsis.vaultaire.service.node.NodeService
 import com.github.manosbatsis.vaultaire.service.node.NodeServiceRpcPoolBoyDelegate
 import net.corda.core.identity.Party
@@ -39,14 +40,25 @@ interface CordaRpcService : NodeService {
     val myIdentity: Party
 
     /** Refreshes the node's NetworkMap cache */
-    fun refreshNetworkMapCache(): Unit
+    fun refreshNetworkMapCache() = delegate.poolBoy.withConnection {
+        it.proxy.refreshNetworkMapCache()
+    }
 
-    /** Persist the given file as an attachment in the vault  */
-    fun saveAttachment(attachmentFile: AttachmentFile): AttachmentReceipt
+    /** Persist the given file as a single attachment in the vault  */
+    fun saveAttachment(attachmentFile: AttachmentFile): AttachmentReceipt {
+        return this.saveAttachment(listOf(attachmentFile))
+    }
 
-    /** Persist the given files as a single attachment in the vault  */
-    fun saveAttachment(attachmentFiles: List<AttachmentFile>): AttachmentReceipt
+    /** Persist the given file(s) as a single attachment in the vault  */
+    fun saveAttachment(attachmentFiles: List<AttachmentFile>): AttachmentReceipt {
+        return this.saveAttachment(toAttachment(attachmentFiles))
+    }
 
     /** Whether this service should be skipped from actuator */
-    fun skipInfo(): Boolean
+    fun skipInfo(): Boolean = delegate.poolBoy.withConnection { it.skipInfo() }
 }
+
+/**
+ *  RPC-based, accounts-aware node-specific service
+ */
+interface CordaAccountsAwareRpcService: CordaRpcService, AccountsAwareNodeService

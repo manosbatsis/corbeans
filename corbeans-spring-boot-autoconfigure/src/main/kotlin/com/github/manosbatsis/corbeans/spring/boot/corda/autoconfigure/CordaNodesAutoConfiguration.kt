@@ -29,8 +29,8 @@ import com.github.manosbatsis.corbeans.spring.boot.corda.bind.StringToCordaX500N
 import com.github.manosbatsis.corbeans.spring.boot.corda.bind.StringToSecureHashConverter
 import com.github.manosbatsis.corbeans.spring.boot.corda.bind.StringToUniqueIdentifierConverter
 import com.github.manosbatsis.corbeans.spring.boot.corda.bind.UniqueIdentifierToStringConverter
-import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.ApplicationPropertiesBasedRpcConfigurationService
+import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaAccountsAwareNetworkServiceImpl
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkServiceImpl
 import com.github.manosbatsis.corda.rpc.poolboy.config.RpcConfigurationService
@@ -58,6 +58,13 @@ class CordaNodesAutoConfiguration {
         private val logger = LoggerFactory.getLogger(CordaNodesAutoConfiguration::class.java)
     }
 
+    val accountAware: Boolean = try {
+        Class.forName(
+                "com.github.manosbatsis.vaultaire.plugin.accounts.service.node.AccountsAwareNodeService")
+        true
+    }
+    catch (e: Exception){false}
+
     @Bean
     @ConditionalOnMissingBean(name = ["rpcConfigurationService"])
     fun rpcConfigurationService(): RpcConfigurationService {
@@ -67,18 +74,12 @@ class CordaNodesAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(name = ["cordaNetworkService"])
     fun cordaNetworkService(): CordaNetworkService {
-        return CordaNetworkServiceImpl()
+        return if(accountAware) CordaAccountsAwareNetworkServiceImpl()
+        else CordaNetworkServiceImpl()
     }
 
     @Autowired
     protected lateinit var applicationContext: ApplicationContext
-
-    @Autowired
-    protected lateinit var cordaNodesProperties: CordaNodesProperties
-
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
-    @Autowired
-    protected lateinit var networkService: CordaNetworkService
 
     /** Add transparent [net.corda.core.crypto.SecureHash] conversion */
     @Bean
