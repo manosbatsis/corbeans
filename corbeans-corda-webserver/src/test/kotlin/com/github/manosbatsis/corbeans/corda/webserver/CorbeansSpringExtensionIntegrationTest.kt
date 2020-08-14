@@ -196,7 +196,7 @@ class CorbeansSpringExtensionIntegrationTest {
     }
 
 
-    //@Test
+    @Test
     @Throws(Exception::class)
     fun `Can save and retrieve regular files as attachments`() {
         // Upload a couple of files
@@ -222,7 +222,7 @@ class CorbeansSpringExtensionIntegrationTest {
         assertTrue(paths.containsAll(listOf("test.txt", "test.png")))
     }
 
-    @Test
+    //@Test
     @Throws(Exception::class)
     fun `Can save and retrieve single zip and jar files as attachments`() {
         testArchiveUploadAndDownload("test.zip", "application/zip")
