@@ -8,6 +8,10 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.47
+
+- Bumped Vaultaire to v0.30
+
 ## 0.46
 
 - Bumped Vaultaire to v0.29
