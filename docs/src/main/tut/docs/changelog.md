@@ -8,6 +8,11 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.48
+
+- Support custom Cordapp Config during test execution using 
+prperty files. 
+
 ## 0.47
 
 - Bumped Vaultaire to v0.30

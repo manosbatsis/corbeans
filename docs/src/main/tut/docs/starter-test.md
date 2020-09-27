@@ -14,6 +14,7 @@ title: "Starter Test"
 - [Implicit Network](#implicit-network)
 - [With CorbeansSpringExtension](#with-corbeansspringextension)
 	- [Nested Tests](#nested-tests)
+- [Cordapp Config](#cordapp-config)
 
 <!-- /TOC -->
 
@@ -149,6 +150,7 @@ class MyWithSingleNetworkIntegrationTest {
 	// Same members as in the previous section
 }
 ```
+ 
 
 ### Nested Tests
 
@@ -189,3 +191,12 @@ class MainIntegrationTest {
     inner class `Bar tests` : BarTests(restTemplate)
 }
 ```
+
+
+## Cordapp Config
+
+You can add custom cordapp configurations for a target package 
+to be used while testing. By default `NodeDriverHelper.buildCordappConfig` 
+will look for a `${cordappPackage}.config.properties` file in the classpath 
+and, if found, will use it as config for the corresponding `TestCordapp` 
+instance.
