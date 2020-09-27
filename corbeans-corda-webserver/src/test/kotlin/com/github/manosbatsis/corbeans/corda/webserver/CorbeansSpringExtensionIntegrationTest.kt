@@ -21,6 +21,7 @@ package com.github.manosbatsis.corbeans.corda.webserver
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaNetworkService
+import com.github.manosbatsis.corbeans.test.containers.CordformExtension
 import com.github.manosbatsis.corbeans.test.integration.CorbeansSpringExtension
 import com.github.manosbatsis.vaultaire.dto.attachment.AttachmentReceipt
 import com.github.manosbatsis.vaultaire.util.asUniqueIdentifier
@@ -46,6 +47,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.client.BufferingClientHttpRequestFactory
 import org.springframework.http.client.SimpleClientHttpRequestFactory
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 import org.springframework.util.LinkedMultiValueMap
 import java.util.UUID
 import kotlin.test.assertTrue
@@ -55,13 +58,30 @@ import kotlin.test.assertTrue
  * instead of extending [WithImplicitNetworkIT]
  */
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = [Application::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 // Note we are using CorbeansSpringExtension Instead of SpringExtension
-@ExtendWith(CorbeansSpringExtension::class)
+@ExtendWith(CordformExtension::class)
 class CorbeansSpringExtensionIntegrationTest {
 
     companion object {
+        @JvmStatic
         private val logger = LoggerFactory.getLogger(CorbeansSpringExtensionIntegrationTest::class.java)
+
+        @DynamicPropertySource
+        @JvmStatic
+        fun nodeProperties(registry: DynamicPropertyRegistry) {
+            CordformExtension.instances.forEach { (nodeName, instance) ->
+                val mappedPort = CordformExtension.instancePorts[nodeName]
+                if(mappedPort != null){
+                    val propKey = "corbeans.nodes.$nodeName.address"
+                    val propValy = "${instance.host}:${mappedPort}"
+                    logger.info("nodeProperties, adding: $propKey=$propValy")
+                    registry.add(propKey) { propValy }
+                }
+            }
+            //registry.add("test.container.ip") { container.ipAddress }
+            //registry.add("test.container.port") { container.port }
+        }
     }
 
     // autowire a network service, used to access node services
@@ -86,7 +106,7 @@ class CorbeansSpringExtensionIntegrationTest {
         assertNotNull(this.networkService.getNodeService("partyA"))
     }
 
-    // TODO: @Test
+    // TODO: //@Test
     fun `Can inject custom service`() {
         //logger.info("customCervice: {}", customCervice)
         //assertNotNull(this.customCervice)
@@ -97,7 +117,7 @@ class CorbeansSpringExtensionIntegrationTest {
     fun `Can retrieve node identity`() {
         val service = this.networkService.getNodeService("partyA")
         assertNotNull(service.nodeIdentity)
-        val entity = this.restTemplate.getForEntity("/api/node/whoami", Any::class.java)
+        val entity = this.restTemplate.getForEntity("/api/nodes/partyA/whoami", Any::class.java)
         assertEquals(HttpStatus.OK, entity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON.type, entity.headers.contentType?.type)
         assertEquals(MediaType.APPLICATION_JSON.subtype, entity.headers.contentType?.subtype)
@@ -107,7 +127,7 @@ class CorbeansSpringExtensionIntegrationTest {
     fun `Can retrieve identities`() {
         val service = this.networkService.getNodeService("partyA")
         assertNotNull(service.identities())
-        val entity = this.restTemplate.getForEntity("/api/node/identities", JsonNode::class.java)
+        val entity = this.restTemplate.getForEntity("/api/nodes/partyA/identities", JsonNode::class.java)
         assertEquals(HttpStatus.OK, entity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON.type, entity.headers.contentType?.type)
         assertEquals(MediaType.APPLICATION_JSON.subtype, entity.headers.contentType?.subtype)
@@ -118,7 +138,7 @@ class CorbeansSpringExtensionIntegrationTest {
     fun `Can retrieve nodes`() {
         val service = this.networkService.getNodeService("partyA")
         assertNotNull(service.identities())
-        val entity = this.restTemplate.getForEntity("/api/node/nodes", JsonNode::class.java)
+        val entity = this.restTemplate.getForEntity("/api/nodes/partyA/nodes", JsonNode::class.java)
         assertEquals(HttpStatus.OK, entity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON.type, entity.headers.contentType?.type)
         assertEquals(MediaType.APPLICATION_JSON.subtype, entity.headers.contentType?.subtype)
@@ -129,7 +149,7 @@ class CorbeansSpringExtensionIntegrationTest {
     fun `Can retrieve peers`() {
         val service = this.networkService.getNodeService("partyA")
         assertNotNull(service.identities())
-        val entity = this.restTemplate.getForEntity("/api/node/peers", JsonNode::class.java)
+        val entity = this.restTemplate.getForEntity("/api/nodes/partyA/peers", JsonNode::class.java)
         assertEquals(HttpStatus.OK, entity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON.type, entity.headers.contentType?.type)
         assertEquals(MediaType.APPLICATION_JSON.subtype, entity.headers.contentType?.subtype)
@@ -141,7 +161,7 @@ class CorbeansSpringExtensionIntegrationTest {
         val service = this.networkService.getNodeService("partyA")
         val notaries: List<Party> = service.notaries()
         assertNotNull(notaries)
-        val entity = this.restTemplate.getForEntity("/api/node/notaries", JsonNode::class.java)
+        val entity = this.restTemplate.getForEntity("/api/nodes/partyA/notaries", JsonNode::class.java)
         assertEquals(HttpStatus.OK, entity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON.type, entity.headers.contentType?.type)
         assertEquals(MediaType.APPLICATION_JSON.subtype, entity.headers.contentType?.subtype)
@@ -153,7 +173,7 @@ class CorbeansSpringExtensionIntegrationTest {
         val service = this.networkService.getNodeService("partyA")
         val flows: List<String> = service.flows()
         assertNotNull(flows)
-        val entity = this.restTemplate.getForEntity("/api/node/flows", Any::class.java)
+        val entity = this.restTemplate.getForEntity("/api/nodes/partyA/flows", Any::class.java)
         assertEquals(HttpStatus.OK, entity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON.type, entity.headers.contentType?.type)
         assertEquals(MediaType.APPLICATION_JSON.subtype, entity.headers.contentType?.subtype)
@@ -164,7 +184,7 @@ class CorbeansSpringExtensionIntegrationTest {
         val service = this.networkService.getNodeService("partyA")
         val addresses: List<NetworkHostAndPort> = service.addresses()
         assertNotNull(addresses)
-        val entity = this.restTemplate.getForEntity("/api/node/addresses", Any::class.java)
+        val entity = this.restTemplate.getForEntity("/api/nodes/partyA/addresses", Any::class.java)
         assertEquals(HttpStatus.OK, entity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON.type, entity.headers.contentType?.type)
         assertEquals(MediaType.APPLICATION_JSON.subtype, entity.headers.contentType?.subtype)
@@ -208,15 +228,15 @@ class CorbeansSpringExtensionIntegrationTest {
         assertNotNull(hash)
         assertTrue(attachmentReceipt.files.containsAll(listOf("test.txt", "test.png")))
         // Test archive download
-        var attachment = this.restTemplate.getForEntity("/api/node/attachments/${hash}", ByteArray::class.java)
+        var attachment = this.restTemplate.getForEntity("/api/nodes/partyA/attachments/${hash}", ByteArray::class.java)
         assertEquals(HttpStatus.OK, attachment.statusCode)
         // Test archive file entry download
-        attachment = this.restTemplate.getForEntity("/api/node/attachments/${hash}/test.txt", ByteArray::class.java)
+        attachment = this.restTemplate.getForEntity("/api/nodes/partyA/attachments/${hash}/test.txt", ByteArray::class.java)
         assertEquals(HttpStatus.OK, attachment.statusCode)
 
         // Test archive file browsing
         val paths = this.restTemplate.getForObject(
-                "/api/node/attachments/${hash}/paths",
+                "/api/nodes/partyA/attachments/${hash}/paths",
                 List::class.java)
         logger.info("attachment paths: $paths")
         assertTrue(paths.containsAll(listOf("test.txt", "test.png")))
@@ -228,7 +248,7 @@ class CorbeansSpringExtensionIntegrationTest {
         testArchiveUploadAndDownload("test.zip", "application/zip")
         testArchiveUploadAndDownload("test.jar", "application/java-archive")
         // Ensure a proper 404
-        val attachment = this.restTemplate.getForEntity("/api/node/attachments/${SecureHash.randomSHA256()}", ByteArray::class.java)
+        val attachment = this.restTemplate.getForEntity("/api/nodes/partyA/attachments/${SecureHash.randomSHA256()}", ByteArray::class.java)
         assertEquals(HttpStatus.NOT_FOUND, attachment.statusCode)
 
     }
@@ -244,7 +264,7 @@ class CorbeansSpringExtensionIntegrationTest {
 
         val entity = HttpEntity(parameters, headers)
 
-        val response = this.restTemplate.exchange("/api/node/attachments",
+        val response = this.restTemplate.exchange("/api/nodes/partyA/attachments",
                 HttpMethod.POST, entity, AttachmentReceipt::class.java, "")
 
         var attachmentReceipt: AttachmentReceipt? = response.body
@@ -264,7 +284,7 @@ class CorbeansSpringExtensionIntegrationTest {
         assertTrue(attachmentReceipt.savedOriginal)
         assertNotNull(attachmentReceipt.files.firstOrNull { it == fileName })
         // Test archive download
-        val attachment = this.restTemplate.getForEntity("/api/node/attachments/${hash}", ByteArray::class.java)
+        val attachment = this.restTemplate.getForEntity("/api/nodes/partyA/attachments/${hash}", ByteArray::class.java)
         assertEquals(HttpStatus.OK, attachment.statusCode)
     }
 

@@ -79,6 +79,9 @@ open class ApplicationPropertiesBasedRpcConfigurationService :
     }
 
     val rpcNodeParams: MutableMap<String, NodeParams> by lazy {
+        logger.info("rpcNodeParams, cordaNodesProperties: $cordaNodesProperties")
+        println("rpcNodeParams, cordaNodesProperties: $cordaNodesProperties")
+
         // Pickup any user-defined global defaultParams, use defaults if missing
         val defaultParams = cordaNodesProperties.nodes
                 .getOrDefault(NodeParams.NODENAME_DEFAULT, NodeParams.DEFAULT)
@@ -92,6 +95,7 @@ open class ApplicationPropertiesBasedRpcConfigurationService :
                 // Ignore "default" overrides
                 .filter { it.key != NodeParams.NODENAME_DEFAULT }
                 .forEach { (nodeName, partialParams) ->
+                    println("Registering, node name: $nodeName, params: $partialParams")
                     logger.debug("Registering, node name: {}, params: {}", nodeName, partialParams)
                     // Merge params to complete config
                     val nodeParams = NodeParams.mergeParams(partialParams, defaultParams)
