@@ -21,7 +21,7 @@ package com.github.manosbatsis.corbeans.corda.common.test
 
 import com.fasterxml.jackson.databind.DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY
 import com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES
-import com.github.manosbatsis.corbeans.corda.common.NodeDriverNodesConfigWrapper
+import com.fasterxml.jackson.dataformat.javaprop.JavaPropsSchema
 import com.github.manosbatsis.corda.testacles.nodedriver.config.NodeDriverNodesConfig
 import com.github.manosbatsis.corda.testacles.nodedriver.config.SimpleNodeDriverNodesConfig
 import java.util.Properties
@@ -29,9 +29,10 @@ import java.util.Properties
 object Util {
 
 
-    fun <T> loadProperties(
+    fun <T: NodeDriverNodesConfig> loadProperties(
             resourcePath: String = "/application.properties",
             configClass: Class<T>,
+            propertiesPrefix: String? = null,
             ignoreErrors: Boolean = false
     ): NodeDriverNodesConfig {
         var cordaNodesProperties: NodeDriverNodesConfig? = null
@@ -42,13 +43,10 @@ object Util {
             val mapper = com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper()
             mapper.configure(ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
             mapper.configure(FAIL_ON_UNKNOWN_PROPERTIES, false)
-            val tmp: T = mapper
-                    .readPropertiesAs(properties, configClass)
-            cordaNodesProperties = when(tmp){
-                            is NodeDriverNodesConfigWrapper -> tmp.getNodeDriverNodesConfig()
-                            is NodeDriverNodesConfig -> tmp
-                            else -> throw IllegalArgumentException("Unknown config type: ${configClass.name}")
-                        }
+            cordaNodesProperties = mapper.readPropertiesAs(
+                            properties,
+                            if(propertiesPrefix != null) JavaPropsSchema().withPrefix(propertiesPrefix) else JavaPropsSchema.emptySchema(),
+                            configClass)
 
             // Fix parsing
             if (cordaNodesProperties.cordapPackages.size == 1) {

@@ -19,8 +19,8 @@
  */
 package com.github.manosbatsis.corbeans.corda.common.test
 
-import com.github.manosbatsis.corbeans.corda.common.CorbeansNodesPropertiesWrapper
 import com.github.manosbatsis.corda.testacles.nodedriver.config.NodeDriverNodesConfig
+import com.github.manosbatsis.corda.testacles.nodedriver.config.SimpleNodeDriverNodesConfig
 import com.github.manosbatsis.partiture.test.MockNodeParametersConfig
 import com.github.manosbatsis.partiture.test.MockNodeParametersConfigFlowTest
 import com.github.manosbatsis.partiture.test.SimpleMockNodeParametersConfig
@@ -44,7 +44,8 @@ open class CorbeansMockNodeParametersConfig(val requireApplicationProperties: Bo
 
     protected open fun loadCordaNodesProperties(): NodeDriverNodesConfig =
             Util.loadProperties(
-                    configClass = CorbeansNodesPropertiesWrapper::class.java,
+                    configClass = SimpleNodeDriverNodesConfig::class.java,
+                    propertiesPrefix = "corbeans",
                     ignoreErrors = true)
 
     override fun getCordappPackages(): List<String> = cordaNodesProperties.cordapPackages

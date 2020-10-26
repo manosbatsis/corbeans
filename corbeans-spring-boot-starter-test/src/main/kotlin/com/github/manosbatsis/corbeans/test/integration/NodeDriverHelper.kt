@@ -19,12 +19,13 @@
  */
 package com.github.manosbatsis.corbeans.test.integration
 
-import com.github.manosbatsis.corbeans.corda.common.CorbeansNodesPropertiesWrapper
 import com.github.manosbatsis.corbeans.corda.common.test.Util
 import com.github.manosbatsis.corda.testacles.nodedriver.NodeDriverHelper
+import com.github.manosbatsis.corda.testacles.nodedriver.config.SimpleNodeDriverNodesConfig
 
 class CorbeansNodeDriverHelper() : NodeDriverHelper(
         Util.loadProperties(
-                configClass = CorbeansNodesPropertiesWrapper::class.java,
+                configClass = SimpleNodeDriverNodesConfig::class.java,
+                propertiesPrefix = "corbeans",
                 ignoreErrors = true)
 )
