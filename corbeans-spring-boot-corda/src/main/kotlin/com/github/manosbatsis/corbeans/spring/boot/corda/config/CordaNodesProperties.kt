@@ -19,7 +19,7 @@
  */
 package com.github.manosbatsis.corbeans.spring.boot.corda.config
 
-import com.github.manosbatsis.corbeans.corda.common.NodesProperties
+import com.github.manosbatsis.corda.testacles.nodedriver.config.SimpleNodeDriverNodesConfig
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
 
@@ -61,4 +61,4 @@ import org.springframework.stereotype.Component
  */
 @Component("cordaNodesProperties")
 @ConfigurationProperties(prefix = "corbeans")
-class CordaNodesProperties : NodesProperties()
+class CordaNodesProperties : SimpleNodeDriverNodesConfig()

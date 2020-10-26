@@ -19,47 +19,18 @@
  */
 package com.github.manosbatsis.corbeans.corda.common
 
-import com.github.manosbatsis.corda.rpc.poolboy.config.NodeParams
-import com.github.manosbatsis.corda.rpc.poolboy.config.PoolParams
+import com.github.manosbatsis.corda.testacles.nodedriver.config.NodeDriverNodesConfig
+import com.github.manosbatsis.corda.testacles.nodedriver.config.SimpleNodeDriverNodesConfig
 
 
-interface NodesPropertiesWrapper {
-    fun toNodesProperties(): NodesProperties
+interface NodeDriverNodesConfigWrapper{
+    fun getNodeDriverNodesConfig(): NodeDriverNodesConfig
 }
-
 /**
  * Used to wrap a [NodesProperties] for easier parsing via jackson-dataformats-text,
  * as a temporary workaround to https://github.com/FasterXML/jackson-dataformats-text/issues/100
  */
-class CorbeansNodesPropertiesWrapper : NodesPropertiesWrapper {
-    companion object Config : NodesPropertiesLoadingConfig {
-        override val resourcePath = "/application.properties"
-        override val wrappingClass = CorbeansNodesPropertiesWrapper::class.java
-        override val ignoreError = true
-    }
-
-    var corbeans: NodesProperties? = null
-    override fun toNodesProperties() = corbeans!!
+open class CorbeansNodesPropertiesWrapper: NodeDriverNodesConfigWrapper {
+    var corbeans: SimpleNodeDriverNodesConfig = SimpleNodeDriverNodesConfig()
+    override fun getNodeDriverNodesConfig() = corbeans
 }
-
-
-open class NodesProperties : NodesPropertiesWrapper {
-    var cordapPackages: List<String> = mutableListOf()
-    var nodes: Map<String, NodeParams> = mutableMapOf()
-    var bnmsServiceType: String? = null
-    var notarySpec: TestNotaryProperties = TestNotaryProperties()
-    var flowOverrides: List<String> = mutableListOf()
-    var poolParams: PoolParams = PoolParams()
-    override fun toNodesProperties(): NodesProperties = this
-
-    override fun toString(): String {
-        return "NodesProperties(cordapPackages=$cordapPackages, " +
-                "nodes=$nodes, " +
-                "notarySpec=$notarySpec, " +
-                "flowOverrides=${flowOverrides}), " +
-                "bnmsServiceType=${bnmsServiceType}, " +
-                "poolParams=${poolParams}"
-    }
-}
-
-

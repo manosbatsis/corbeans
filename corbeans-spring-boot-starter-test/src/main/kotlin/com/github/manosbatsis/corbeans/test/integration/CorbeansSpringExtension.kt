@@ -19,6 +19,7 @@
  */
 package com.github.manosbatsis.corbeans.test.integration
 
+import com.github.manosbatsis.corda.testacles.nodedriver.NodeDriverHelper
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource
@@ -76,7 +77,6 @@ class CorbeansSpringExtension : SpringExtension() {
      * Delegate to [SpringExtension.beforeAll],
      * then start the Corda network
      */
-    @Throws(Exception::class)
     override fun beforeAll(context: ExtensionContext) {
         // Stop Spring Boot's Tomcat (if present) from hijacking the URLStreamHandlerFactory implementation
         try {
@@ -102,7 +102,6 @@ class CorbeansSpringExtension : SpringExtension() {
      * Delegate to [SpringExtension.afterAll],
      * then stop the Corda network
      */
-    @Throws(Exception::class)
     override fun afterAll(context: ExtensionContext) {
         // Is network owner?
         if (ownsNetwork) {
@@ -123,12 +122,12 @@ class CorbeansSpringExtension : SpringExtension() {
             logger.debug("Starting Corda network")
             // Start the network
             this.nodeDriverHelper = CorbeansNodeDriverHelper()
-            this.nodeDriverHelper.startNetwork()
+            this.nodeDriverHelper.start()
         }
 
         override fun close() {
             logger.debug("Stopping Corda network...")
-            this.nodeDriverHelper.stopNetwork()
+            this.nodeDriverHelper.stop()
         }
 
     }

@@ -4,8 +4,12 @@ apply from: "${rootProject.projectDir}/gradle/published.gradle"
 
 dependencies {
 	api project(":corbeans-corda-common")
+	api("com.github.manosbatsis.corda.testacles:corda-testacles-nodedriver:$testacles_version")
+	implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-properties:$jackson_version"
+
 	implementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
 	implementation "com.github.manosbatsis.partiture:partiture-test:$partiture_version"
+
 	implementation "$corda_release_group:corda-node-driver:$corda_release_version"
 	implementation "$corda_release_group:corda-test-common:$corda_release_version"
 }

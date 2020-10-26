@@ -16,6 +16,7 @@ dependencies {
 	// Jackson
 	implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-properties:$jackson_version"
 	//implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
+	compile("com.github.manosbatsis.corda.testacles:corda-testacles-nodedriver:$testacles_version")
 	compile("com.github.manosbatsis.corda.rpc.poolboy:corda-rpc-poolboy:$poolboy_version")
 
 	// Corda dependencies.

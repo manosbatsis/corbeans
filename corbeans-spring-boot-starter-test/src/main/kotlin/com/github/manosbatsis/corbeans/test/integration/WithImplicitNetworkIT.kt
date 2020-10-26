@@ -20,6 +20,7 @@
 package com.github.manosbatsis.corbeans.test.integration
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
+import com.github.manosbatsis.corda.testacles.nodedriver.NodeDriverHelper
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.TestInstance
@@ -82,7 +83,7 @@ abstract class WithImplicitNetworkIT {
     open fun startNetwork() {
         logger.debug("startNetwork for nodes: {}", cordaNodesProperties.nodes.keys)
         this.nodeDriverHelper = NodeDriverHelper(cordaNodesProperties)
-        this.nodeDriverHelper.startNetwork()
+        this.nodeDriverHelper.start()
     }
 
     /**
@@ -91,7 +92,7 @@ abstract class WithImplicitNetworkIT {
     @AfterAll
     open fun stopNetwork() {
         logger.debug("stopNetwork for nodes: {}", cordaNodesProperties.nodes.keys)
-        this.nodeDriverHelper.stopNetwork()
+        this.nodeDriverHelper.stop()
     }
 
 }

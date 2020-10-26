@@ -24,16 +24,17 @@ buildscript {
         // Misc
         corda_solutions_version = '2.0'
         kotlinx_coroutines_version = '0.30.2'
-        jackson_version = "2.10.3"
+        jackson_version = "2.10.5"
         hibernate_version = '5.4.3.Final'
         artemis_version = "2.6.2"
         netty_version = constants.getProperty("nettyVersion")
 
 
         dokka_version = '0.9.17'
-        jupiter_api = '5.3.2'
+        jupiter_api = '5.6.2'
         commons_pool2_version = '2.8.0'
         scrudbeans_version = '0.26'
+        testacles_version = '0.6'
         vaultaire_version = '0.31'
         poolboy_version = '0.3'
         partiture_version = '0.11'
@@ -184,9 +185,9 @@ subprojects {
     apply plugin: 'kotlin'
     apply plugin: 'org.jetbrains.dokka'
 
-
     tasks.withType(org.jetbrains.dokka.gradle.DokkaTask) {
         skipDeprecated = true
+        noJdkLink = true
         // Disable linking to online JDK documentation
         //noJdkLink = true
         noStdlibLink=true

@@ -20,6 +20,7 @@
 package com.github.manosbatsis.corbeans.test.integration
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.config.CordaNodesProperties
+import com.github.manosbatsis.corda.testacles.nodedriver.NodeDriverHelper
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 
