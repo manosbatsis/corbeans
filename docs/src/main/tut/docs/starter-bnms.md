@@ -49,8 +49,8 @@ Add the Corda BNMS dependencies to your cordapp:
 
 dependencies {
 	// Corda memberships-management deps
-    compile "com.r3.businessnetworks:membership-service:$corda_solutions_version"
-    compile "com.r3.businessnetworks:membership-service-contracts-and-states:$corda_solutions_version"
+    compile "com.r3.businessnetworks:membership-service:$corda_bn_extension_version"
+    compile "com.r3.businessnetworks:membership-service-contracts-and-states:$corda_bn_extension_version"
     //...
 }
 ```
@@ -69,8 +69,8 @@ dependencies {
     // Corbeans BNMS starter
     compile ("com.github.manosbatsis.corbeans:corbeans-spring-boot-bnms-starter:$corbeans_version")
     // Optional: control the BNMS dependency versions
-    	compile "com.r3.businessnetworks:membership-service:$corda_solutions_version"
-    	compile "com.r3.businessnetworks:membership-service-contracts-and-states:$corda_solutions_version"
+    	compile "com.r3.businessnetworks:membership-service:$corda_bn_extension_version"
+    	compile "com.r3.businessnetworks:membership-service-contracts-and-states:$corda_bn_extension_version"
 }
 
 ```
@@ -91,7 +91,7 @@ First of all you need to create a metadata class that fits your needs.
 
 `MembershipState` allows the use of a custom type as
 the value of it's `membershipMetadata` member. It's worth noting the type
-is also used by [com.r3.businessnetworks.membership.flows.GenericsUtilsKt#getAttachmentIdForGenericParam(com.r3.businessnetworks.membership.states.MembershipState<? extends java.lang.Object>)]
+is also used by [com.r3.businessnetworks.membership.flows.GenericsUtilsKt#getAttachmentIdForGenericParam(net.corda.bn.contracts.MembershipState<? extends java.lang.Object>)]
 to to find the appropriate class location and turn it into an attachment.
 
 Here's a sample implementation that adds a simple comment metadatum:

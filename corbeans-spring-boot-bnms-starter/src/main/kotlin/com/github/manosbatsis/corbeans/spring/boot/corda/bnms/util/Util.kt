@@ -20,18 +20,32 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.util
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaRpcService
-import com.r3.businessnetworks.membership.states.MembershipState
-import com.r3.businessnetworks.membership.states.MembershipStateSchemaV1
+import com.github.manosbatsis.vaultaire.annotation.VaultaireDtoStrategyKeys
+import com.github.manosbatsis.vaultaire.annotation.VaultaireGenerateDtoForDependency
+import com.github.manosbatsis.vaultaire.annotation.VaultaireGenerateForDependency
+import net.corda.bn.schemas.MembershipStateSchemaV1.PersistentMembershipState
+import net.corda.bn.states.MembershipState
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.identity.Party
 import net.corda.core.node.services.Vault
 import net.corda.core.node.services.vault.QueryCriteria
 import net.corda.core.node.services.vault.builder
 
+/** Generate Query DSL and services for [MembershipState] */
+@VaultaireGenerateForDependency(name = "accountInfoConditions",
+        persistentStateType = PersistentMembershipState::class,
+        contractStateType = MembershipState::class)
+@VaultaireGenerateDtoForDependency(
+        persistentStateType = PersistentMembershipState::class,
+        contractStateType = MembershipState::class,
+        strategies = [VaultaireDtoStrategyKeys.DEFAULT, VaultaireDtoStrategyKeys.LITE])
+class MembershipStateMixin
+
+
 /** Find the membership matching the given member and BNO parties */
 fun <T : Any> getMembership(
-        member: Party, bno: Party, cordaRpcService: CordaRpcService
-): StateAndRef<MembershipState<T>>? {
+        member: Party, networkId: String, cordaRpcService: CordaRpcService
+): StateAndRef<MembershipState>? {
     val criteria = QueryCriteria.VaultQueryCriteria(Vault.StateStatus.UNCONSUMED)
             .and(memberCriteria(member))
             .and(bnoCriteria(bno))
@@ -42,8 +56,9 @@ fun <T : Any> getMembership(
 
 private fun memberCriteria(member: Party) =
         QueryCriteria.VaultCustomQueryCriteria(
-                builder { MembershipStateSchemaV1.PersistentMembershipState::member.equal(member) })
-
+                builder { PersistentMembershipState::cordaIdentity.equal(member) })
+/*
 private fun bnoCriteria(bno: Party) =
         QueryCriteria.VaultCustomQueryCriteria(
-                builder { MembershipStateSchemaV1.PersistentMembershipState::bno.equal(bno) })
+                builder { PersistentMembershipState::a.equal(bno) })
+*/

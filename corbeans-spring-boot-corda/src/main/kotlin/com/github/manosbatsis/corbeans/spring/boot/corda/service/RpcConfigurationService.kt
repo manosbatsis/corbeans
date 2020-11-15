@@ -45,7 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired
  *     com.r3.corda.lib.tokens.workflows, \
  *     com.r3.corda.lib.tokens.selection, \
  *     com.r3.corda.lib.ci.workflows, \
- *     com.r3.businessnetworks.membership.states, \
+ *     net.corda.bn.contracts, \
  *     com.r3.businessnetworks.membership.flows
  *
  * # First node

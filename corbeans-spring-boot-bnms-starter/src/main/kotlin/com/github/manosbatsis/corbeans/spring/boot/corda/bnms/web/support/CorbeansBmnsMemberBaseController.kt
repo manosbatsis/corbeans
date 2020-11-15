@@ -21,9 +21,10 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipRequestMessage
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipsListRequestMessage
-import com.r3.businessnetworks.membership.states.MembershipState
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
+import net.corda.bn.states.BNIdentity
+import net.corda.bn.states.MembershipState
 
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.PathVariable
@@ -33,7 +34,7 @@ import java.util.Optional
 
 
 @Tag(name = "BNMS Member", description = "BNMS membership operation endpoints")
-open class CorbeansBmnsMemberBaseController : CorbeansBmnsBaseController() {
+open class CorbeansBmnsMemberBaseController<T: BNIdentity> : CorbeansBmnsBaseController<T>() {
 
     companion object {
         private val logger = LoggerFactory.getLogger(CorbeansBmnsMemberBaseController::class.java)
@@ -41,13 +42,13 @@ open class CorbeansBmnsMemberBaseController : CorbeansBmnsBaseController() {
 
     open fun createMembershipRequest(
             @PathVariable nodeName: Optional<String>,
-            @RequestBody input: MembershipRequestMessage): MembershipState<*> =
+            @RequestBody input: MembershipRequestMessage<T>): MembershipState =
             this.getBmnsService(nodeName).createMembershipRequest(input)
 
 
     open fun ammendMembershipRequest(
             @PathVariable nodeName: Optional<String>,
-            @RequestBody input: MembershipRequestMessage): MembershipState<*> =
+            @RequestBody input: MembershipRequestMessage<T>): MembershipState =
             this.getBmnsService(nodeName).ammendMembershipRequest(input)
 
 
@@ -66,7 +67,7 @@ open class CorbeansBmnsMemberBaseController : CorbeansBmnsBaseController() {
             @Parameter(name = "Wether to filter out anyone missing from the Network Map.")
             @RequestParam(required = false, defaultValue = "true")
             filterOutMissingFromNetworkMap: Boolean
-    ): List<MembershipState<*>> =
+    ): List<MembershipState> =
             this.getBmnsService(nodeName)
                     .listMemberships(
                             MembershipsListRequestMessage(bno, networkId.orElse(null), forceRefresh, filterOutMissingFromNetworkMap))

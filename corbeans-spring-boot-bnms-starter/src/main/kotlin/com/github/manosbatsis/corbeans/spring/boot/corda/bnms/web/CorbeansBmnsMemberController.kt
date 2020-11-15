@@ -21,11 +21,12 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipRequestMessage
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support.CorbeansBmnsMemberBaseController
-import com.r3.businessnetworks.membership.states.MembershipState
 
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
+import net.corda.bn.states.BNIdentity
+import net.corda.bn.states.MembershipState
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -49,7 +50,7 @@ import java.util.Optional
  *  @see CorbeansBmnsMemberPathFragmentController
  */
 @RequestMapping(path = arrayOf("api/bnms/member"))
-open class CorbeansBmnsMemberController : CorbeansBmnsMemberBaseController() {
+open class CorbeansBmnsMemberController<T: BNIdentity> : CorbeansBmnsMemberBaseController<T>() {
 
     companion object {
         private val logger = LoggerFactory.getLogger(CorbeansBmnsMemberController::class.java)
@@ -61,13 +62,13 @@ open class CorbeansBmnsMemberController : CorbeansBmnsMemberBaseController() {
 
     @PostMapping("memberships")
     @Operation(summary = "Request the BNO to kick-off the on-boarding procedure.")
-    fun createMembershipRequest(@RequestBody input: MembershipRequestMessage): MembershipState<*> =
+    fun createMembershipRequest(@RequestBody input: MembershipRequestMessage<T>): MembershipState =
             super.createMembershipRequest(getRequestNodeName(), input)
 
 
     @PutMapping("memberships")
     @Operation(summary = "Propose a change to the membership metadata.")
-    fun ammendMembershipRequest(@RequestBody input: MembershipRequestMessage): MembershipState<*> =
+    fun ammendMembershipRequest(@RequestBody input: MembershipRequestMessage<T>): MembershipState =
             super.ammendMembershipRequest(getRequestNodeName(), input)
 
 
@@ -90,7 +91,7 @@ open class CorbeansBmnsMemberController : CorbeansBmnsMemberBaseController() {
             @Parameter(name = "Whether to filter out anyone missing from the Network Map.")
             @RequestParam(required = false, defaultValue = "true")
             filterOutMissingFromNetworkMap: Boolean
-    ): List<MembershipState<*>> =
+    ): List<MembershipState> =
             super.listMemberships(getRequestNodeName(), bno, networkId, forceRefresh, filterOutMissingFromNetworkMap)
 
 

@@ -24,36 +24,34 @@ import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.Membership
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipRequestMessage
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipsListRequestMessage
 import com.github.manosbatsis.corbeans.spring.boot.corda.service.CordaRpcService
-import com.r3.businessnetworks.membership.states.MembershipState
+import net.corda.bn.flows.MembershipRequest
+import net.corda.bn.states.BNIdentity
+import net.corda.bn.states.MembershipState
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.identity.Party
 
 /**
  *  Basic interface for Business Network Membership services
  */
-interface CordaBnmsService<T : Any> : CordaRpcService {
+interface CordaBnmsService<T: BNIdentity> : CordaRpcService {
 
     // --------------------------
     // Member methods
     // --------------------------
 
     /** Get the membership matching the given criteria */
-    fun getMembership(member: Party, bno: Party): StateAndRef<MembershipState<T>>?
+    fun getMembership(member: Party, bno: Party): StateAndRef<MembershipState>?
 
     /** Request the BNO to kick-off the on-boarding procedure. */
-    fun createMembershipRequest(input: MembershipRequestMessage): MembershipState<T>
+    fun createMembershipRequest(input: MembershipRequestMessage<T>): MembershipState
 
     /** Request the BNO to kick-off the on-boarding procedure. */
-    fun createMembershipRequest(bno: Party, metadata: T, networkId: String?): MembershipState<T>
-
-    /** Propose a change to the membership metadata. */
-    fun ammendMembershipRequest(input: MembershipRequestMessage): MembershipState<T>
-
-    /** Propose a change to the membership metadata. */
-    fun ammendMembershipRequest(bno: Party, membershipMetadata: T, networkId: String?): MembershipState<T>
+    fun createMembershipRequest(
+            authorisedParty: Party, membershipRequest: MembershipRequest
+    ): MembershipState
 
     /** Get a memberships list from a BNO. */
-    fun listMemberships(input: MembershipsListRequestMessage): List<MembershipState<T>>
+    fun listMemberships(input: MembershipsListRequestMessage): List<MembershipState>
 
     /**
      * Get a memberships list from a BNO
@@ -65,13 +63,13 @@ interface CordaBnmsService<T : Any> : CordaRpcService {
             bno: Party,
             networkID: String? = null,
             forceRefresh: Boolean = false,
-            filterOutMissingFromNetworkMap: Boolean = true): List<MembershipState<T>>
+            filterOutMissingFromNetworkMap: Boolean = true): List<MembershipState>
 
     /**
      * Convert the given JSON node to the target `membershipMetadata` instance.
      * By overriding this method you can constructing a metadata instance using the desired type,
      * thus providing a hint for
-     * [com.r3.businessnetworks.membership.flows.GenericsUtilsKt#getAttachmentIdForGenericParam(com.r3.businessnetworks.membership.states.MembershipState<? extends java.lang.Object>)]
+     * [com.r3.businessnetworks.membership.flows.GenericsUtilsKt#getAttachmentIdForGenericParam(net.corda.bn.contracts.MembershipState<? extends java.lang.Object>)]
      * to find the appropriate class location and turn it into an attachment
      */
     fun toMembershipMetadata(meta: JsonNode?): T
@@ -81,15 +79,15 @@ interface CordaBnmsService<T : Any> : CordaRpcService {
     // --------------------------
 
     /** Activate a pending membership. */
-    fun activateMembership(input: MembershipPartiesMessage): MembershipState<T>
+    fun activateMembership(input: MembershipPartiesMessage): MembershipState
 
     /** Activate a pending membership. */
-    fun activateMembership(member: Party, bno: Party = myIdentity): MembershipState<T>
+    fun activateMembership(member: Party, bno: Party = myIdentity): MembershipState
 
     /** Suspend an active membership.*/
-    fun suspendMembership(input: MembershipPartiesMessage): MembershipState<T>
+    fun suspendMembership(input: MembershipPartiesMessage): MembershipState
 
     /** Suspend an active membership.*/
-    fun suspendMembership(member: Party, bno: Party = myIdentity): MembershipState<T>
+    fun suspendMembership(member: Party, bno: Party = myIdentity): MembershipState
 
 }

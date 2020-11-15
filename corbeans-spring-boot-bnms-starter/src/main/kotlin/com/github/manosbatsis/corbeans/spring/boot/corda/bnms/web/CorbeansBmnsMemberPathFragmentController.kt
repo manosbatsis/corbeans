@@ -21,7 +21,7 @@ package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipRequestMessage
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support.CorbeansBmnsMemberBaseController
-import com.r3.businessnetworks.membership.states.MembershipState
+import net.corda.bn.contracts.MembershipState
 
 
 import io.swagger.v3.oas.annotations.Operation

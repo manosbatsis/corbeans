@@ -23,6 +23,9 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.deser.std.JsonNodeDeserializer
 import io.swagger.v3.oas.annotations.media.Schema
+import net.corda.bn.states.BNIdentity
+import net.corda.core.identity.CordaX500Name
+import net.corda.core.identity.Party
 import net.corda.core.serialization.CordaSerializable
 
 /**
@@ -31,12 +34,13 @@ import net.corda.core.serialization.CordaSerializable
  */
 @CordaSerializable
 @Schema(description = "A message with the information necessary to create or ammend a membership request.")
-class MembershipRequestMessage(
-        @Schema(title = "The BNO party name")
-        val party: String,
-        @Schema(title = "The network ID")
-        val networkId: String? = null,
-        @Schema(title = "The membership metadata")
-        @JsonDeserialize(using = JsonNodeDeserializer::class)
-        var membershipMetadata: JsonNode? = null
+class MembershipRequestMessage<T: BNIdentity>(
+        @Schema(title = "The authorised party name", required = true)
+        val authorisedParty: CordaX500Name,
+        @Schema(title = "The network ID", required = true)
+        val networkId: String,
+        @Schema(title = "The membership identity", required = false)
+        var businessIdentity: T? = null,
+        @Schema(title = "The notary to use for the request", required = false)
+        var notary: CordaX500Name? = null
 )

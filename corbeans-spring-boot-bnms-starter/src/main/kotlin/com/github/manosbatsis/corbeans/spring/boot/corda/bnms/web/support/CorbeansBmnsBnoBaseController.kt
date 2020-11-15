@@ -20,23 +20,24 @@
 package com.github.manosbatsis.corbeans.spring.boot.corda.bnms.web.support
 
 import com.github.manosbatsis.corbeans.spring.boot.corda.bnms.message.MembershipPartiesMessage
-import com.r3.businessnetworks.membership.states.MembershipState
 import io.swagger.v3.oas.annotations.tags.Tag
+import net.corda.bn.states.BNIdentity
+import net.corda.bn.states.MembershipState
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
 import java.util.Optional
 
 @Tag(name = "BNMS BNO", description = "BNO operation endpoints")
-open class CorbeansBmnsBnoBaseController : CorbeansBmnsBaseController() {
+open class CorbeansBmnsBnoBaseController<T: BNIdentity> : CorbeansBmnsBaseController<T>() {
 
     open fun activateMembership(
             @PathVariable nodeName: Optional<String>,
-            @RequestBody input: MembershipPartiesMessage): MembershipState<*> =
+            @RequestBody input: MembershipPartiesMessage): MembershipState =
             getBmnsService(nodeName).activateMembership(input)
 
     open fun suspendMembership(
             @PathVariable nodeName: Optional<String>,
-            @RequestBody input: MembershipPartiesMessage): MembershipState<*> =
+            @RequestBody input: MembershipPartiesMessage): MembershipState =
             getBmnsService(nodeName).suspendMembership(input)
 
 }
