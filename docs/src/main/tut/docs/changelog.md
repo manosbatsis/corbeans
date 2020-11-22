@@ -8,6 +8,11 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.50
+
+- Updated dependencies, upgraded to Corda to 4.6 
+
+
 ## 0.49
 
 - Updated vaultaire, corda-rpc-poolboy 
