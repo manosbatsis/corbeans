@@ -70,6 +70,10 @@ class CorbeansSpringExtension : SpringExtension() {
         private val logger = LoggerFactory.getLogger(CorbeansSpringExtension::class.java)
     }
 
+    init {
+        logger.info("Initializing CorbeansSpringExtension")
+    }
+
     private var ownsNetwork = false
 
 
@@ -78,8 +82,10 @@ class CorbeansSpringExtension : SpringExtension() {
      * then start the Corda network
      */
     override fun beforeAll(context: ExtensionContext) {
+        logger.info("beforeAll")
         // Stop Spring Boot's Tomcat (if present) from hijacking the URLStreamHandlerFactory implementation
         try {
+            logger.info("Stop Spring Boot's Tomcat (if present) from hijacking the URLStreamHandlerFactory")
             Class.forName("org.apache.catalina.webresources.TomcatURLStreamHandlerFactory")
                     .getMethod("disable")
                     .invoke(null)
@@ -94,8 +100,11 @@ class CorbeansSpringExtension : SpringExtension() {
 
 
     fun startNodes(context: ExtensionContext): CordaNetwork {
+        logger.debug("Starting nodes...")
         ownsNetwork = true
-        return CordaNetwork()
+        val network = CordaNetwork()
+        logger.debug("Started nodes")
+        return network
     }
 
     /**

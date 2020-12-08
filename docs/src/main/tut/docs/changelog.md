@@ -8,10 +8,15 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.51
+
+- Updated Corda Testacles to 0.13.
+- All instances of `cordapPackages` have been renamed to 
+`cordappPackages`, including code and properties.
+
 ## 0.50
 
 - Updated dependencies, upgraded to Corda to 4.6 
-
 
 ## 0.49
 

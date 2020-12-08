@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component
  *
  * ```properties
  * # The cordapp packages to scan for during tests
- * corbeans.cordapPackages=net.corda.finance
+ * corbeans.cordappPackages=net.corda.finance
  *
  * # first node
  * corbeans.nodes.partyA.username=user1

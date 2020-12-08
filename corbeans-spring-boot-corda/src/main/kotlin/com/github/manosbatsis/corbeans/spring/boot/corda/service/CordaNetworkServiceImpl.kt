@@ -108,7 +108,7 @@ open class CordaNetworkServiceImpl :
         // Init state service registry
         val scanner = ClassPathScanningCandidateComponentProvider(false)
         scanner.addIncludeFilter(AnnotationTypeFilter(ExtendedStateServiceBean::class.java))
-        cordaNodesProperties.cordapPackages.forEach{packageName ->
+        cordaNodesProperties.cordappPackages.forEach{packageName ->
             for (beanDefinition in scanner.findCandidateComponents(packageName)) {
                 try {
                     val serviceClass = Class.forName(beanDefinition.beanClassName)

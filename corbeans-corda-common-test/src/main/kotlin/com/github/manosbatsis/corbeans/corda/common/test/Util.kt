@@ -49,8 +49,8 @@ object Util {
                             configClass)
 
             // Fix parsing
-            if (cordaNodesProperties.cordapPackages.size == 1) {
-                cordaNodesProperties.cordapPackages = cordaNodesProperties.cordapPackages.first()
+            if (cordaNodesProperties.cordappPackages.size == 1) {
+                cordaNodesProperties.cordappPackages = cordaNodesProperties.cordappPackages.first()
                         .replace(',', ' ').split(' ')
             }
         } catch (e: Throwable) {

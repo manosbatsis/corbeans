@@ -48,7 +48,7 @@ open class CorbeansMockNodeParametersConfig(val requireApplicationProperties: Bo
                     propertiesPrefix = "corbeans",
                     ignoreErrors = true)
 
-    override fun getCordappPackages(): List<String> = cordaNodesProperties.cordapPackages
+    override fun getCordappPackages(): List<String> = cordaNodesProperties.cordappPackages
 
     /**
      * Get node parameters for the [StartedMockNode]s to create. Uses an application.properties

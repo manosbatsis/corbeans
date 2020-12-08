@@ -33,7 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired
  *
  * ```properties
  * # Cordapp packages
- * corbeans.cordapPackages=\
+ * corbeans.cordappPackages=\
  *     foo.bar.baz.cordapp.contract,\
  *     foo.bar.baz.cordapp.workflow, \
  *     com.github.manosbatsis.vaultaire.dto, \
@@ -85,7 +85,7 @@ open class ApplicationPropertiesBasedRpcConfigurationService :
         val rpcNodeParams = mutableMapOf<String, NodeParams>()
         // Get the custom SerializationCustomSerializer
         // implementations to register with our RPC ops
-        val customSerializers = getCustomSerializers(cordaNodesProperties.cordapPackages)
+        val customSerializers = getCustomSerializers(cordaNodesProperties.cordappPackages)
 
         // Process node connection definitions
         this.cordaNodesProperties.nodes

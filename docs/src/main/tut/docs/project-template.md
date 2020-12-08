@@ -96,7 +96,7 @@ or __server/src/test/resources/application.properties__ respectively.
 ### Custom Package
 
 If you refactor from `mypackage` to your actual base package, make sure to update main and test sources 
-throughout project modules, along with the `corbeans.cordapPackages` property in both __application.properties__ 
+throughout project modules, along with the `corbeans.cordappPackages` property in both __application.properties__ 
 files in the __server__ module.
 
 ### Multiple Webservers
