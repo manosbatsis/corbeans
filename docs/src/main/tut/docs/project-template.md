@@ -41,15 +41,25 @@ git clone https://github.com/manosbatsis/corbeans-yo-cordapp.git
 cd corbeans-yo-cordapp
 ```
 
-3. Build the project and run unit/integration tests
+3. Build the project and run unit tests
 
 ```bash
-./gradlew clean build install integrationTest
+./gradlew clean build 
 ```
 
-Note that unit tests for the Spring Boot module now use the node driver, 
-while the `integrationTest` task uses Docker via [Testcontainers](https://www.testcontainers.org/) - 
-see also [Corda Testacles](https://manosbatsis.github.io/corda-testacles/testcontainers/).
+Note that unit tests for the Spring Boot module use the node driver. 
+You can also use the `integrationTest` task to execute the same tests 
+against a Docker-based corda network:
+
+
+```bash
+./gradlew clean build integrationTest -x test
+```
+
+This will implicitly call `deployNodes` as well (see below) and uses 
+Docker via [Testcontainers](https://www.testcontainers.org/) 
+(see also [Corda Testacles](https://manosbatsis.github.io/corda-testacles/testcontainers/)).
+
 Both approaches run the same tests by extending `mypackage.server.AbstractRootTest`.
 
 4. Deploy Corda nodes
@@ -58,7 +68,7 @@ Both approaches run the same tests by extending `mypackage.server.AbstractRootTe
 ./gradlew deployNodes
 ```
 
-4. Run nodes and webserver
+5. Run nodes and webserver
 
 Linux/Unix:
 
@@ -71,11 +81,10 @@ Windows:
 call cordapp/build/nodes/runnodes.bat
 ```
 
-5. Browse the API
+You can also uncomment `webPort` and `webserverJar` in build.gradle 
+to have `runnodes` launch Spring Boot as well, then browse the API:
 
-(Party A node) 
-
-http://localhost:10007/swagger-ui.html
+http://localhost:8080/swagger-ui.html
 
 ## Project Modules
 
