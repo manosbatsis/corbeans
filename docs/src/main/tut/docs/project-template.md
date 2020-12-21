@@ -47,6 +47,11 @@ cd corbeans-yo-cordapp
 ./gradlew clean build install integrationTest
 ```
 
+Note that unit tests for the Spring Boot module now use the node driver, 
+while the `integrationTest` task uses Docker via [Testcontainers](https://www.testcontainers.org/) - 
+see also [Corda Testacles](https://manosbatsis.github.io/corda-testacles/testcontainers/).
+Both approaches run the same tests by extending `mypackage.server.AbstractRootTest`.
+
 4. Deploy Corda nodes
 
 ```bash
