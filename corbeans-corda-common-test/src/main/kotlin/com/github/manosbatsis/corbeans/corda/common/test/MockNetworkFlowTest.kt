@@ -32,6 +32,8 @@ import net.corda.testing.node.MockNetwork
 import net.corda.testing.node.MockNodeParameters
 import net.corda.testing.node.StartedMockNode
 
+@Deprecated("Use Corda Testacles' MockNetworkExtension or MockNetworkHelper instead" +
+        " see https://manosbatsis.github.io/corda-testacles/mocknetwork/")
 open class CorbeansMockNodeParametersConfig(val requireApplicationProperties: Boolean = false) : SimpleMockNodeParametersConfig() {
 
     companion object {
@@ -77,6 +79,8 @@ open class CorbeansMockNodeParametersConfig(val requireApplicationProperties: Bo
  * Automatically intitializes a [MockNetwork] with [StartedMockNode]s based on the given [MockNodeParametersConfig].
  * Uses a [CorbeansMockNodeParametersConfig] by default.
  */
+@Deprecated("Use Corda Testacles' MockNetworkExtension or MockNetworkHelper instead" +
+        " see https://manosbatsis.github.io/corda-testacles/mocknetwork/")
 abstract class CorbeansMockNetworkFlowTest(
         config: MockNodeParametersConfig = CorbeansMockNodeParametersConfig()
 ) : MockNodeParametersConfigFlowTest(config)

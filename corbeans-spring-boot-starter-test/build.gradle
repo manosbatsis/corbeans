@@ -12,6 +12,7 @@ dependencies {
 	implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_coroutines_version")
 
 	compile("com.github.manosbatsis.corda.testacles:corda-testacles-nodedriver:$testacles_version")
+	compile("com.github.manosbatsis.corda.testacles:corda-testacles-testcontainers:$testacles_version")
 
 	//implementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
 	//implementation "org.springframework:spring-test:$spring_version"
