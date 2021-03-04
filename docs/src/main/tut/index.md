@@ -48,12 +48,12 @@ technologies:
 		</div>
 	</div>
 	<div class="col-md-4">
-		<div class="panel panel-info">
-		  <div class="panel-heading text-center"><h2>Webserver</h2></div>
+		<div class="panel panel-success">
+		  <div class="panel-heading text-center"><h2>Vaultaire</h2></div>
 		  <div class="panel-body">
-			<p>Try a corbeans sample project for a Spring Boot alternative to Corda’s standard Webserver.</p>
+			<p>Query DSL and data access utilities for Corda developers.</p>
 		  </div>
-		  <div class="panel-footer text-right"><a href="docs/webserver.html">More details</a></div>
+		  <div class="panel-footer text-right"><a href="https://manosbatsis.github.io/vaultaire/">More details</a></div>
 		</div>
 	</div>
 	<div class="col-md-4">
@@ -68,16 +68,30 @@ technologies:
 </div>
 <div class="row">
 	<div class="col-md-4">
-	</div>
-	<div class="col-md-4">
 		<div class="panel panel-success">
-		  <div class="panel-heading text-center"><h2>Vaultaire</h2></div>
+		  <div class="panel-heading text-center"><h2>RPC PoolBoy</h2></div>
 		  <div class="panel-body">
-			<p>Query DSL and data access utilities for Corda developers.</p>
+			<p>RPC connection pool with for multiple Corda nodes.</p>
 		  </div>
-		  <div class="panel-footer text-right"><a href="https://manosbatsis.github.io/vaultaire/">More details</a></div>
+		  <div class="panel-footer text-right"><a href="https://manosbatsis.github.io/corda-rpc-poolboy/">More details</a></div>
 		</div>
 	</div>
 	<div class="col-md-4">
+		<div class="panel panel-info">
+		  <div class="panel-heading text-center"><h2>Corbeans Template</h2></div>
+		  <div class="panel-body">
+			<p>Check project example based on the original Yo! CorDapp.</p>
+		  </div>
+		  <div class="panel-footer text-right"><a href="docs/project-template.html">More details</a></div>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="panel panel-success">
+		  <div class="panel-heading text-center"><h2>Corda Testacles</h2></div>
+		  <div class="panel-body">
+			<p>Test helpers and JUnit5 extensions for MockNetwork, Node Driver and Docker via Testcontainers.</p>
+		  </div>
+		  <div class="panel-footer text-right"><a href="https://manosbatsis.github.io/corda-testacles/">More details</a></div>
+		</div>
 	</div>
 </div>

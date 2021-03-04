@@ -8,6 +8,11 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+
+## 0.52
+
+- Updated dependencies.
+
 ## 0.51
 
 - Updated Corda Testacles to 0.13.
