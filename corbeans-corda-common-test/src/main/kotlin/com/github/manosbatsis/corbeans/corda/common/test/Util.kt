@@ -22,20 +22,18 @@ package com.github.manosbatsis.corbeans.corda.common.test
 import com.fasterxml.jackson.databind.DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY
 import com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsSchema
-import com.github.manosbatsis.corda.testacles.nodedriver.config.NodeDriverNodesConfig
 import com.github.manosbatsis.corda.testacles.nodedriver.config.SimpleNodeDriverNodesConfig
-import java.util.Properties
+import java.util.*
 
 object Util {
 
 
-    fun <T: NodeDriverNodesConfig> loadProperties(
+    fun loadProperties(
             resourcePath: String = "/application.properties",
-            configClass: Class<T>,
             propertiesPrefix: String? = null,
             ignoreErrors: Boolean = false
-    ): NodeDriverNodesConfig {
-        var cordaNodesProperties: NodeDriverNodesConfig? = null
+    ): SimpleNodeDriverNodesConfig {
+        var cordaNodesProperties: SimpleNodeDriverNodesConfig? = null
         try {
             val inputStream = this::class.java.getResourceAsStream(resourcePath)
             val properties = Properties()
@@ -46,8 +44,7 @@ object Util {
             cordaNodesProperties = mapper.readPropertiesAs(
                             properties,
                             if(propertiesPrefix != null) JavaPropsSchema().withPrefix(propertiesPrefix) else JavaPropsSchema.emptySchema(),
-                            configClass)
-
+                    SimpleNodeDriverNodesConfig::class.java)
             // Fix parsing
             if (cordaNodesProperties.cordappPackages.size == 1) {
                 cordaNodesProperties.cordappPackages = cordaNodesProperties.cordappPackages.first()
