@@ -163,27 +163,19 @@ open class CordaNetworkServiceImpl :
                 if(it.parameterTypes.size == 1){
                     hasPoolBoyFirstParam(it)
                 }
-                else if(it.parameterTypes.size == 2){
-                    hasPoolBoyFirstParam(it) && hasServiceDefaultsLastParam(it)
-                }
                 else false
             } ?: error("No constructor found with appropriate parameters " +
                     "(${PoolBoyPooledConnection::class.java.simpleName}, " +
-                    "optional ${ServiceDefaults::class.java.simpleName}) " +
                     "for class ${serviceType.canonicalName}")
         }
         return with(constructor){
-            if(parameterTypes.size == 1) newInstance(poolBoy.forKey(poolKey)) as T
-            else newInstance(poolBoy.forKey(poolKey), SimpleServiceDefaults()) as T
+             newInstance(poolBoy.forKey(poolKey)) as T
+
         }
     }
 
     private fun hasPoolBoyFirstParam(it: Constructor<*>) =
             it.parameterTypes.first().isAssignableFrom(PoolBoyConnection::class.java)
-
-    private fun hasServiceDefaultsLastParam(it: Constructor<*>) =
-            it.parameterTypes.last().isAssignableFrom(SimpleServiceDefaults::class.java)
-
 
     override fun resolveNodeName(optionalNodeName: Optional<String>): String {
         var nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName

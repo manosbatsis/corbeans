@@ -36,8 +36,8 @@ open class CordaNodeServiceImpl(
 
     /** [PoolBoyConnection]-based constructor */
     constructor(
-            poolBoy: PoolBoyConnection, defaults: ServiceDefaults = SimpleServiceDefaults()
-    ) : this(NodeServiceRpcPoolBoyDelegate(poolBoy, defaults))
+            poolBoy: PoolBoyConnection
+    ) : this(NodeServiceRpcPoolBoyDelegate(poolBoy))
 
 }
 
@@ -51,7 +51,7 @@ open class CordaAccountsAwareNodeServiceImpl(
 
     /** [PoolBoyConnection]-based constructor */
     constructor(
-            poolBoy: PoolBoyConnection, defaults: ServiceDefaults = SimpleServiceDefaults()
-    ) : this(AccountsAwareNodeServicePoolBoyDelegate(poolBoy, defaults))
+            poolBoy: PoolBoyConnection
+    ) : this(AccountsAwareNodeServicePoolBoyDelegate(poolBoy))
 
 }

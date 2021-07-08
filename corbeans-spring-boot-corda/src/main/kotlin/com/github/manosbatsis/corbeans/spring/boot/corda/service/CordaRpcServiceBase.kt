@@ -44,8 +44,8 @@ abstract class CordaRpcServiceBase(
     }
     /** [PoolBoyConnection]-based constructor */
     constructor(
-            poolBoy: PoolBoyConnection, defaults: ServiceDefaults = SimpleServiceDefaults()
-    ) : this(NodeServiceRpcPoolBoyDelegate(poolBoy, defaults))
+            poolBoy: PoolBoyConnection
+    ) : this(NodeServiceRpcPoolBoyDelegate(poolBoy))
 
     override val myIdentity: Party by lazy { nodeIdentity }
 
@@ -68,8 +68,8 @@ abstract class CordaAccountsAwareRpcServiceBase(
     }
     /** [PoolBoyConnection]-based constructor */
     constructor(
-            poolBoy: PoolBoyConnection, defaults: ServiceDefaults = SimpleServiceDefaults()
-    ) : this(AccountsAwareNodeServicePoolBoyDelegate(poolBoy, defaults))
+            poolBoy: PoolBoyConnection
+    ) : this(AccountsAwareNodeServicePoolBoyDelegate(poolBoy))
 
     override val myIdentity: Party by lazy { nodeIdentity }
 
