@@ -9,7 +9,7 @@ The following sections describe major changes per version
 and can be helpful with version upgrades.
 
 
-## 0.52-0.54
+## 0.52-0.56
 
 - Updated dependencies.
 
