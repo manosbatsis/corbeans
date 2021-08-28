@@ -8,6 +8,9 @@ title: "Changelog"
 The following sections describe major changes per version 
 and can be helpful with version upgrades.
 
+## 0.57
+
+- "Normalise" X500 name strings when resolving a node name
 
 ## 0.52-0.56
 

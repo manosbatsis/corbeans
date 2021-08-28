@@ -178,7 +178,12 @@ open class CordaNetworkServiceImpl :
             it.parameterTypes.first().isAssignableFrom(PoolBoyConnection::class.java)
 
     override fun resolveNodeName(optionalNodeName: Optional<String>): String {
-        var nodeName = if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName
+        val nodeName = (if (optionalNodeName.isPresent) optionalNodeName.get() else defaultNodeName)
+                // "Normalise" string if X500 name
+                ?.let{
+                    if(it.contains("=")) try{ CordaX500Name.parse(it).toString() } catch (e: Exception){ it }
+                    else it
+                }
                 ?: throw IllegalArgumentException("No nodeName was given and a default one is not available")
         if (nodeName.isBlank()) throw IllegalArgumentException("nodeName cannot be an empty or blank string")
         // If organization name match
